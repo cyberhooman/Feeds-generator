@@ -1,0 +1,98 @@
+/* Warm Cream Theme - Soft & Approachable */
+:root {
+    --bg-primary: #FDF6E3;
+    --bg-secondary: #F5EDDA;
+    --bg-gradient: none;
+
+    --text-primary: #2C2C2C;
+    --text-secondary: #5C5C5C;
+
+    --accent: #D4A574;
+    --accent-secondary: #8B7355;
+
+    --highlight-bg: #D4A574;
+    --highlight-text: #ffffff;
+
+    --border-color: #E0D5C5;
+
+    --success: #6B8E6B;
+    --error: #C75050;
+}
+
+.slide-container {
+    background: var(--bg-primary);
+}
+
+/* Subtle paper texture */
+.slide-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.02;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Warm vignette */
+.slide-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(ellipse at center, transparent 50%, rgba(212, 165, 116, 0.1) 100%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Warm brown highlight */
+.highlight {
+    background: var(--highlight-bg);
+    color: var(--highlight-text);
+    padding: 6px 16px;
+    border-radius: 6px;
+    font-weight: 700;
+}
+
+/* Cream accent line */
+.accent-line {
+    background: var(--accent);
+    box-shadow: none;
+}
+
+/* Soft meme container */
+.meme-container {
+    box-shadow: 0 6px 25px rgba(139, 115, 85, 0.15);
+    border: 2px solid rgba(212, 165, 116, 0.2);
+}
+
+/* Warm slide indicators */
+.slide-indicator .dot {
+    background: rgba(212, 165, 116, 0.4);
+}
+
+.slide-indicator .dot.active {
+    background: var(--accent);
+}
+
+/* Swipe indicator */
+.swipe-indicator {
+    color: var(--text-secondary);
+}
+
+/* Action buttons */
+.action-button {
+    border-color: var(--border-color);
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.action-button.primary {
+    background: var(--accent);
+    color: #ffffff;
+    border-color: var(--accent);
+}

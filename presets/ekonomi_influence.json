@@ -1,0 +1,237 @@
+{
+  "preset_name": "The Economic Influence Style",
+  "description": "Dark, minimal, meme-integrated economics content style. Edgy but educational.",
+  "reference": "@theeconomicinfluence.id",
+
+  "content_settings": {
+    "tone": "ekonomi_edgy",
+    "language": "bahasa",
+    "angle": "ekonomi_explainer",
+    "default_versions": 1
+  },
+
+  "design": {
+    "slide_dimensions": {
+      "width": 1080,
+      "height": 1350,
+      "ratio": "4:5"
+    },
+
+    "color_palette": {
+      "background": {
+        "primary": "#0D0D0D",
+        "secondary": "#1A1A2E",
+        "tertiary": "#16213E"
+      },
+      "text": {
+        "primary": "#FFFFFF",
+        "secondary": "#E8E8E8",
+        "muted": "#888888"
+      },
+      "accent": {
+        "highlight": "#FFD93D",
+        "success": "#6BCB77",
+        "danger": "#FF6B6B",
+        "info": "#4D96FF"
+      }
+    },
+
+    "typography": {
+      "hook_slide": {
+        "font_family": "Inter Bold",
+        "font_size": 64,
+        "line_height": 1.2,
+        "text_transform": "none",
+        "alignment": "center"
+      },
+      "body_slide": {
+        "font_family": "Inter Medium",
+        "font_size": 42,
+        "line_height": 1.4,
+        "alignment": "left"
+      },
+      "data_highlight": {
+        "font_family": "Inter Black",
+        "font_size": 72,
+        "color": "#FFD93D"
+      },
+      "caption": {
+        "font_family": "Inter Regular",
+        "font_size": 36,
+        "color": "#888888"
+      }
+    },
+
+    "layout": {
+      "padding": {
+        "top": 80,
+        "bottom": 80,
+        "left": 60,
+        "right": 60
+      },
+      "text_max_width_percentage": 85,
+      "meme_position": "bottom",
+      "meme_max_height_percentage": 40
+    },
+
+    "effects": {
+      "text_shadow": false,
+      "gradient_overlay": true,
+      "gradient_type": "subtle_vignette"
+    }
+  },
+
+  "content_structure": {
+    "carousel_length": {
+      "standard": 7,
+      "quick_take": 5,
+      "deep_dive": 10
+    },
+
+    "slide_types": {
+      "1": {
+        "type": "hook",
+        "style": "bold_statement",
+        "meme": "optional",
+        "max_words": 20
+      },
+      "2": {
+        "type": "context",
+        "style": "setup",
+        "meme": "optional",
+        "max_words": 40
+      },
+      "3": {
+        "type": "explanation",
+        "style": "breakdown",
+        "meme": "rare",
+        "max_words": 50
+      },
+      "4": {
+        "type": "data",
+        "style": "numbers_focus",
+        "meme": "rare",
+        "max_words": 35
+      },
+      "5": {
+        "type": "impact",
+        "style": "personal_connection",
+        "meme": "recommended",
+        "max_words": 40
+      },
+      "6": {
+        "type": "reveal",
+        "style": "system_criticism",
+        "meme": "optional",
+        "max_words": 45
+      },
+      "7": {
+        "type": "cta",
+        "style": "engagement",
+        "meme": "rare",
+        "max_words": 30
+      }
+    }
+  },
+
+  "meme_guidelines": {
+    "max_per_carousel": 3,
+    "preferred_categories": [
+      "economic_pain",
+      "system_criticism",
+      "relatable_struggle",
+      "sarcastic",
+      "revelation"
+    ],
+    "emotional_mapping": {
+      "hook": ["shocked", "curious", "sarcastic"],
+      "pain_point": ["suffering", "frustrated", "crying"],
+      "revelation": ["enlightened", "conspiracy", "knowing"],
+      "criticism": ["clown", "ironic", "blame"],
+      "closing": ["wise", "confident", "accepting"]
+    },
+    "placement_rules": {
+      "hook_slide": "reaction_meme_optional",
+      "data_slide": "minimal_or_none",
+      "impact_slide": "relatable_meme_recommended",
+      "cta_slide": "text_only_preferred"
+    }
+  },
+
+  "caption_style": {
+    "length": "medium",
+    "structure": [
+      "hook_question_or_statement",
+      "brief_context",
+      "call_to_action",
+      "hashtags"
+    ],
+    "hashtag_strategy": {
+      "total": 15,
+      "mix": {
+        "big_reach": 5,
+        "medium": 5,
+        "niche": 5
+      },
+      "categories": [
+        "economics",
+        "indonesia",
+        "politics",
+        "finance",
+        "viral"
+      ]
+    },
+    "sample_hashtags": [
+      "#ekonomi",
+      "#ekonomiindonesia",
+      "#inflasi",
+      "#genzindonesia",
+      "#financialliteracy",
+      "#politik",
+      "#uangdigital",
+      "#investasi",
+      "#millennials",
+      "#faktaekonomi"
+    ]
+  },
+
+  "topic_pillars": [
+    {
+      "name": "Macro Economics",
+      "topics": ["inflasi", "GDP", "resesi", "nilai tukar", "kebijakan moneter"],
+      "frequency": "2x per week"
+    },
+    {
+      "name": "Personal Finance Reality",
+      "topics": ["gaji vs biaya hidup", "housing crisis", "retirement", "cost of living"],
+      "frequency": "2x per week"
+    },
+    {
+      "name": "Wealth Inequality",
+      "topics": ["oligarki", "wealth gap", "pajak", "generational wealth"],
+      "frequency": "1x per week"
+    },
+    {
+      "name": "Government Policy",
+      "topics": ["subsidi", "APBN", "utang negara", "kebijakan pajak"],
+      "frequency": "1x per week"
+    },
+    {
+      "name": "Trending Economics",
+      "topics": ["current events", "viral ekonomi", "berita terkini"],
+      "frequency": "as needed"
+    }
+  ],
+
+  "voice_checklist": [
+    "Uses 'lu/gua' pronouns",
+    "Mixes Bahasa and English naturally",
+    "Includes at least 1 data point",
+    "Has sarcasm or irony",
+    "Makes it personal/relatable",
+    "Reveals systemic issues",
+    "Avoids victim blaming",
+    "Not preachy or lecturing",
+    "Has clear takeaway"
+  ]
+}

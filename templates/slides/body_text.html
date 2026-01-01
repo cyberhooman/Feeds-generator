@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block extra_styles %}
+<style>
+    .body-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        max-height: 1200px;
+        padding: 100px 70px;
+        text-align: center;
+        overflow: hidden;
+    }
+
+    .body-text {
+        font-size: clamp(28px, 4vw, 46px);
+        font-weight: 600;
+        line-height: 1.45;
+        color: var(--text-primary);
+        letter-spacing: -0.01em;
+        max-width: 920px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Adjust font size based on text length */
+    .body-text.long {
+        font-size: clamp(24px, 3.5vw, 40px);
+    }
+
+    .body-text.very-long {
+        font-size: clamp(22px, 3vw, 36px);
+        line-height: 1.5;
+    }
+
+    /* Slide number badge */
+    .slide-badge {
+        position: absolute;
+        top: 50px;
+        right: 50px;
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text-secondary);
+        opacity: 0.6;
+    }
+
+    /* Quote styling for specific content */
+    .body-text.quote {
+        font-style: italic;
+        position: relative;
+        padding-left: 30px;
+    }
+
+    .body-text.quote::before {
+        content: '"';
+        font-size: 120px;
+        position: absolute;
+        left: -20px;
+        top: -40px;
+        color: var(--accent);
+        opacity: 0.3;
+        font-family: Georgia, serif;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% if show_slide_badge %}
+<div class="slide-badge">{{ slide_number }}/{{ total_slides }}</div>
+{% endif %}
+
+<div class="body-content">
+    <p class="body-text {{ text_size_class|default('') }} {{ 'quote' if is_quote else '' }}">
+        {{ formatted_text|safe }}
+    </p>
+</div>
+{% endblock %}

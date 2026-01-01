@@ -1,0 +1,75 @@
+/* Ocean Gradient Theme - Modern & Trendy */
+:root {
+    --bg-primary: #667eea;
+    --bg-secondary: #764ba2;
+    --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+    --text-primary: #ffffff;
+    --text-secondary: #e0e0ff;
+
+    --accent: #ffffff;
+    --accent-secondary: #FFD93D;
+
+    --highlight-bg: #ffffff;
+    --highlight-text: #667eea;
+
+    --border-color: rgba(255, 255, 255, 0.2);
+
+    --success: #6BCB77;
+    --error: #FF6B6B;
+}
+
+.slide-container {
+    background: var(--bg-gradient);
+}
+
+/* Gradient mesh overlay for depth */
+.slide-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(ellipse at 20% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(118, 75, 162, 0.3) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* No vignette for gradient themes */
+.slide-container::after {
+    display: none;
+}
+
+/* White highlight on gradient */
+.highlight {
+    background: var(--highlight-bg);
+    color: var(--highlight-text);
+    padding: 6px 16px;
+    border-radius: 6px;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* White accent line */
+.accent-line {
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+/* Softer meme container */
+.meme-container {
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Slide indicator dots */
+.slide-indicator .dot {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.slide-indicator .dot.active {
+    background: #ffffff;
+}

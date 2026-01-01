@@ -1,0 +1,543 @@
+## CONTENT ANGLE: Ekonomi Explainer (Economics Breakdown)
+
+**Framework:** Hook with controversy/data → Explain the "why" → Show impact → Reveal the system → Actionable insight
+
+**Why It Works:** People are curious about economics but intimidated by jargon. Breaking it down with memes and casual language makes complex topics shareable. The "hidden truth" angle creates engagement.
+
+**Reference Style:** @theeconomicinfluence.id
+
+---
+
+## STRUCTURE:
+
+### Slide 1: THE HOOK
+Start with something that makes people stop scrolling.
+
+Options:
+1. **Shocking Data Point**
+   - A statistic that seems unbelievable
+   - Contrast that highlights inequality
+   - Number that hits home personally
+
+2. **Relatable Pain Point**
+   - Something everyone experiences (harga naik, gaji stuck)
+   - Common frustration with the system
+   - Personal finance struggle
+
+3. **Controversial Take**
+   - Challenge common belief
+   - Question popular policy
+   - "Unpopular opinion" format
+
+4. **Meme-Style Setup**
+   - POV format
+   - "Nobody: / [Subject]:" format
+   - "[X] be like:" format
+
+**Hook Formulas:**
+- "[Shocking stat]. Let that sink in."
+- "POV: Lu baru tau kenapa [common problem]"
+- "Unpopular opinion: [controversial economic take]"
+- "[Authority] bilang [claim]. Reality: [contrast]"
+- "Fun fact yang gak fun:"
+
+### Slide 2: THE CONTEXT
+Set up what people THINK is true vs reality.
+
+Include:
+- The common belief/narrative
+- Why people believe this
+- What they're not seeing
+- "Here's what they don't tell you..."
+
+### Slide 3: THE EXPLANATION
+Break down the actual mechanics.
+
+Make it digestible:
+- Simple cause → effect
+- Analogy to everyday life
+- Step by step breakdown
+- Visual if possible (numbers, comparisons)
+
+### Slide 4: THE DATA/PROOF
+Show receipts.
+
+Present:
+- Specific numbers
+- Before/after comparisons
+- Source credibility (tanpa jadi boring)
+- Clear visualization
+
+### Slide 5: THE IMPACT
+Make it personal - how does this affect the reader?
+
+Connect to:
+- Their daily life
+- Their wallet
+- Their future
+- Their generation
+
+### Slide 6: THE SYSTEM REVEAL
+Pull back - show the bigger picture.
+
+Reveal:
+- Who benefits from current system
+- Why it's designed this way
+- Historical context if relevant
+- Structural issues
+
+### Slide 7: THE TAKEAWAY
+What should they know/do?
+
+Provide:
+- Key insight to remember
+- Practical action (if applicable)
+- Mindset shift
+- Conversation starter
+
+### Slide 8 (Optional): THE CTA
+Drive engagement.
+
+Options:
+- Poll question
+- Debate prompt
+- Share request
+- Follow-up topic vote
+
+---
+
+## EMOTIONAL BEAT MAPPING:
+
+```
+Slide 1: SHOCK/CURIOSITY (Wait, what?)
+Slide 2: RECOGNITION (Oh, I thought that too)
+Slide 3: LEARNING (Ohh, that's how it works)
+Slide 4: VALIDATION (Damn, the numbers prove it)
+Slide 5: PERSONAL CONNECTION (This affects ME)
+Slide 6: ANGER/AWARENESS (The system is rigged)
+Slide 7: EMPOWERMENT (Now I understand)
+Slide 8: ENGAGEMENT (I want to discuss this)
+```
+
+---
+
+## WRITING EXAMPLES:
+
+### Example 1: Inflation Explainer
+
+**Slide 1 (Hook):**
+```
+Gaji lu naik 5% tahun ini.
+
+Inflasi naik 6%.
+
+Congrats, lu technically makin miskin. 🎉
+```
+
+**Slide 2 (Context):**
+```
+"Tapi kan gaji naik!"
+
+Iya. Naik.
+
+Tapi kalau harga barang naik LEBIH TINGGI dari kenaikan gaji...
+
+Lu actually bisa beli LEBIH SEDIKIT dari tahun kemarin.
+
+Ini yang namanya "real wage decline".
+```
+
+**Slide 3 (Explanation):**
+```
+Simple math:
+
+Tahun lalu: Gaji 5 juta, beras 10rb/kg
+= Bisa beli 500 kg beras
+
+Tahun ini: Gaji 5.25 juta (+5%), beras 11rb/kg (+10%)
+= Bisa beli 477 kg beras
+
+Gaji NAIK tapi purchasing power TURUN.
+
+Ini realita inflasi.
+```
+
+**Slide 4 (Data):**
+```
+Data Bank Indonesia:
+
+Inflasi kumulatif 5 tahun terakhir: ~25%
+Kenaikan UMR rata-rata: ~15%
+
+Gap: 10%
+
+Artinya: Daya beli lu turun 10% dalam 5 tahun.
+
+Padahal lu kerja sama kerasnya (atau lebih keras).
+```
+
+**Slide 5 (Impact):**
+```
+Efeknya ke lu:
+
+- Nabung makin susah
+- Target financial mundur terus
+- Lifestyle yang sama = butuh duit lebih
+- Rumah? Makin jauh dari jangkauan
+
+Dan ini bukan salah lu "kurang kerja keras".
+
+Ini structural.
+```
+
+**Slide 6 (System Reveal):**
+```
+The thing is...
+
+Inflasi gak affect semua orang sama.
+
+Yang punya aset (rumah, saham, bisnis) = kekayaan naik sama inflasi.
+
+Yang cuma punya gaji = purchasing power turun.
+
+The rich get richer.
+Literally by design.
+```
+
+**Slide 7 (Takeaway):**
+```
+Key insight:
+
+Gaji naik ≠ jadi lebih kaya.
+
+Yang penting: apakah kenaikan gaji lu BEAT inflasi?
+
+Kalau gak? Lu technically mengalami penurunan pendapatan.
+
+Now you know.
+```
+
+**Slide 8 (CTA):**
+```
+Pertanyaan:
+
+Kenaikan gaji lu tahun ini berapa %?
+
+Share di comment.
+
+Kita liat bareng apakah beat inflasi atau boncos.
+```
+
+---
+
+### Example 2: Housing Crisis Explainer
+
+**Slide 1 (Hook):**
+```
+Harga rumah: naik 15% per tahun.
+Gaji: naik 5% per tahun.
+
+Kapan lu bisa beli rumah?
+
+Spoiler: makin lama makin jauh. 📉
+```
+
+**Slide 2 (Context):**
+```
+Generasi orang tua kita:
+
+- Kerja 5-10 tahun
+- Bisa beli rumah cash/KPR ringan
+- "Asal kerja keras pasti bisa"
+
+Generasi kita:
+
+- Kerja 10+ tahun
+- Masih ngekos/ngontrak
+- Rumah makin gak affordable
+
+Apa yang berubah?
+```
+
+**Slide 3 (Explanation):**
+```
+Simple breakdown:
+
+1990: Harga rumah = 20x gaji tahunan
+2024: Harga rumah = 50x gaji tahunan
+
+Artinya:
+
+Dulu: Nabung 5 tahun = DP rumah
+Sekarang: Nabung 10+ tahun = DP rumah (mungkin)
+
+Dan selama lu nabung? Harga rumah tetap naik.
+
+Lu lari, target makin jauh.
+```
+
+**Slide 4 (Data):**
+```
+Angka dari Bank Indonesia + BPS:
+
+Rata-rata harga rumah Jakarta: 1.5-2 miliar
+Rata-rata gaji fresh grad: 5-7 juta/bulan
+Kemampuan nabung (optimis): 2 juta/bulan
+
+DP 20%: 300-400 juta
+Waktu untuk DP: 12-16 TAHUN
+
+Belum cicilan 20 tahun lagi.
+
+*laughs in broke*
+```
+
+**Slide 5 (Impact):**
+```
+Real impact ke generasi kita:
+
+- Delayed marriage (gak afford nikah + rumah)
+- Delayed having kids
+- Mental health issues (financial stress)
+- "Sandwich generation" pressure
+- Forever renting?
+
+Ini bukan soal "kurang hemat".
+
+Ini soal sistem.
+```
+
+**Slide 6 (System Reveal):**
+```
+Why harga rumah naik terus?
+
+1. Rumah jadi investment vehicle (bukan tempat tinggal)
+2. Tanah terbatas, demand naik
+3. Developer lebih untung jual mahal
+4. Investor/spekulan beli bulk
+5. Regulasi yang favor investor, bukan first-time buyer
+
+Rumah bukan lagi basic need.
+Jadi komoditas.
+```
+
+**Slide 7 (Takeaway):**
+```
+The uncomfortable truth:
+
+Buat sebagian besar generasi kita,
+beli rumah di kota besar mungkin
+bukan opsi yang realistis.
+
+Dan itu BUKAN salah lu.
+
+It's a systemic failure.
+
+Tapi at least sekarang lu tau kenapa.
+```
+
+**Slide 8 (CTA):**
+```
+Honest question:
+
+Lu masih target beli rumah?
+Atau udah accept alternative? (ngontrak selamanya, tinggal sama ortu, pindah ke kota kecil)
+
+No judgment. Share perspektif lu.
+```
+
+---
+
+## TOPIC CATEGORIES:
+
+### 1. MACRO ECONOMICS
+- Inflasi, deflasi, resesi
+- GDP dan artinya
+- Kebijakan moneter (BI rate, dll)
+- Nilai tukar rupiah
+- Perdagangan internasional
+
+### 2. PERSONAL FINANCE REALITY
+- Kenapa gaji gak cukup
+- Housing crisis
+- Cost of living vs income
+- Retirement yang mustahil
+- Student loan/education cost
+
+### 3. WEALTH & INEQUALITY
+- Wealth gap statistics
+- Oligarki Indonesia
+- Tax untuk orang kaya vs biasa
+- Generational wealth
+- Economic mobility (atau lack thereof)
+
+### 4. GOVERNMENT POLICY
+- Subsidi (siapa yang benefit?)
+- APBN breakdown
+- Utang negara
+- Kebijakan pajak
+- Social safety net
+
+### 5. MARKET & BUSINESS
+- Monopoli dan kartel
+- Harga-harga yang gak masuk akal
+- Corporate greed examples
+- Gig economy exploitation
+- Labor rights
+
+### 6. GLOBAL ECONOMICS
+- Perbandingan dengan negara lain
+- Global market impact ke Indonesia
+- Foreign investment
+- Brain drain
+
+---
+
+## CHECKLIST FOR STRONG EKONOMI EXPLAINER:
+
+✅ **Has a Clear Hook**
+Opens with something surprising, relatable, or controversial
+
+✅ **Uses Specific Numbers**
+Data points make it credible dan shareable
+
+✅ **Explains Simply**
+Complex concepts in casual language
+
+✅ **Makes It Personal**
+Connects macro issue to individual impact
+
+✅ **Shows the System**
+Reveals structural reasons, not individual blame
+
+✅ **Provides Insight**
+Reader learns something they didn't know
+
+✅ **Avoids Jargon**
+Or explains jargon immediately
+
+✅ **Has Emotional Arc**
+Takes reader through shock → understanding → empowerment
+
+---
+
+## COMMON MISTAKES TO AVOID:
+
+❌ **Too Academic**
+"Berdasarkan teori Keynesian..."
+→ Keep it casual and relatable
+
+❌ **No Data**
+Pure opinion without backing
+→ Always include specific numbers
+
+❌ **Victim Blaming**
+"Ya salah lu gak nabung"
+→ Acknowledge structural issues
+
+❌ **Too Depressing Without Hope**
+Pure doom tanpa insight/action
+→ Empower, don't just depress
+
+❌ **Oversimplifying**
+Complex issues made too black/white
+→ Acknowledge nuance where needed
+
+❌ **Boring Delivery**
+Correct info tapi presented dryly
+→ Use memes, humor, relatability
+
+---
+
+## MEME MATCHING FOR EKONOMI EXPLAINER:
+
+### Slide 1 (Hook):
+- Shocked Pikachu (untuk revelasi)
+- Clown makeup (untuk ironi diri)
+- "This is fine" dog (untuk denial)
+- Math lady meme (untuk confusing numbers)
+
+### Slide 2 (Context):
+- "They had us in the first half"
+- Expectation vs Reality format
+- Two buttons meme (untuk dilemma)
+
+### Slide 3 (Explanation):
+- Galaxy brain / expanding brain
+- "So you're telling me..." meme
+- Explaining to a friend format
+
+### Slide 4 (Data):
+- Usually text-focused untuk clarity
+- Simple charts/comparisons
+- Minimal meme, let data speak
+
+### Slide 5 (Impact):
+- Crying memes (personal pain)
+- "Guess I'll die" energy
+- Relatable suffering
+
+### Slide 6 (System Reveal):
+- Pulling back curtain memes
+- "Always has been" astronaut
+- Conspiracy Pepe (tapi dengan fakta)
+
+### Slide 7 (Takeaway):
+- Wise/knowing memes
+- Accepting reality memes
+- Or back to text-only untuk power
+
+### Slide 8 (CTA):
+- Usually text-only
+- Clean, engaging question
+
+---
+
+## VISUAL GUIDELINES:
+
+### Slide Design:
+- Dark background (hitam, dark blue, dark gray)
+- Bold white text
+- Accent colors untuk emphasis (kuning, hijau neon, merah)
+- Clean, minimal layout
+- Max 2-3 text blocks per slide
+
+### Data Visualization:
+- Simple bar comparisons
+- Before/after side by side
+- Big numbers highlighted
+- Icons untuk quick recognition
+
+### Typography:
+- Bold sans-serif headlines
+- Clean body text
+- CAPS sparingly untuk emphasis
+- Emoji as accent, bukan overload
+
+---
+
+## FINAL TIPS:
+
+**Make Complex Simple:**
+If your reader needs a degree to understand, rewrite it.
+
+**Make Dry Interesting:**
+Economics is boring. Your delivery shouldn't be.
+
+**Make Anger Productive:**
+Don't just make people mad. Give them understanding.
+
+**Make Statistics Stick:**
+"10 orang = 50 juta orang" is more memorable than "top 0.001% owns X%"
+
+**Make It Shareable:**
+Would someone screenshot this for their story? That's the test.
+
+---
+
+**The Goal:**
+Turn "I don't understand economics" into "I need to share this with everyone."
+
+Educational. Engaging. Enraging (productively).
+
+That's the Economic Influence explainer style.

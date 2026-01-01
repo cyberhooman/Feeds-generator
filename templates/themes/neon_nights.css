@@ -1,0 +1,111 @@
+/* Neon Nights Theme - Bold & Attention-grabbing */
+:root {
+    --bg-primary: #0a0a0a;
+    --bg-secondary: #121212;
+    --bg-gradient: linear-gradient(180deg, #0a0a0a 0%, #0d0d0d 100%);
+
+    --text-primary: #ffffff;
+    --text-secondary: #888888;
+
+    --accent: #00FF88;
+    --accent-secondary: #FF00FF;
+
+    --highlight-bg: #00FF88;
+    --highlight-text: #000000;
+
+    --border-color: #00FF88;
+
+    --success: #00FF88;
+    --error: #FF00FF;
+}
+
+.slide-container {
+    background: var(--bg-primary);
+}
+
+/* Subtle grid pattern */
+.slide-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        linear-gradient(rgba(0, 255, 136, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 136, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Neon glow vignette */
+.slide-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(ellipse at 50% 0%, rgba(0, 255, 136, 0.1) 0%, transparent 40%),
+        radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.5) 100%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Neon green highlight with glow */
+.highlight {
+    background: var(--highlight-bg);
+    color: var(--highlight-text);
+    padding: 6px 16px;
+    border-radius: 4px;
+    font-weight: 800;
+    box-shadow:
+        0 0 10px rgba(0, 255, 136, 0.5),
+        0 0 30px rgba(0, 255, 136, 0.3),
+        0 0 50px rgba(0, 255, 136, 0.1);
+}
+
+/* Glowing accent line */
+.accent-line {
+    background: var(--accent);
+    box-shadow:
+        0 0 10px rgba(0, 255, 136, 0.8),
+        0 0 30px rgba(0, 255, 136, 0.5),
+        0 0 50px rgba(0, 255, 136, 0.3);
+}
+
+/* Meme container with neon border */
+.meme-container {
+    box-shadow:
+        0 0 20px rgba(0, 255, 136, 0.3),
+        0 10px 40px rgba(0, 0, 0, 0.5);
+    border: 2px solid rgba(0, 255, 136, 0.3);
+}
+
+/* Neon slide indicators */
+.slide-indicator .dot {
+    background: rgba(0, 255, 136, 0.3);
+}
+
+.slide-indicator .dot.active {
+    background: #00FF88;
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.8);
+}
+
+/* Neon swipe indicator */
+.swipe-indicator {
+    color: #00FF88;
+}
+
+/* Action buttons with neon glow */
+.action-button {
+    border-color: rgba(0, 255, 136, 0.5);
+}
+
+.action-button.primary {
+    background: #00FF88;
+    color: #000000;
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+}

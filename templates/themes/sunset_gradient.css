@@ -1,0 +1,79 @@
+/* Sunset Gradient Theme - Warm & Vibrant */
+:root {
+    --bg-primary: #f093fb;
+    --bg-secondary: #f5576c;
+    --bg-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+
+    --text-primary: #ffffff;
+    --text-secondary: #fff5f5;
+
+    --accent: #ffffff;
+    --accent-secondary: #FFD93D;
+
+    --highlight-bg: #ffffff;
+    --highlight-text: #f5576c;
+
+    --border-color: rgba(255, 255, 255, 0.25);
+
+    --success: #6BCB77;
+    --error: #ffffff;
+}
+
+.slide-container {
+    background: var(--bg-gradient);
+}
+
+/* Warm glow overlay */
+.slide-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(ellipse at 30% 0%, rgba(255, 255, 255, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 100%, rgba(245, 87, 108, 0.3) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.slide-container::after {
+    display: none;
+}
+
+/* White highlight */
+.highlight {
+    background: var(--highlight-bg);
+    color: var(--highlight-text);
+    padding: 6px 16px;
+    border-radius: 6px;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* White accent line */
+.accent-line {
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.4);
+}
+
+/* Meme container with warm shadow */
+.meme-container {
+    box-shadow: 0 10px 40px rgba(245, 87, 108, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Slide indicators */
+.slide-indicator .dot {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.slide-indicator .dot.active {
+    background: #ffffff;
+}
+
+/* Swipe indicator */
+.swipe-indicator {
+    color: rgba(255, 255, 255, 0.8);
+}

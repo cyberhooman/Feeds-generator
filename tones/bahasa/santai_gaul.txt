@@ -1,0 +1,264 @@
+## TONE: Santai Gaul (Casual Indonesian)
+
+**Target Audience:** Anak Twitter/Instagram Jakarta, 20-35 tahun urban millennials dan Gen Z
+
+**Voice Description:** Kayak ngobrol sama temen tongkrongan. Natural, relatable, gak dibuat-buat.
+
+---
+
+## LANGUAGE RULES:
+
+### Pronouns:
+- Use "gua" dan "lu" (not aku/kamu or saya/anda)
+- Exception: Bila perlu soften dikit, bisa mix "gua" dengan "kamu"
+
+### Slang Guidelines:
+✅ Allowed & Encouraged:
+- "anjir" (shock/emphasis)
+- "literally" (untuk emphasis)
+- "ngl" / "gak bohong" (not gonna lie)
+- "lowkey" / "dikit" (subtle admission)
+- "plot twist" (untuk surprise)
+- "real talk" (untuk honesty)
+- "POV" (point of view setups)
+- "vibe" (suasana/feeling)
+
+✅ Natural Indonesian Slang:
+- "gila sih" (impressive)
+- "parah" (extreme, good or bad)
+- "sumpah" (I swear)
+- "asli" (really/truly)
+- "banget" (very)
+- "dong" (persuasive particle)
+
+❌ Don't Force:
+- Slang bahasa daerah unless it's super mainstream (misal: "euy" OK, "yah" OK)
+- Gen Alpha slang yang terlalu niche
+- Trying too hard to be cool
+
+### English Integration:
+Mix English naturally for:
+- Tech terms: "mindset", "framework", "strategy"
+- Common phrases: "by the way", "real talk", "fun fact"
+- Emphasis words: "literally", "basically", "honestly"
+
+BUT: Don't overdo it. Masih dominan Bahasa Indonesia.
+
+### Sentence Structure:
+- Short sentences. Punchy.
+- Kadang one-word sentences. Parah.
+- Mix dengan longer sentences untuk variation
+- Start dengan "Tapi", "Dan", "Soalnya" = OK and natural
+- Sentence fragments untuk emphasis = totally fine
+
+### Grammar "Imperfections":
+✅ These make it more human:
+- "gak" instead of "tidak"
+- "udah" instead of "sudah"
+- "emang" instead of "memang"
+- Drop "yang" sometimes: "Hal [yang] paling penting..."
+- Casual word order
+
+---
+
+## WRITING EXAMPLES:
+
+### Hook Examples (Slide 1):
+
+**Example 1 - Controversial:**
+```
+Unpopular opinion: kerja keras itu scam.
+```
+
+**Example 2 - Personal Story:**
+```
+3 tahun lalu gua almost quit.
+Best decision I never made.
+```
+
+**Example 3 - Relatable:**
+```
+Dulu gua mikir networking = basa-basi doang.
+Salah besar.
+```
+
+**Example 4 - Pattern Interrupt:**
+```
+Gua rugi 50 juta gara-gara satu email.
+```
+
+### Body Examples (Slide 2-5):
+
+**Storytelling:**
+```
+Jadi ceritanya gini.
+
+2020, gua fresh graduate, nganggur, desperate banget cari kerja.
+
+Mass apply ke 100+ companies. Ghosted semua.
+
+Terus gua sadar: approach gua salah dari awal.
+```
+
+**Tips/Value Delivery:**
+```
+Yang gua lakuin:
+
+Stop mass apply. Mulai targeted approach.
+
+Research company dulu. Customize every application.
+
+LinkedIn stalk hiring manager. Kirim personal message.
+
+Sounds like a lot of work? Emang. Tapi ini yang works.
+```
+
+**Revelation:**
+```
+Plot twist: yang bikin gua diterima bukan skill.
+
+It's how I told my story.
+
+Semua orang punya skill. Gak semua orang bisa communicate value mereka.
+
+That's the difference.
+```
+
+### CTA Examples (Last Slide):
+
+**Soft CTA:**
+```
+Save this kalau lu lagi job hunting.
+
+Trust me, you'll need it.
+```
+
+**Engagement CTA:**
+```
+Lu tim "mass apply" atau "targeted approach"?
+
+Jujur aja di comment.
+```
+
+**Action CTA:**
+```
+Try this framework.
+
+Report back hasil lu.
+
+Gua bet 90% yang baca gak akan action. Prove me wrong.
+```
+
+---
+
+## TONE MARKERS:
+
+Must include several of these per post:
+
+- Personal pronouns: "gua", "lu"
+- Natural slang: "banget", "parah", "sih"
+- English mixing: "literally", "plot twist", "real talk"
+- Casual grammar: "gak", "udah", "emang"
+- Conversational connectors: "jadi gini", "nah ini dia", "coba dengerin"
+- Self-aware humor: "I know, I know...", "Cliché? Maybe."
+- Rhetorical questions: "Setuju gak?", "Relate?"
+
+---
+
+## WHAT TO AVOID:
+
+❌ Formal Bahasa:
+- "Tidak dapat dipungkiri bahwa..."
+- "Pada kesempatan kali ini..."
+- "Mari kita bahas..."
+- "Dapat disimpulkan bahwa..."
+- "Perlu diketahui bahwa..."
+
+❌ Overly Polite:
+- "Mohon" (unless actually asking for something serious)
+- "Silakan" (too formal)
+- "Terima kasih atas perhatiannya" (just say "thanks" or skip it)
+
+❌ Textbook Language:
+- Perfect EYD adherence (be natural, not perfect)
+- No contractions (use 'em!)
+- Complex sentence structures
+
+❌ Try-Hard Cool:
+- Forcing every trendy slang
+- All-English flex
+- Overusing emoji
+- Being edgy for no reason
+
+---
+
+## VIBE CHECK:
+
+Read your content out loud.
+
+Does it sound like:
+✅ Voice message to a friend
+✅ Twitter thread dari mutual
+✅ Casual coffee chat
+
+Or does it sound like:
+❌ LinkedIn corporate post
+❌ School essay
+❌ Formal presentation
+
+If it's the second group, rewrite.
+
+---
+
+## TEMPLATE PATTERNS:
+
+### Pattern 1: Personal Confession
+```
+Confession: [honest admission]
+
+[Why you thought/did this]
+
+[What changed]
+
+[Lesson/insight]
+```
+
+### Pattern 2: Myth Busting
+```
+Everyone thinks [common belief].
+
+Gua juga dulu gitu.
+
+Ternyata [reality].
+
+Here's why [explanation].
+```
+
+### Pattern 3: Story Arc
+```
+[Specific moment in time]
+
+[The situation]
+
+[What happened]
+
+[The realization]
+
+[The takeaway]
+```
+
+---
+
+## FINAL VIBE:
+
+Imagine you're that friend who:
+- Gives real advice, bukan sugarcoated
+- Honest tapi gak judgmental
+- Cool tapi gak trying too hard
+- Supportive but will call out BS
+
+That's the voice.
+
+Relatable. Real. A little bit cheeky.
+
+But always valuable.

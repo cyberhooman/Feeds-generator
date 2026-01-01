@@ -1,0 +1,104 @@
+/* Dark Gradient Theme - Sophisticated & Professional */
+:root {
+    --bg-primary: #0f0c29;
+    --bg-secondary: #24243e;
+    --bg-gradient: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+
+    --text-primary: #ffffff;
+    --text-secondary: #b0b0c0;
+
+    --accent: #00D9FF;
+    --accent-secondary: #FF6B6B;
+
+    --highlight-bg: #00D9FF;
+    --highlight-text: #0f0c29;
+
+    --border-color: #444466;
+
+    --success: #6BCB77;
+    --error: #FF6B6B;
+}
+
+.slide-container {
+    background: var(--bg-gradient);
+}
+
+/* Subtle star-like dots */
+.slide-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 100px 100px, 150px 150px, 200px 200px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Deep vignette */
+.slide-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(15, 12, 41, 0.5) 100%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Cyan highlight with glow */
+.highlight {
+    background: var(--highlight-bg);
+    color: var(--highlight-text);
+    padding: 6px 16px;
+    border-radius: 6px;
+    font-weight: 700;
+    box-shadow: 0 0 20px rgba(0, 217, 255, 0.4);
+}
+
+/* Cyan accent line */
+.accent-line {
+    background: var(--accent);
+    box-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+}
+
+/* Meme container with subtle glow */
+.meme-container {
+    box-shadow:
+        0 0 30px rgba(0, 217, 255, 0.1),
+        0 10px 40px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(0, 217, 255, 0.2);
+}
+
+/* Slide indicators */
+.slide-indicator .dot {
+    background: rgba(0, 217, 255, 0.3);
+}
+
+.slide-indicator .dot.active {
+    background: var(--accent);
+    box-shadow: 0 0 8px rgba(0, 217, 255, 0.6);
+}
+
+/* Swipe indicator */
+.swipe-indicator {
+    color: var(--accent);
+}
+
+/* Action buttons */
+.action-button {
+    border-color: rgba(0, 217, 255, 0.3);
+}
+
+.action-button.primary {
+    background: var(--accent);
+    color: var(--highlight-text);
+    box-shadow: 0 0 15px rgba(0, 217, 255, 0.3);
+}

@@ -1,0 +1,61 @@
+/* Minimal Light Theme - Clean & Premium */
+:root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f8f8;
+    --bg-gradient: none;
+
+    --text-primary: #1a1a1a;
+    --text-secondary: #666666;
+
+    --accent: #000000;
+    --accent-secondary: #444444;
+
+    --highlight-bg: #000000;
+    --highlight-text: #ffffff;
+
+    --border-color: #e0e0e0;
+
+    --success: #2E8B57;
+    --error: #DC3545;
+}
+
+.slide-container {
+    background: var(--bg-primary);
+}
+
+/* Clean, no texture */
+.slide-container::before {
+    display: none;
+}
+
+/* Subtle border */
+.slide-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 1px solid #f0f0f0;
+    pointer-events: none;
+}
+
+/* Black highlight on white */
+.highlight {
+    background: var(--highlight-bg);
+    color: var(--highlight-text);
+    padding: 6px 16px;
+    border-radius: 4px;
+    font-weight: 700;
+}
+
+/* Refined accent line */
+.accent-line {
+    background: #1a1a1a;
+    box-shadow: none;
+}
+
+/* Softer meme shadows */
+.meme-container {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}

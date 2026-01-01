@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block extra_styles %}
+<style>
+    .reaction-content {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        padding: 60px 60px 100px;
+    }
+
+    /* Text section at top */
+    .text-section {
+        flex: 0 0 auto;
+        margin-bottom: 40px;
+    }
+
+    .reaction-text {
+        font-size: {{ font_size|default('44px') }};
+        font-weight: 600;
+        line-height: 1.4;
+        color: var(--text-primary);
+        text-align: center;
+    }
+
+    .reaction-text.small {
+        font-size: 38px;
+    }
+
+    .reaction-text.large {
+        font-size: 50px;
+    }
+
+    /* Meme section takes remaining space */
+    .meme-section {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 0;
+    }
+
+    .meme-container {
+        max-width: 100%;
+        max-height: 100%;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+    }
+
+    .meme-container img {
+        width: auto;
+        height: auto;
+        max-width: 900px;
+        max-height: 700px;
+        object-fit: contain;
+        display: block;
+    }
+
+    /* Optional reaction label */
+    .reaction-label {
+        position: absolute;
+        bottom: 120px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 18px;
+        font-weight: 500;
+        color: var(--text-secondary);
+        opacity: 0.6;
+    }
+
+    /* Slide badge */
+    .slide-badge {
+        position: absolute;
+        top: 40px;
+        right: 50px;
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text-secondary);
+        opacity: 0.5;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% if show_slide_badge %}
+<div class="slide-badge">{{ slide_number }}/{{ total_slides }}</div>
+{% endif %}
+
+<div class="reaction-content">
+    <div class="text-section">
+        <p class="reaction-text {{ text_size_class|default('') }}">
+            {{ formatted_text|safe }}
+        </p>
+    </div>
+
+    <div class="meme-section">
+        <div class="meme-container">
+            <img src="{{ meme_path }}" alt="Reaction meme">
+        </div>
+    </div>
+</div>
+
+{% if reaction_label %}
+<div class="reaction-label">{{ reaction_label }}</div>
+{% endif %}
+{% endblock %}

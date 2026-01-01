@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block extra_styles %}
+<style>
+    .hook-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        padding: 80px 70px;
+        text-align: center;
+    }
+
+    .hook-text {
+        font-size: {{ font_size|default('68px') }};
+        font-weight: 800;
+        line-height: 1.15;
+        color: var(--text-primary);
+        letter-spacing: -0.02em;
+        max-width: 940px;
+    }
+
+    /* Adjust font size based on text length */
+    .hook-text.long {
+        font-size: 56px;
+    }
+
+    .hook-text.very-long {
+        font-size: 48px;
+    }
+
+    /* Decorative accent line */
+    .accent-line {
+        width: 80px;
+        height: 5px;
+        background: var(--accent);
+        border-radius: 3px;
+        margin-top: 50px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hook-content">
+    <h1 class="hook-text {{ text_size_class|default('') }}">
+        {{ formatted_text|safe }}
+    </h1>
+
+    {% if show_accent_line %}
+    <div class="accent-line"></div>
+    {% endif %}
+</div>
+{% endblock %}

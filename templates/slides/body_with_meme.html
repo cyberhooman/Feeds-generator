@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block extra_styles %}
+<style>
+    .split-content {
+        display: flex;
+        flex-direction: {{ 'column' if meme_position == 'bottom' else 'column-reverse' if meme_position == 'top' else 'row' }};
+        height: 100%;
+        padding: 60px;
+        gap: 40px;
+    }
+
+    /* Horizontal layout (meme left/right) */
+    .split-content.horizontal {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .split-content.horizontal .text-section {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .split-content.horizontal .meme-section {
+        flex: 0.9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Vertical layout (meme top/bottom) */
+    .split-content.vertical {
+        flex-direction: column;
+    }
+
+    .split-content.vertical.meme-top {
+        flex-direction: column;
+    }
+
+    .split-content.vertical.meme-bottom {
+        flex-direction: column;
+    }
+
+    .split-content.vertical .text-section {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 0 20px;
+        overflow: hidden;
+        max-height: 650px;
+    }
+
+    .split-content.vertical .meme-section {
+        flex: 0 0 auto;
+        max-height: 550px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .body-text {
+        font-size: clamp(28px, 3.5vw, 42px);
+        font-weight: 600;
+        line-height: 1.4;
+        color: var(--text-primary);
+        text-align: {{ text_align|default('center') }};
+        overflow: hidden;
+    }
+
+    .body-text.small {
+        font-size: clamp(24px, 3vw, 38px);
+    }
+
+    .body-text.long {
+        font-size: clamp(22px, 2.8vw, 34px);
+    }
+
+    .body-text.very-long {
+        font-size: clamp(20px, 2.5vw, 30px);
+        line-height: 1.35;
+    }
+
+    .meme-container {
+        max-width: 100%;
+        max-height: 100%;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+        background: transparent;
+    }
+
+    .meme-container img {
+        width: 100%;
+        max-height: 500px;
+        object-fit: contain;
+        display: block;
+        background: transparent;
+    }
+
+    /* Slide badge */
+    .slide-badge {
+        position: absolute;
+        top: 40px;
+        right: 50px;
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text-secondary);
+        opacity: 0.5;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% if show_slide_badge %}
+<div class="slide-badge">{{ slide_number }}/{{ total_slides }}</div>
+{% endif %}
+
+<div class="split-content {{ 'horizontal' if meme_position in ['left', 'right'] else 'vertical' }} {{ 'meme-top' if meme_position == 'top' else 'meme-bottom' if meme_position == 'bottom' else '' }}">
+
+    {% if meme_position in ['top', 'left'] %}
+    <div class="meme-section">
+        <div class="meme-container">
+            <img src="{{ meme_path }}" alt="Meme">
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="text-section">
+        <p class="body-text {{ text_size_class|default('') }}">
+            {{ formatted_text|safe }}
+        </p>
+    </div>
+
+    {% if meme_position in ['bottom', 'right'] %}
+    <div class="meme-section">
+        <div class="meme-container">
+            <img src="{{ meme_path }}" alt="Meme">
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

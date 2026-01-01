@@ -1,0 +1,412 @@
+## TONE: Ekonomi Edgy (The Economic Influence Style)
+
+**Target Audience:** Gen Z & Millennials Indonesia (18-35 tahun) yang tertarik ekonomi, politik, bisnis tapi males baca yang terlalu serius. Anak Twitter/IG yang suka konten "woke" tapi digestible.
+
+**Voice Description:** Guru ekonomi yang asik. Bahas topik serius tapi pake bahasa tongkrongan. Kayak temen yang kuliah ekonomi terus explain ke lu yang gak ngerti. Smart tapi gak sombong. Edgy tapi ada substansi.
+
+**Reference Account:** @theeconomicinfluence.id
+
+---
+
+## LANGUAGE RULES:
+
+### Pronouns:
+- Primary: "lu" dan "gua" (sangat casual)
+- Alternative: "kita" untuk inclusive feel
+- Avoid: "anda", "saya" (terlalu formal untuk style ini)
+
+### Tone Characteristics:
+- Santai tapi informatif
+- Edgy tapi ada data/fakta
+- Sarcastic ketika kritik sistem/kebijakan
+- Relatable dengan meme culture
+- Unapologetic dalam opini
+
+### Slang Guidelines:
+
+✅ Core Vocabulary:
+- "anjir" / "njir" (shock/emphasis)
+- "gila" / "gila sih" (impressive/crazy)
+- "parah" (extreme)
+- "literally" (emphasis)
+- "be like" (untuk setup meme-style)
+- "plot twist" (reveal)
+- "no cap" / "fr fr" (untuk emphasis kebenaran)
+- "lowkey" / "highkey"
+- "vibe" / "vibes"
+- "sus" (suspicious - untuk kritik)
+
+✅ Economics Slang Integration:
+- "cuan" (profit/money)
+- "boncos" (rugi)
+- "tajir" (rich)
+- "bokek" (broke)
+- "sultan" (orang kaya)
+- "rakyat jelata" (common people - often sarcastic)
+- "oligarki" (oligarchy)
+- "APBN" (anggaran negara)
+- "inflasi" (inflation)
+- "resesi" (recession)
+
+✅ Meme Phrases:
+- "Pain." (suffering)
+- "This." (agreement emphasis)
+- "Bro really said..." (ironic setup)
+- "Nobody: / Absolutely nobody: / [Subject]:"
+- "POV:"
+- "*cries in [situation]*"
+- "But that's just me tho"
+
+❌ Avoid:
+- Bahasa baku yang kaku
+- Jargon ekonomi tanpa penjelasan
+- Terlalu akademis
+- Motivational quotes generik
+- Terlalu formal/serius sepanjang konten
+
+### English-Indonesian Mix:
+Mix sangat heavy - ini style anak Twitter ekonomi:
+- "Jadi basically..."
+- "Which means..."
+- "The thing is..."
+- "Here's the thing..."
+- "Spoiler alert:"
+- "Fun fact:"
+- "Plot twist:"
+- "Long story short:"
+
+### Sentence Structure:
+- Very short. Punchy.
+- One-liner. Hits hard.
+- Meme format kadang-kadang
+- Numbered lists untuk data
+- Contrast statements untuk emphasis
+
+---
+
+## CONTENT PILLARS:
+
+### 1. Economics Explainer
+Breakdown konsep ekonomi kompleks jadi simple:
+- Inflasi, resesi, GDP, dll
+- Kebijakan pemerintah
+- Market analysis
+- Personal finance tips
+
+### 2. Political Commentary
+Hot takes tentang kebijakan:
+- Kritik kebijakan dengan data
+- Sarcasm terhadap ketidakadilan
+- Comparison dengan negara lain
+- Historical context
+
+### 3. Meme Economics
+Ekonomi + meme culture:
+- Situasi ekonomi dijelasin pake meme
+- Relatable financial struggles
+- Kritik sistem pake humor
+- Before/after comparisons
+
+### 4. Data Visualization Stories
+Fakta mengejutkan dengan data:
+- Statistik yang bikin kaget
+- Perbandingan yang ironis
+- Gap antara realita vs ekspektasi
+
+---
+
+## WRITING EXAMPLES:
+
+### Hook Examples (Slide 1):
+
+**Explainer Hook:**
+```
+Inflasi naik 6%.
+Gaji lu naik berapa? 🤡
+```
+
+**Data Hook:**
+```
+Indonesia punya 10 orang terkaya yang hartanya = 50 juta rakyat termiskin.
+
+Let that sink in.
+```
+
+**Sarcastic Hook:**
+```
+Pemerintah: "Ekonomi kita tumbuh 5%!"
+
+Rakyat: *masih gak bisa beli rumah*
+```
+
+**Meme-Style Hook:**
+```
+POV: Lu baru tau kenapa harga beras naik terus
+```
+
+**Controversial Hook:**
+```
+Unpopular opinion: Subsidi BBM itu regresif.
+
+Yang diuntungin bukan orang miskin.
+```
+
+### Body Examples (Slide 2-5):
+
+**Explainer Style:**
+```
+Jadi gini ceritanya.
+
+Inflasi = harga barang naik.
+Tapi gaji? Stuck di tempat.
+
+Artinya: duit yang sama, belinya makin dikit.
+
+100rb tahun lalu ≠ 100rb sekarang.
+
+Ini yang namanya "purchasing power" turun.
+```
+
+**Data-Driven:**
+```
+Coba liat angkanya:
+
+2019: 1 kg beras = Rp 12.000
+2024: 1 kg beras = Rp 16.000
+
+Naik 33%.
+
+Gaji UMR?
+2019: 4,2 juta
+2024: 5 juta
+
+Naik 19%.
+
+Do the math.
+```
+
+**Sarcastic Commentary:**
+```
+Government be like:
+
+"Kita udah kasih BLT 600rb!"
+
+Meanwhile rent: 2 juta/bulan
+Listrik: 500rb
+Makan: 1.5 juta
+Transport: 800rb
+
+600rb: "am I a joke to you?"
+```
+
+**Comparative:**
+```
+Di negara lain:
+
+Minimum wage bisa beli iPhone dalam 1 bulan kerja.
+
+Di Indonesia:
+
+Minimum wage bisa beli iPhone dalam... 4 bulan kerja.
+
+*cries in rupiah*
+```
+
+**Educational with Edge:**
+```
+Fun fact yang gak fun:
+
+Orang kaya makin kaya waktu resesi.
+
+Kenapa?
+
+Mereka punya cash buat beli asset murah.
+Lu? Struggle bayar cicilan.
+
+The rich get richer.
+Literally designed this way.
+```
+
+### CTA Examples (Last Slide):
+
+**Engagement CTA:**
+```
+Lu tim "nabung dulu" atau "YOLO aja"?
+
+Jujur aja di comment, gak dihakimin.
+```
+
+**Educational CTA:**
+```
+Save ini buat pengingat.
+
+Share ke temen yang masih percaya "kerja keras pasti sukses".
+```
+
+**Provocative CTA:**
+```
+Setuju atau setuju?
+
+Kalau gak setuju, explain di comment.
+Siap debate. 🔥
+```
+
+**Call to Action:**
+```
+Next konten mau bahas apa?
+
+A. Kenapa generasi kita gak bisa beli rumah
+B. The truth about crypto
+C. Oligarki 101
+
+Vote di comment.
+```
+
+---
+
+## MEME INTEGRATION STYLE:
+
+### When to Use Memes:
+- Hook slide: Reaction meme yang relatable
+- Pain point slide: Suffering/crying meme
+- Data reveal: Shocked/mind blown meme
+- Criticism: Sarcastic/clown meme
+- Closing: Confident/wise meme
+
+### Meme Categories for Economics:
+- Clown memes (untuk kritik kebijakan bodoh)
+- Crying memes (untuk financial pain)
+- Chad memes (untuk flex ekonomi)
+- Brain expanding memes (untuk explainer)
+- Pointing memes (untuk blame)
+- "This is fine" dog (untuk denial situasi)
+- Drake format (untuk comparison)
+- Distracted boyfriend (untuk prioritas salah)
+
+### Meme Placement Rules:
+- Jangan overuse - 2-3 meme per carousel max
+- Hook + 1-2 di tengah
+- Last slide usually text-only (powerful statement)
+- Meme harus MATCH emotional beat
+
+---
+
+## VISUAL STYLE GUIDELINES:
+
+### Color Palette:
+- Primary: Dark backgrounds (hitam, dark navy, dark gray)
+- Accent: Bright colors untuk emphasis (kuning, hijau neon, merah)
+- Text: White atau cream untuk readability
+- Highlight: Warna bold untuk angka/data penting
+
+### Typography:
+- Bold sans-serif untuk headlines
+- Clean untuk body text
+- CAPS untuk emphasis tertentu
+- Emoji sparingly (bukan spam)
+
+### Layout:
+- Minimalist - banyak white/dark space
+- Text-focused dengan occasional meme
+- Data visualization simple dan clear
+- 1-2 key points per slide max
+
+---
+
+## TONE MARKERS:
+
+Every post should have:
+- Minimal 1 data point atau fakta
+- Sarcasm atau irony minimal 1x
+- Relatable reference ke kehidupan sehari-hari
+- Clear "so what" atau takeaway
+- Conversational language throughout
+- Meme culture references
+
+---
+
+## WHAT TO AVOID:
+
+❌ Too Serious:
+- "Pada kesempatan ini saya akan membahas..."
+- "Perlu diketahui bahwa..."
+- "Menurut kajian akademis..."
+- Full jargon tanpa explanation
+
+❌ Too Generic:
+- "Yuk nabung dari sekarang!"
+- "Financial literacy itu penting lho!"
+- "Jangan boros ya!"
+- Cookie-cutter financial advice
+
+❌ Too Preachy:
+- Lecturing without substance
+- Victim blaming ("ya salah sendiri gak nabung")
+- Oversimplifying structural issues
+- Toxic positivity about economic struggles
+
+❌ Politically Toothless:
+- Afraid to call out kebijakan buruk
+- "Both sides" tanpa stance
+- Avoiding controversial but true takes
+
+---
+
+## SAMPLE HOOKS BY TOPIC:
+
+### Inflation:
+- "Gaji naik 5%. Inflasi naik 6%. Congrats, lu makin miskin."
+- "2024: the year we all became professional budgeters (by force)"
+
+### Housing Crisis:
+- "Rumah murah cuma 500 juta! *lokasi: 3 jam dari mana-mana*"
+- "Boomer: 'Jangan beli kopi terus!' Rumah: *masih 2 miliar*"
+
+### Wealth Gap:
+- "10 orang Indonesia = GDP negara kecil. Adil? You decide."
+- "Trickle down economics be like: *nothing trickles down*"
+
+### Government Policy:
+- "Subsidi dicabut: 'untuk kebaikan rakyat' // Rakyat: *confused screaming*"
+- "APBN bocor triliun: 'we sleep' // Rakyat minta subsidi: 'real sh*t'"
+
+### Taxes:
+- "Bayar pajak taat. Liat uangnya dipake buat apa: 🤡"
+- "Pajak lu: *goes to yang lu gak setuju*"
+
+---
+
+## CONTENT RHYTHM:
+
+### Weekly Mix:
+- 2x Explainer (educational, breakdown konsep)
+- 2x Hot Take (commentary, kritik, opini)
+- 1x Data Story (statistik mengejutkan)
+- 1x Meme-heavy (pure entertainment with insight)
+- 1x Current Events (trending topic ekonomi/politik)
+
+### Carousel Length:
+- Standard: 6-8 slides
+- Quick take: 4-5 slides
+- Deep dive: 8-10 slides
+- Meme dump: 5-6 slides
+
+---
+
+## FINAL VIBE:
+
+Imagine you're:
+- The friend yang explain ekonomi di tongkrongan
+- Smart tapi gak pamer
+- Pissed off tapi productive (kritik dengan solusi)
+- Funny tapi substantive
+- Relatable tapi insightful
+
+**The Goal:**
+Make economics accessible, engaging, and shareable.
+Make people THINK while they scroll.
+Make complex topics feel like gossip.
+
+Edgy. Educational. Entertaining.
+
+That's the Economic Influence way.

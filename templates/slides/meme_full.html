@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block extra_styles %}
+<style>
+    .meme-full-content {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        position: relative;
+    }
+
+    /* Full meme background */
+    .meme-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
+    }
+
+    .meme-background img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* Dark overlay for text readability */
+    .meme-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, {{ overlay_top|default('0.7') }}) 0%,
+            rgba(0, 0, 0, {{ overlay_middle|default('0.2') }}) 40%,
+            rgba(0, 0, 0, {{ overlay_middle|default('0.2') }}) 60%,
+            rgba(0, 0, 0, {{ overlay_bottom|default('0.7') }}) 100%
+        );
+        z-index: 2;
+    }
+
+    /* Text overlay */
+    .text-overlay {
+        position: relative;
+        z-index: 3;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: {{ text_position|default('flex-end') }};
+        padding: 70px;
+    }
+
+    .text-overlay.top {
+        justify-content: flex-start;
+    }
+
+    .text-overlay.center {
+        justify-content: center;
+    }
+
+    .text-overlay.bottom {
+        justify-content: flex-end;
+    }
+
+    .overlay-text {
+        font-size: {{ font_size|default('48px') }};
+        font-weight: 700;
+        line-height: 1.3;
+        color: #FFFFFF;
+        text-align: {{ text_align|default('center') }};
+        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .overlay-text.large {
+        font-size: 56px;
+    }
+
+    .overlay-text.small {
+        font-size: 40px;
+    }
+
+    /* Caption style text (smaller, at bottom) */
+    .caption-text {
+        font-size: 28px;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.9);
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    /* Slide badge on full meme */
+    .slide-badge {
+        position: absolute;
+        top: 40px;
+        right: 50px;
+        font-size: 15px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.7);
+        z-index: 10;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% if show_slide_badge %}
+<div class="slide-badge">{{ slide_number }}/{{ total_slides }}</div>
+{% endif %}
+
+<div class="meme-full-content">
+    <div class="meme-background">
+        <img src="{{ meme_path }}" alt="Meme">
+    </div>
+
+    <div class="meme-overlay"></div>
+
+    <div class="text-overlay {{ text_vertical_position|default('bottom') }}">
+        {% if formatted_text %}
+        <p class="overlay-text {{ text_size_class|default('') }}">
+            {{ formatted_text|safe }}
+        </p>
+        {% endif %}
+
+        {% if caption_text %}
+        <p class="caption-text">{{ caption_text }}</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

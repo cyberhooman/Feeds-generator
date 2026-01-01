@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir:*)",
+      "Bash(findstr:*)",
+      "Bash(tree:*)",
+      "Bash(pip install:*)",
+      "Bash(python -m streamlit run:*)",
+      "WebFetch(domain:www.instagram.com)",
+      "WebSearch",
+      "WebFetch(domain:socialblade.com)",
+      "Bash(copy .env.example .env)",
+      "WebFetch(domain:resont.com)",
+      "WebFetch(domain:torro.io)",
+      "Bash(streamlit run:*)",
+      "Bash(python -m playwright:*)",
+      "Bash(python:*)",
+      "Bash(timeout:*)",
+      "Bash(ping:*)",
+      "Bash(git init:*)",
+      "Bash(git remote add:*)",
+      "Bash(git fetch:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
