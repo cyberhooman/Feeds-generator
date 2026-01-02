@@ -617,8 +617,8 @@ def main():
                     topic_hint = None
                     if tone in ["ekonomi_edgy", "profesional"]:
                         topic_hint = "finance"
-                    elif "tech" in topic.lower() if topic else False:
-                        topic_hint = "tech"
+                    elif preset == "The Economic Influence":
+                        topic_hint = "finance"
 
                     images, saved_paths = slide_gen.generate_carousel(
                         slides=slides,
