@@ -199,94 +199,169 @@ Before outputting, verify:
 
 ---
 
-## PART 8: MEME INTEGRATION (CRITICAL)
+## PART 8: MEME INTEGRATION (CRITICAL FOR VIRALITY)
 
-Memes should be DOMINANT on slides - taking 60-80% of the space. There are two types:
+Memes should be DOMINANT on slides - taking 60-80% of the space. But more importantly, they must be GENUINELY FUNNY - not corporate humor.
+
+### THE 4 RULES OF VIRAL MEME HUMOR:
+
+1. **SUBVERSION** - The punchline flips expectations
+   - BAD: "Good thing" vs "Bad thing" (obvious)
+   - GOOD: "What experts say" vs "What actually works (chaos)"
+
+2. **SPECIFICITY** - Use exact numbers, real situations
+   - BAD: "Lost a lot of money"
+   - GOOD: "Portfolio -47.3% dalam 2 jam"
+
+3. **SELF-DEPRECATING** - We're all clowns together
+   - BAD: "Some people make mistakes"
+   - GOOD: "Gua every single time"
+
+4. **IRONIC TWIST** - The setup makes the punchline land harder
+   - BAD: "I did X and bad thing happened"
+   - GOOD: "Gua yakin 100% ini pasti naik: *narrator voice* It did not naik"
+
+---
 
 ### TYPE 1: Template Memes
 For Drake, Expanding Brain, Clown Makeup - text FILLS the white panels.
 
-**Drake Format:**
+**Drake Format (IRONIC COMPARISON):**
+The trick: The "approve" panel is ironically WORSE or unexpectedly absurd
 ```json
 {
   "slide_type": "meme_template",
   "meme": "drake_format.jpg",
   "panels": {
-    "reject": "Trading pakai feeling",
-    "approve": "Trading pakai data + journal"
+    "reject": "Invest di saham blue chip, diversifikasi, long term",
+    "approve": "YOLO all-in ke shitcoin dari grup WA"
   }
 }
 ```
 
-**Expanding Brain (4 levels):**
+**Expanding Brain (ESCALATING ABSURDITY):**
+The trick: Galaxy brain is either genuinely enlightened OR hilariously dumb
 ```json
 {
   "slide_type": "meme_template",
   "meme": "galaxy_brain.jpg",
   "panels": {
-    "small_brain": "Gak catat trade",
-    "medium_brain": "Catat profit/loss aja",
-    "big_brain": "Catat semua detail",
-    "galaxy_brain": "Review + improve dari data"
+    "small_brain": "Nabung di bank",
+    "medium_brain": "Invest di reksadana",
+    "big_brain": "Diversifikasi ke crypto, saham, emas",
+    "galaxy_brain": "Duit semua jadi kuota buat scroll TikTok"
   }
 }
 ```
 
-**Clown Makeup (4 steps of becoming a clown):**
+**Clown Makeup (SELF-DEPRECATING ESCALATION):**
+The trick: Each step makes the reader say "oh no... I've done this"
 ```json
 {
   "slide_type": "meme_template",
   "meme": "clown_makeup.jpg",
   "panels": {
-    "step1": "Ini pasti bull market",
-    "step2": "Buy the dip",
-    "step3": "Average down lagi",
-    "step4": "Portfolio -80%"
+    "step1": "Ini pasti cuma koreksi sehat",
+    "step2": "Perfect timing buat average down",
+    "step3": "Pake margin biar cuan lebih gede",
+    "step4": "LIQUIDATED -100%"
   }
 }
 ```
 
-### TYPE 2: Reaction Memes
-For Shocked Pikachu, Crying Cat, etc - setup text + caption.
-
-**Reaction Format:**
+**Distracted Boyfriend (WRONG PRIORITIES):**
+The trick: The "distraction" is relatable and tempting
 ```json
 {
-  "slide_type": "meme_reaction",
-  "meme": "crying_cat.jpg",
-  "setup_text": "Gua setelah yakin 100% ini pasti naik:",
-  "caption": "Rugi 50 juta"
+  "slide_type": "meme_template",
+  "meme": "distracted_boyfriend.jpg",
+  "panels": {
+    "girlfriend": "Emergency fund 6 bulan",
+    "boyfriend": "Gua",
+    "other_girl": "iPhone 15 Pro Max 0% 36 bulan"
+  }
 }
 ```
 
-**Dialog Style:**
+---
+
+### TYPE 2: Reaction Memes
+For Shocked Pikachu, Crying Cat, etc - setup text + caption.
+
+**Shocked Pikachu (PREDICTABLE DISASTER):**
+The trick: Everyone knew this would happen except the person
 ```json
 {
   "slide_type": "meme_reaction",
   "meme": "shocked_pikachu.jpg",
-  "setup_text": "Me: I'll just check my portfolio real quick\n\nPortfolio:",
-  "caption": "-40% dalam sehari"
+  "setup_text": "Pake leverage 100x tanpa stop loss",
+  "caption": "Liquidated"
 }
 ```
 
+**Crying Cat (RELATABLE PAIN):**
+The trick: The reader feels personally attacked
+```json
+{
+  "slide_type": "meme_reaction",
+  "meme": "crying_cat.jpg",
+  "setup_text": "Gua yakin ini udah bottom",
+  "caption": "Bottom terus setiap minggu"
+}
+```
+
+**This Is Fine (COPIUM/DENIAL):**
+The trick: The situation is clearly NOT fine
+```json
+{
+  "slide_type": "meme_reaction",
+  "meme": "this_is_fine.jpg",
+  "setup_text": "Portfolio -50%, inflasi 6%",
+  "caption": "iNi DiScOuNt SeAsOn"
+}
+```
+
+**Stonks (IRONIC VICTORY):**
+The trick: The "win" is questionable at best
+```json
+{
+  "slide_type": "meme_reaction",
+  "meme": "stonks.jpg",
+  "setup_text": "Rugi cuma 10% (bukan 50%)",
+  "caption": "Basically profit"
+}
+```
+
+---
+
 ### MEME CONTENT RULES:
 1. Panel text: MAX 6-8 words per panel
-2. Caption: MAX 3-5 words (it's the punchline!)
-3. Setup text: Creates context for the meme
+2. Caption: MAX 3-5 words (it's the PUNCHLINE - short = punchy!)
+3. Setup text: Creates context, builds tension
 4. NEVER leave panels empty - fill all of them
 5. Match meme emotion to content meaning
+6. Use specific numbers when possible ("rugi 2.3 juta" > "rugi banyak")
+7. Mix Indonesian + English naturally (how Gen-Z actually talks)
 
-### MEME SELECTION GUIDE:
-| Content Type | Best Meme |
-|--------------|-----------|
-| Compare good vs bad | drake_format.jpg |
-| Progression/levels | galaxy_brain.jpg |
-| Sequence of mistakes | clown_makeup.jpg |
-| Distracted by wrong thing | distracted_boyfriend.jpg |
-| Painful loss/failure | crying_cat.jpg |
-| Predictable bad outcome | shocked_pikachu.jpg |
-| Ironic "success" | stonks.jpg |
-| Denial of disaster | this_is_fine.jpg |
+### MEME SELECTION BY EMOTIONAL BEAT:
+| Emotional Beat | Best Memes |
+|----------------|------------|
+| Irony/Subversion | distracted_boyfriend.jpg, clown_makeup.jpg |
+| Revelation/Truth | galaxy_brain.jpg, drake_format.jpg |
+| Painful Loss | crying_cat.jpg, sad_pablo_escobar.jpg |
+| Predictable Disaster | shocked_pikachu.jpg, clown_makeup.jpg |
+| Denial/Copium | this_is_fine.jpg, stonks.jpg |
+| Comparison | drake_format.jpg, two_buttons.jpg |
+| Escalation | galaxy_brain.jpg, clown_makeup.jpg, gru_plan.jpg |
+| Regret | clown_makeup.jpg, crying_cat.jpg |
+
+### WHAT MAKES MEMES ACTUALLY FUNNY:
+- Relatability: "This is literally me"
+- Specificity: Real numbers, real situations
+- Self-awareness: We're all in this together
+- Subversion: The punchline you didn't expect
+- Brevity: Short = punchy = funny
+- Cultural context: Indonesian Gen-Z references that land
 
 ---
 
