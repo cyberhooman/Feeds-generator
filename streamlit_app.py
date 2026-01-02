@@ -32,6 +32,13 @@ st.set_page_config(
 from app.config import Config
 Config.ensure_directories_only()
 
+# Auto-download fresh memes on startup
+from app.meme_scraper import auto_download_memes_on_startup
+try:
+    auto_download_memes_on_startup(max_age_days=30)
+except Exception as e:
+    st.warning(f"Failed to update meme library: {e}")
+
 # Check if Playwright is available
 PLAYWRIGHT_AVAILABLE = False
 try:
@@ -355,6 +362,43 @@ def main():
 
         # Output name
         output_name = st.text_input("Output folder name", value="carousel")
+
+        st.divider()
+
+        # Meme Library Management
+        st.subheader("🎭 Meme Library")
+
+        from app.meme_scraper import MemeScraper
+        scraper = MemeScraper()
+        status = scraper.get_all_memes_status()
+        total_memes = len(status)
+        available_memes = sum(1 for info in status.values() if info['exists'])
+
+        st.caption(f"{available_memes}/{total_memes} memes available")
+
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button("🔄 Refresh Memes", help="Download missing or outdated memes"):
+                with st.spinner("Updating meme library..."):
+                    results = scraper.auto_update_library(max_age_days=30)
+                    updated = sum(1 for s in results.values() if s == "updated")
+                    failed = sum(1 for s in results.values() if s == "failed")
+
+                    if updated > 0:
+                        st.success(f"Updated {updated} memes!")
+                    if failed > 0:
+                        st.warning(f"Failed to update {failed} memes")
+                    st.rerun()
+
+        with col2:
+            if st.button("📊 View Status", help="Show detailed meme library status"):
+                st.session_state.show_meme_status = not st.session_state.get('show_meme_status', False)
+
+        if st.session_state.get('show_meme_status', False):
+            st.caption("Meme Library Status:")
+            for meme_name, info in status.items():
+                status_icon = "✅" if info['exists'] else "❌"
+                st.caption(f"{status_icon} {meme_name}")
 
         st.divider()
 
