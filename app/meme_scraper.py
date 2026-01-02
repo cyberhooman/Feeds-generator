@@ -44,8 +44,8 @@ MEME_TEMPLATE_URLS = {
         "https://imgflip.com/s/meme/Sad-Cat.jpg"
     ],
     "stonks.jpg": [
-        "https://i.imgflip.com/2pfot9.jpg",
-        "https://i.imgflip.com/3sgt8z.jpg"
+        "https://i.imgflip.com/2yvad5.jpg",
+        "https://i.imgflip.com/392xtu.jpg"
     ],
     "two_buttons.jpg": [
         "https://i.imgflip.com/1g8my4.jpg",

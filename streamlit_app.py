@@ -434,40 +434,49 @@ def main():
         use_memes = st.checkbox(
             "Include Memes",
             value=True,
-            help="Auto-add memes to slides based on content"
+            help="Auto-add memes to slides based on content. Uncheck for text-only slides."
         )
 
-        st.divider()
+        if not use_memes:
+            st.info("ℹ️ Text-only mode enabled - No memes will be added to slides")
+        else:
+            # Only show meme library management when memes are enabled
+            st.divider()
 
-        # Meme Library Management
-        st.subheader("📚 Meme Library")
+            # Meme Library Management with Scraper
+            st.subheader("🎭 Meme Library")
 
-        if st.button("🔄 Sync Library", help="Detect new memes and update metadata"):
-            try:
-                from app.meme_search_agent import MemeSearchAgent
-                agent = MemeSearchAgent()
-                changes = agent.sync_library()
+            from app.meme_scraper import MemeScraper
+            scraper = MemeScraper()
+            status = scraper.get_all_memes_status()
+            total_memes = len(status)
+            available_memes = sum(1 for info in status.values() if info['exists'])
 
-                if changes['new_memes']:
-                    st.success(f"Added {len(changes['new_memes'])} new meme(s)!")
-                    for meme in changes['new_memes']:
-                        st.caption(f"+ {meme}")
-                elif changes['removed']:
-                    st.warning(f"Removed {len(changes['removed'])} missing meme(s)")
-                else:
-                    st.info("Library is up to date!")
-            except Exception as e:
-                st.error(f"Error: {e}")
+            st.caption(f"📁 {available_memes}/{total_memes} memes available")
 
-        # Show library stats
-        try:
-            import json
-            if Config.MEME_METADATA_PATH.exists():
-                with open(Config.MEME_METADATA_PATH, 'r') as f:
-                    memes = json.load(f)
-                st.caption(f"📁 {len(memes)} memes in library")
-        except:
-            st.caption("📁 0 memes in library")
+            col1, col2 = st.columns(2)
+            with col1:
+                if st.button("🔄 Refresh Memes", help="Download missing or outdated memes"):
+                    with st.spinner("Updating meme library..."):
+                        results = scraper.auto_update_library(max_age_days=30)
+                        updated = sum(1 for s in results.values() if s == "updated")
+                        failed = sum(1 for s in results.values() if s == "failed")
+
+                        if updated > 0:
+                            st.success(f"Updated {updated} memes!")
+                        if failed > 0:
+                            st.warning(f"Failed to update {failed} memes")
+                        st.rerun()
+
+            with col2:
+                if st.button("📊 View Status", help="Show detailed meme library status"):
+                    st.session_state.show_meme_status = not st.session_state.get('show_meme_status', False)
+
+            if st.session_state.get('show_meme_status', False):
+                st.caption("Meme Library Status:")
+                for meme_name, info in status.items():
+                    status_icon = "✅" if info['exists'] else "❌"
+                    st.caption(f"{status_icon} {meme_name}")
 
         st.divider()
         st.caption("Powered by DeepSeek AI")
