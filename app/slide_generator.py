@@ -181,14 +181,16 @@ class SlideGenerator:
         show_logo: bool = False,
         logo_path: Optional[str] = None,
         show_slide_indicator: bool = False,
-        show_swipe: bool = True
+        show_swipe: bool = True,
+        use_dynamic_memes: bool = True,
+        topic_hint: str = None
     ) -> Tuple[List[Image.Image], List[Path]]:
         """
         Generate full carousel with all slides.
 
         Args:
             slides: List of slide texts
-            meme_recommendations: Meme matching results from MemeMatcher
+            meme_recommendations: Meme matching results from MemeMatcher (legacy)
             image_assignments: Image assignments (future: for stock photos)
             highlight_data: Highlight data from rewriter.extract_highlights()
             output_dir: Output directory
@@ -197,6 +199,8 @@ class SlideGenerator:
             logo_path: Path to logo image
             show_slide_indicator: Whether to show slide dots
             show_swipe: Whether to show swipe indicator
+            use_dynamic_memes: If True, fetch fresh memes from internet dynamically
+            topic_hint: Topic hint for better meme matching (e.g., "finance", "tech")
 
         Returns:
             Tuple of (list of PIL Images, list of saved file paths)
@@ -210,9 +214,30 @@ class SlideGenerator:
         project_dir = output_dir / f"{project_name}_{timestamp}"
         project_dir.mkdir(exist_ok=True)
 
-        # Process meme recommendations to get local paths
+        # Get meme paths - either dynamically or from recommendations
         meme_paths = {}
-        if meme_recommendations:
+        dynamic_engine = None
+
+        if use_dynamic_memes and meme_recommendations is not None:
+            # NEW: Use dynamic meme engine - fetch fresh from internet
+            try:
+                from .dynamic_meme_engine import DynamicMemeEngine
+                dynamic_engine = DynamicMemeEngine()
+
+                # Fetch fresh memes based on slide content analysis
+                fetched_memes = dynamic_engine.get_memes_for_slides(slides, topic_hint)
+
+                # Use temporary file paths
+                for slide_num, meme in fetched_memes.items():
+                    meme_paths[slide_num] = meme.temp_path
+
+            except Exception as e:
+                import logging
+                logging.warning(f"Dynamic meme fetch failed, falling back to legacy: {e}")
+                # Fall through to legacy handling
+
+        # Legacy: Process meme recommendations to get local paths
+        if not meme_paths and meme_recommendations:
             # Handle format from MemeMatcher - available_memes (already in library)
             available_memes = meme_recommendations.get('available_memes', [])
             for meme in available_memes:
@@ -304,6 +329,13 @@ class SlideGenerator:
                 print(f"Warning: Could not load rendered image {path}: {e}")
                 # Create placeholder
                 images.append(Image.new('RGB', (1080, 1350), (50, 50, 50)))
+
+        # Clean up temporary meme files from dynamic engine
+        if dynamic_engine:
+            try:
+                dynamic_engine.cleanup_temp_files()
+            except Exception:
+                pass  # Ignore cleanup errors
 
         return images, path_objects
 

@@ -32,12 +32,8 @@ st.set_page_config(
 from app.config import Config
 Config.ensure_directories_only()
 
-# Auto-download fresh memes on startup
-from app.meme_scraper import auto_download_memes_on_startup
-try:
-    auto_download_memes_on_startup(max_age_days=30)
-except Exception as e:
-    st.warning(f"Failed to update meme library: {e}")
+# Note: Memes are now fetched dynamically from the internet on-demand
+# No local meme library is needed - see app/dynamic_meme_engine.py
 
 # Check if Playwright is available
 PLAYWRIGHT_AVAILABLE = False
@@ -440,43 +436,8 @@ def main():
         if not use_memes:
             st.info("ℹ️ Text-only mode enabled - No memes will be added to slides")
         else:
-            # Only show meme library management when memes are enabled
-            st.divider()
-
-            # Meme Library Management with Scraper
-            st.subheader("🎭 Meme Library")
-
-            from app.meme_scraper import MemeScraper
-            scraper = MemeScraper()
-            status = scraper.get_all_memes_status()
-            total_memes = len(status)
-            available_memes = sum(1 for info in status.values() if info['exists'])
-
-            st.caption(f"📁 {available_memes}/{total_memes} memes available")
-
-            col1, col2 = st.columns(2)
-            with col1:
-                if st.button("🔄 Refresh Memes", help="Download missing or outdated memes"):
-                    with st.spinner("Updating meme library..."):
-                        results = scraper.auto_update_library(max_age_days=30)
-                        updated = sum(1 for s in results.values() if s == "updated")
-                        failed = sum(1 for s in results.values() if s == "failed")
-
-                        if updated > 0:
-                            st.success(f"Updated {updated} memes!")
-                        if failed > 0:
-                            st.warning(f"Failed to update {failed} memes")
-                        st.rerun()
-
-            with col2:
-                if st.button("📊 View Status", help="Show detailed meme library status"):
-                    st.session_state.show_meme_status = not st.session_state.get('show_meme_status', False)
-
-            if st.session_state.get('show_meme_status', False):
-                st.caption("Meme Library Status:")
-                for meme_name, info in status.items():
-                    status_icon = "✅" if info['exists'] else "❌"
-                    st.caption(f"{status_icon} {meme_name}")
+            # Dynamic meme info
+            st.caption("🌐 Memes fetched dynamically from internet based on content analysis")
 
         st.divider()
         st.caption("Powered by DeepSeek AI")
@@ -601,13 +562,12 @@ def main():
                         else:
                             st.write("✅ All slides sound human!")
 
-                    # Step 3: Find matching memes (if enabled)
+                    # Step 3: Prepare meme settings (dynamic fetching happens during generation)
                     meme_results = None
                     if use_memes:
-                        st.write("🎭 Finding matching memes...")
-                        meme_agent = MemeSearchAgent()
-                        meme_results = meme_agent.find_memes_for_content(slides)
-                        st.write(f"✅ Analyzed {len(slides)} slides for meme matches")
+                        st.write("🎭 Memes enabled - will fetch fresh memes dynamically...")
+                        # Just pass a flag dict to trigger dynamic fetching
+                        meme_results = {"use_dynamic": True}
                     else:
                         st.write("⏭️ Memes disabled - creating text-only slides")
 
@@ -647,9 +607,19 @@ def main():
 
                     st.write(f"✅ Generated {len(captions)} caption variation(s)")
 
-                    # Step 7: Generate slide images
+                    # Step 7: Generate slide images (with dynamic meme fetching)
                     st.write(f"🎨 Generating slide images ({theme} theme)...")
+                    if use_memes:
+                        st.write("🌐 Fetching fresh memes from internet...")
                     slide_gen = SlideGenerator(theme=theme)
+
+                    # Determine topic hint from preset/tone
+                    topic_hint = None
+                    if tone in ["ekonomi_edgy", "profesional"]:
+                        topic_hint = "finance"
+                    elif "tech" in topic.lower() if topic else False:
+                        topic_hint = "tech"
+
                     images, saved_paths = slide_gen.generate_carousel(
                         slides=slides,
                         meme_recommendations=meme_results,
@@ -658,7 +628,9 @@ def main():
                         project_name=output_name,
                         show_logo=show_logo,
                         logo_path=logo_path,
-                        show_slide_indicator=show_slide_indicator
+                        show_slide_indicator=show_slide_indicator,
+                        use_dynamic_memes=use_memes,
+                        topic_hint=topic_hint
                     )
                     st.write(f"✅ Created {len(images)} slide images")
 
