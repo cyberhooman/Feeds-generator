@@ -65,6 +65,7 @@ class SlideContent:
     highlights: List[str] = None
     meme_path: Optional[str] = None
     meme_position: Optional[str] = None  # "top", "bottom", "left", "right", "full"
+    split_ratio: Optional[str] = None  # "50-50", "60-40", "40-60"
 
     def __post_init__(self):
         if self.highlights is None:
@@ -433,6 +434,7 @@ if __name__ == "__main__":
             "text_size_class": text_size_class,
             "meme_path": meme_url,
             "meme_position": content.meme_position or "bottom",
+            "split_ratio": content.split_ratio or "50-50",
 
             # Theme
             "theme_css": theme_css,

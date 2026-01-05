@@ -25,6 +25,11 @@ from .asset_pipeline import AssetPipeline, MemeRecommendationParser
 from .meme_renderer import MemeRenderer
 from .meme_categories import get_meme_category, get_panel_descriptions
 
+# New AI Meme Agent imports
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class SlideGenerator:
     """
@@ -150,6 +155,17 @@ class SlideGenerator:
                     # Body slide - position based on text length
                     meme_position = "bottom" if text_length > 100 else "right"
 
+            # Determine split ratio based on text length for vertical layouts
+            split_ratio = None
+            if meme_path and meme_position in ['top', 'bottom']:
+                text_length = len(clean_text)
+                if text_length < 80:
+                    split_ratio = "40-60"  # Short text, visual priority
+                elif text_length > 150:
+                    split_ratio = "60-40"  # Long text, text priority
+                else:
+                    split_ratio = "50-50"  # Balanced default
+
             # Determine template automatically
             template = self.template_selector.select_template(
                 slide_number=slide_num,
@@ -165,7 +181,8 @@ class SlideGenerator:
                 text=clean_text,
                 highlights=highlights,
                 meme_path=meme_path,
-                meme_position=meme_position
+                meme_position=meme_position,
+                split_ratio=split_ratio
             ))
 
         return contents
@@ -183,7 +200,11 @@ class SlideGenerator:
         show_slide_indicator: bool = False,
         show_swipe: bool = True,
         use_dynamic_memes: bool = True,
-        topic_hint: str = None
+        topic_hint: str = None,
+        use_ai_meme_agent: bool = False,
+        content_type_override: str = None,
+        meme_style: str = "dark_minimal",
+        meme_language: str = "en"
     ) -> Tuple[List[Image.Image], List[Path]]:
         """
         Generate full carousel with all slides.
@@ -201,6 +222,9 @@ class SlideGenerator:
             show_swipe: Whether to show swipe indicator
             use_dynamic_memes: If True, fetch fresh memes from internet dynamically
             topic_hint: Topic hint for better meme matching (e.g., "finance", "tech")
+            use_ai_meme_agent: If True, use AI to generate original memes (no templates)
+            meme_style: Style for AI meme generation (dark_minimal, light_clean, etc.)
+            meme_language: Language for AI meme content ("en" or "id")
 
         Returns:
             Tuple of (list of PIL Images, list of saved file paths)
@@ -214,11 +238,41 @@ class SlideGenerator:
         project_dir = output_dir / f"{project_name}_{timestamp}"
         project_dir.mkdir(exist_ok=True)
 
-        # Get meme paths - either dynamically or from recommendations
+        # Get meme paths - either from AI agent, dynamically, or from recommendations
         meme_paths = {}
         dynamic_engine = None
+        ai_meme_images = {}  # For AI-generated meme images
 
-        if use_dynamic_memes and meme_recommendations is not None:
+        # NEW: Use Smart Image Curator (AI-powered web scraping)
+        if use_ai_meme_agent:
+            try:
+                from .smart_image_curator import SmartImageCurator
+
+                logger.info("Using Smart Image Curator - AI finds relevant images from the web")
+
+                # Create curator
+                curator = SmartImageCurator(cache_dir=str(project_dir / "curated_images"))
+
+                # Find relevant images for each slide
+                image_results = curator.find_images_for_slides(
+                    slides=slides,
+                    topic=topic_hint,
+                    skip_first_last=True,  # Skip hook and CTA slides
+                    content_type=content_type_override
+                )
+
+                # Use found images as meme paths
+                for slide_num, result in image_results.items():
+                    meme_paths[slide_num] = result.local_path
+
+                logger.info(f"Curated {len(image_results)} contextual images from the web")
+
+            except Exception as e:
+                logger.warning(f"Smart Image Curator failed, falling back to dynamic memes: {e}")
+                # Fall through to dynamic meme handling
+
+        # If AI agent didn't provide memes, try dynamic memes
+        if not meme_paths and use_dynamic_memes and meme_recommendations is not None:
             # NEW: Use dynamic meme engine - fetch fresh from internet
             try:
                 from .dynamic_meme_engine import DynamicMemeEngine
@@ -232,8 +286,7 @@ class SlideGenerator:
                     meme_paths[slide_num] = meme.temp_path
 
             except Exception as e:
-                import logging
-                logging.warning(f"Dynamic meme fetch failed, falling back to legacy: {e}")
+                logger.warning(f"Dynamic meme fetch failed, falling back to legacy: {e}")
                 # Fall through to legacy handling
 
         # Legacy: Process meme recommendations to get local paths

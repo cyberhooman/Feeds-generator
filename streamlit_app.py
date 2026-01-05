@@ -1,7 +1,7 @@
 """
-Streamlit Web UI for Meme Content Studio v2.0
+Content Studio - Professional SaaS UI
+Create viral Instagram carousels powered by AI
 
-A web interface for creating Instagram carousels with DeepSeek AI.
 Features:
 - Professional HTML/CSS templates rendered with Playwright
 - 7 beautiful themes (dark, light, gradients, neon)
@@ -21,19 +21,36 @@ from datetime import datetime
 # Load environment variables
 load_dotenv()
 
-# Page config
+# Page config - must be first Streamlit command
 st.set_page_config(
-    page_title="Meme Content Studio v2.0",
-    page_icon="🎨",
-    layout="wide"
+    page_title="Content Studio",
+    page_icon="📱",
+    layout="wide",
+    initial_sidebar_state="expanded",
+    menu_items={
+        'Get Help': None,
+        'Report a bug': None,
+        'About': None
+    }
 )
+
+# Import UI components
+from app.ui_components import (
+    inject_custom_css,
+    render_header,
+    render_status_badge,
+    render_theme_preview_card,
+    render_feature_grid,
+    render_empty_state,
+    render_caption_card
+)
+
+# Inject custom CSS
+inject_custom_css()
 
 # Ensure directories exist without API validation
 from app.config import Config
 Config.ensure_directories_only()
-
-# Note: Memes are now fetched dynamically from the internet on-demand
-# No local meme library is needed - see app/dynamic_meme_engine.py
 
 # Check if Playwright is available
 PLAYWRIGHT_AVAILABLE = False
@@ -43,7 +60,7 @@ try:
 except ImportError:
     pass
 
-# Import slide generator (has its own theme list)
+# Import slide generator
 from app.slide_generator import SlideGenerator
 
 
@@ -60,12 +77,10 @@ def check_pexels_api_key():
 def get_available_tones():
     """Get list of available tones by language"""
     tones = {"bahasa": [], "english": [], "mixed": []}
-
     for lang in tones.keys():
         lang_dir = Config.TONES_DIR / lang
         if lang_dir.exists():
             tones[lang] = [f.stem for f in lang_dir.glob("*.txt")]
-
     return tones
 
 
@@ -79,23 +94,19 @@ def get_available_angles():
 def create_zip_download(images, captions):
     """Create a ZIP file containing all slide images and captions."""
     zip_buffer = io.BytesIO()
-
     with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
-        # Add images
         for i, img in enumerate(images):
             img_buffer = io.BytesIO()
             img.save(img_buffer, format='PNG')
             img_buffer.seek(0)
             zip_file.writestr(f"slide_{i+1:02d}.png", img_buffer.getvalue())
 
-        # Add captions text file
         captions_text = ""
         for idx, cap_data in enumerate(captions):
             strategy = cap_data.get("strategy", f"Version {idx+1}")
             caption = cap_data.get("caption", "")
             hashtags = " ".join(cap_data.get("hashtags", []))
             captions_text += f"=== {strategy} ===\n\n{caption}\n\n{hashtags}\n\n---\n\n"
-
         zip_file.writestr("captions.txt", captions_text)
 
     zip_buffer.seek(0)
@@ -107,410 +118,447 @@ def get_theme_info():
     return {
         "dark_mode": {
             "label": "Dark Mode",
-            "description": "Classic dark with yellow accents",
+            "description": "Classic dark with yellow accents - Perfect for finance content",
             "colors": {"bg": "#121212", "text": "#FFFFFF", "accent": "#FFD93D"}
         },
         "minimal_light": {
             "label": "Minimal Light",
-            "description": "Clean white with black highlights",
+            "description": "Clean white with black highlights - Professional & clean",
             "colors": {"bg": "#FFFFFF", "text": "#1A1A1A", "accent": "#1A1A1A"}
         },
         "ocean_gradient": {
             "label": "Ocean Gradient",
-            "description": "Blue-purple gradient with white highlights",
+            "description": "Blue-purple gradient - Modern & trendy",
             "colors": {"bg": "#1a2980", "text": "#FFFFFF", "accent": "#FFFFFF"}
         },
         "sunset_gradient": {
             "label": "Sunset Gradient",
-            "description": "Warm pink-red gradient",
+            "description": "Warm pink-red gradient - Energetic & warm",
             "colors": {"bg": "#ee9ca7", "text": "#FFFFFF", "accent": "#FFFFFF"}
         },
         "neon_nights": {
             "label": "Neon Nights",
-            "description": "Black with neon green glow",
+            "description": "Black with neon green glow - Bold & attention-grabbing",
             "colors": {"bg": "#0a0a0a", "text": "#FFFFFF", "accent": "#39FF14"}
         },
         "warm_cream": {
             "label": "Warm Cream",
-            "description": "Soft beige aesthetic",
+            "description": "Soft beige aesthetic - Lifestyle & wellness",
             "colors": {"bg": "#FDF6E3", "text": "#2D2D2D", "accent": "#D4A574"}
         },
         "dark_gradient": {
             "label": "Dark Gradient",
-            "description": "Deep blue-purple with cyan accents",
+            "description": "Deep blue-purple with cyan - Tech & professional",
             "colors": {"bg": "#0f0c29", "text": "#FFFFFF", "accent": "#00D9FF"}
         },
     }
 
 
-def render_theme_preview(theme_name: str):
-    """Render a small preview of the theme."""
-    themes = get_theme_info()
-    theme = themes.get(theme_name, themes["dark_mode"])
-    colors = theme["colors"]
+def render_sidebar():
+    """Render the professional sidebar."""
+    with st.sidebar:
+        # Logo/Brand
+        st.markdown("""
+        <div style="padding: 1.5rem 0; border-bottom: 1px solid var(--border-subtle); margin-bottom: 1.5rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="width: 36px; height: 36px; background: var(--pure-black); border-radius: 4px; display: flex; align-items: center; justify-content: center;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="18" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/></svg>
+                </div>
+                <div>
+                    <div style="font-weight: 700; font-size: 1rem; color: var(--text-primary); letter-spacing: -0.02em;">Content Studio</div>
+                    <div style="font-size: 0.6875rem; color: var(--text-tertiary); font-family: var(--font-mono);">v2.0</div>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
-    bg_color = colors["bg"]
-    text_color = colors["text"]
-    accent_color = colors["accent"]
+        # Quick Presets
+        st.markdown('<h3>Style Preset</h3>', unsafe_allow_html=True)
 
-    # Check if it's a gradient theme
-    is_gradient = "gradient" in theme_name
+        preset_options = {
+            "custom": {"name": "Custom", "desc": "Configure your own settings"},
+            "economic": {"name": "Economic Influence", "desc": "Dark, edgy economics content"},
+            "casual": {"name": "Casual Story", "desc": "Warm, personal storytelling"},
+            "professional": {"name": "Professional", "desc": "Clean, business content"}
+        }
 
-    if is_gradient:
-        if theme_name == "ocean_gradient":
-            bg_style = "background: linear-gradient(135deg, #1a2980, #26d0ce);"
-        elif theme_name == "sunset_gradient":
-            bg_style = "background: linear-gradient(135deg, #ee9ca7, #ffdde1);"
-        elif theme_name == "dark_gradient":
-            bg_style = "background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);"
+        preset = st.selectbox(
+            "Quick Start",
+            list(preset_options.keys()),
+            format_func=lambda x: preset_options[x]['name'],
+            help="Choose a preset to quickly configure settings"
+        )
+
+        # Show preset description
+        st.markdown(f'<p style="color: #64748B; font-size: 0.875rem; margin-top: -0.5rem;">{preset_options[preset]["desc"]}</p>', unsafe_allow_html=True)
+
+        # Apply preset settings
+        if preset == "economic":
+            language = "bahasa"
+            tone = "ekonomi_edgy"
+            angle = "ekonomi_explainer"
+            default_theme = "dark_mode"
+        elif preset == "casual":
+            language = "bahasa"
+            tone = "santai_gaul"
+            angle = "story_personal"
+            default_theme = "sunset_gradient"
+        elif preset == "professional":
+            language = "bahasa"
+            tone = "profesional"
+            angle = "story_personal"
+            default_theme = "minimal_light"
         else:
-            bg_style = f"background-color: {bg_color};"
-    else:
-        bg_style = f"background-color: {bg_color};"
+            default_theme = "dark_mode"
+            language = None
+            tone = None
+            angle = None
 
-    html = f"""
-    <div style="{bg_style} padding: 15px; border-radius: 8px; text-align: center; margin: 5px 0;">
-        <span style="color: {text_color}; font-weight: bold;">Aa</span>
-        <span style="background-color: {accent_color}; color: {bg_color}; padding: 2px 6px; border-radius: 3px; margin-left: 8px;">Key</span>
-    </div>
-    """
-    st.markdown(html, unsafe_allow_html=True)
+        # Custom settings expander
+        if preset == "custom":
+            with st.expander("Language & Tone", expanded=True):
+                language = st.selectbox(
+                    "Language",
+                    ["bahasa", "english", "mixed"],
+                    index=0
+                )
+
+                all_tones = get_available_tones()
+                available_tones = all_tones.get(language, [])
+                if available_tones:
+                    default_idx = available_tones.index("santai_gaul") if "santai_gaul" in available_tones else 0
+                    tone = st.selectbox("Tone", available_tones, index=default_idx)
+                else:
+                    tone = "santai_gaul"
+                    st.caption("No tones found")
+
+                available_angles = get_available_angles()
+                if available_angles:
+                    default_idx = available_angles.index("story_personal") if "story_personal" in available_angles else 0
+                    angle = st.selectbox("Content Angle", available_angles, index=default_idx)
+                else:
+                    angle = "story_personal"
+
+        st.markdown('<hr style="border: none; border-top: 1px solid #E2E8F0; margin: 1.5rem 0;">', unsafe_allow_html=True)
+
+        # Theme Selection
+        st.markdown('<h3 style="color: #64748B; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin: 1.5rem 0 0.75rem 0;">Visual Theme</h3>', unsafe_allow_html=True)
+
+        theme_info = get_theme_info()
+        theme_names = list(theme_info.keys())
+
+        default_theme_idx = theme_names.index(default_theme) if default_theme in theme_names else 0
+
+        theme = st.selectbox(
+            "Choose Theme",
+            theme_names,
+            index=default_theme_idx,
+            format_func=lambda x: theme_info[x]["label"]
+        )
+
+        # Theme preview
+        colors = theme_info[theme]["colors"]
+        is_gradient = "gradient" in theme
+
+        if is_gradient:
+            gradient_map = {
+                "ocean_gradient": "linear-gradient(135deg, #1a2980, #26d0ce)",
+                "sunset_gradient": "linear-gradient(135deg, #ee9ca7, #ffdde1)",
+                "dark_gradient": "linear-gradient(135deg, #0f0c29, #302b63)"
+            }
+            bg_style = gradient_map.get(theme, f"background-color: {colors['bg']}")
+        else:
+            bg_style = f"background-color: {colors['bg']}"
+
+        st.markdown(f"""
+        <div style="{bg_style}; padding: 1rem; border-radius: 8px; text-align: center; margin: 0.5rem 0;">
+            <span style="color: {colors['text']}; font-weight: 600;">Aa</span>
+            <span style="background-color: {colors['accent']}; color: {colors['bg']}; padding: 2px 8px; border-radius: 4px; margin-left: 8px; font-size: 0.875rem;">Key</span>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown(f'<p style="color: #64748B; font-size: 0.875rem; margin-top: 0.5rem;">{theme_info[theme]["description"]}</p>', unsafe_allow_html=True)
+
+        st.markdown('<hr style="border: none; border-top: 1px solid #E2E8F0; margin: 1.5rem 0;">', unsafe_allow_html=True)
+
+        # Generation Options
+        st.markdown('<h3 style="color: #64748B; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin: 1.5rem 0 0.75rem 0;">Generation</h3>', unsafe_allow_html=True)
+
+        with st.expander("Output Options", expanded=False):
+            versions = st.slider("Content Versions", 1, 3, 1)
+
+            use_highlighting = st.checkbox(
+                "AI Keyword Highlighting",
+                value=True,
+                help="Automatically highlight important words"
+            )
+
+            use_images = st.checkbox(
+                "Contextual Images",
+                value=check_pexels_api_key(),
+                disabled=not check_pexels_api_key(),
+                help="Add contextual stock photos"
+            )
+
+            if not check_pexels_api_key():
+                st.caption("Add PEXELS_API_KEY for images")
+
+            skip_humanizer = st.checkbox("Skip humanization", value=False)
+            output_name = st.text_input("Output folder", value="carousel")
+
+        st.markdown('<hr style="border: none; border-top: 1px solid #E2E8F0; margin: 1.5rem 0;">', unsafe_allow_html=True)
+
+        # Display Options
+        st.markdown('<h3 style="color: #64748B; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin: 1.5rem 0 0.75rem 0;">Display</h3>', unsafe_allow_html=True)
+
+        with st.expander("Slide Settings", expanded=False):
+            show_logo = st.checkbox("Show Logo", value=False)
+            logo_path = None
+            if show_logo:
+                default_logo = Path("assets/logo.png")
+                if default_logo.exists():
+                    st.caption("Using: assets/logo.png")
+                    logo_path = str(default_logo)
+                else:
+                    st.caption("Add logo.png to assets/")
+                    show_logo = False
+
+            show_slide_indicator = st.checkbox("Slide Indicators", value=False)
+
+            use_memes = st.checkbox(
+                "Include Memes",
+                value=True,
+                help="Auto-add memes based on content"
+            )
+
+            if use_memes:
+                # Meme generation mode selection
+                meme_mode = st.radio(
+                    "Meme Generation",
+                    ["AI Original", "Template Match"],
+                    index=0,
+                    help="AI Original: Creates unique memes with AI\nTemplate Match: Uses existing meme templates",
+                    horizontal=True
+                )
+
+                use_ai_memes = meme_mode == "AI Original"
+
+                if use_ai_memes:
+                    st.caption("AI will find perfect images from the web")
+
+                    # Content type selector
+                    content_type_mode = st.radio(
+                        "Content Type",
+                        ["Auto-detect", "News Photos", "Meme/Reaction"],
+                        index=0,
+                        help="Auto-detect: AI decides based on keywords\nNews Photos: Force news agency sources\nMeme/Reaction: Force reaction images",
+                        horizontal=True
+                    )
+
+                    # Map to internal content_type value
+                    if content_type_mode == "News Photos":
+                        content_type_override = "news"
+                        st.caption("Sources: Reuters, AP, Getty, Bing news")
+                    elif content_type_mode == "Meme/Reaction":
+                        content_type_override = "emotional"
+                        st.caption("Sources: Google, Bing, Imgur")
+                    else:
+                        content_type_override = None
+                        st.caption("AI will detect: news vs emotional content")
+
+                    # Keep these for compatibility but they're not used by Smart Curator
+                    meme_style = "dark_minimal"
+                    meme_language = "en"
+                else:
+                    content_type_override = None
+                    meme_style = "dark_minimal"
+                    meme_language = "en"
+                    st.caption("Using meme template matching")
+            else:
+                use_ai_memes = False
+                content_type_override = None
+                meme_style = "dark_minimal"
+                meme_language = "en"
+                st.info("Text-only mode enabled")
+
+        st.markdown('<hr style="border: none; border-top: 1px solid #E2E8F0; margin: 1.5rem 0;">', unsafe_allow_html=True)
+
+        # System Status
+        st.markdown('<h3 style="color: #64748B; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin: 1.5rem 0 0.75rem 0;">Status</h3>', unsafe_allow_html=True)
+
+        col1, col2 = st.columns(2)
+        with col1:
+            if PLAYWRIGHT_AVAILABLE:
+                st.markdown(render_status_badge("success", "Renderer"), unsafe_allow_html=True)
+            else:
+                st.markdown(render_status_badge("error", "Renderer"), unsafe_allow_html=True)
+
+        with col2:
+            if check_api_key():
+                st.markdown(render_status_badge("success", "API Key"), unsafe_allow_html=True)
+            else:
+                st.markdown(render_status_badge("error", "API Key"), unsafe_allow_html=True)
+
+        # Footer
+        st.markdown("""
+        <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #E2E8F0; text-align: center;">
+            <div style="font-size: 0.75rem; color: #94A3B8;">Powered by DeepSeek AI</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    return {
+        "preset": preset,
+        "language": language,
+        "tone": tone,
+        "angle": angle,
+        "theme": theme,
+        "versions": versions if preset == "custom" else 1,
+        "use_highlighting": use_highlighting if preset == "custom" else True,
+        "use_images": use_images if preset == "custom" else check_pexels_api_key(),
+        "skip_humanizer": skip_humanizer if preset == "custom" else False,
+        "output_name": output_name if preset == "custom" else "carousel",
+        "show_logo": show_logo if preset == "custom" else False,
+        "logo_path": logo_path if preset == "custom" else None,
+        "show_slide_indicator": show_slide_indicator if preset == "custom" else False,
+        "use_memes": use_memes if preset == "custom" else True,
+        "use_ai_memes": use_ai_memes if preset == "custom" else True,
+        "content_type_override": content_type_override if preset == "custom" else None,
+        "meme_style": meme_style if preset == "custom" else "dark_minimal",
+        "meme_language": meme_language if preset == "custom" else "en",
+    }
 
 
 def main():
-    # Header
-    st.title("🎨 Meme Content Studio v2.0")
-    st.markdown("Create **ready-to-post** Instagram carousels with AI-powered HTML templates")
-
-    # Show Playwright status
-    if not PLAYWRIGHT_AVAILABLE:
-        st.warning("""
-        **Playwright not installed!** The new rendering system requires Playwright.
-
-        Install with:
-        ```bash
-        pip install playwright
-        playwright install chromium
-        ```
-        """)
-
-    # Check API key
+    # Check API key first
     if not check_api_key():
+        render_header()
         st.error("DeepSeek API key not found!")
-        st.markdown("""
-        Please set your API key:
-        1. Create a `.env` file in the project root
-        2. Add: `DEEPSEEK_API_KEY=your_key_here`
-        3. Get your key from: https://platform.deepseek.com/
-        """)
 
-        api_key = st.text_input("Or enter your DeepSeek API key here:", type="password")
+        st.markdown("""
+        <div class="card" style="max-width: 500px; margin: 2rem auto;">
+            <h3 style="margin-bottom: 1rem;">Setup Required</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 1rem;">To use Content Studio, you need a DeepSeek API key.</p>
+            <ol style="color: var(--text-secondary); padding-left: 1.5rem;">
+                <li>Create a <code>.env</code> file in the project root</li>
+                <li>Add: <code>DEEPSEEK_API_KEY=your_key_here</code></li>
+                <li>Get your key from <a href="https://platform.deepseek.com/" target="_blank">platform.deepseek.com</a></li>
+            </ol>
+        </div>
+        """, unsafe_allow_html=True)
+
+        api_key = st.text_input("Or enter your API key here:", type="password")
         if api_key:
             os.environ["DEEPSEEK_API_KEY"] = api_key
             st.success("API key set for this session!")
             st.rerun()
         return
 
-    # Sidebar for settings
-    with st.sidebar:
-        st.header("⚙️ Settings")
-
-        # Quick Preset Selection
-        st.subheader("Quick Presets")
-        preset = st.selectbox(
-            "Style Preset",
-            ["Custom", "The Economic Influence", "Casual Story", "Professional"],
-            index=0,
-            help="Quick presets for different content styles"
-        )
-
-        # Apply preset settings
-        if preset == "The Economic Influence":
-            language = "bahasa"
-            tone = "ekonomi_edgy"
-            angle = "ekonomi_explainer"
-            default_theme = "dark"
-            st.success("Economics style loaded!")
-            st.caption("Dark, edgy, meme-integrated economics content")
-        elif preset == "Casual Story":
-            language = "bahasa"
-            tone = "santai_gaul"
-            angle = "story_personal"
-            default_theme = "gradient_sunset"
-        elif preset == "Professional":
-            language = "bahasa"
-            tone = "profesional"
-            angle = "story_personal"
-            default_theme = "minimal"
-        else:
-            # Custom settings
-            st.divider()
-
-            # Language selection
-            language = st.selectbox(
-                "Language",
-                ["bahasa", "english", "mixed"],
-                index=0,
-                help="Choose the output language"
-            )
-
-            # Get tones for selected language
-            all_tones = get_available_tones()
-            available_tones = all_tones.get(language, [])
-
-            if available_tones:
-                default_idx = 0
-                if "santai_gaul" in available_tones:
-                    default_idx = available_tones.index("santai_gaul")
-                tone = st.selectbox(
-                    "Tone",
-                    available_tones,
-                    index=default_idx,
-                    help="Choose the writing tone"
-                )
-            else:
-                tone = "santai_gaul"
-                st.warning(f"No tones found for {language}")
-
-            # Angle selection
-            available_angles = get_available_angles()
-            if available_angles:
-                default_idx = 0
-                if "story_personal" in available_angles:
-                    default_idx = available_angles.index("story_personal")
-                angle = st.selectbox(
-                    "Content Angle",
-                    available_angles,
-                    index=default_idx,
-                    help="Choose the content structure"
-                )
-            else:
-                angle = "story_personal"
-                st.warning("No angles found")
-
-            default_theme = "dark"
-
-        st.divider()
-
-        # Theme Selection with Previews
-        st.subheader("🎨 Visual Theme")
-
-        theme_info = get_theme_info()
-        theme_names = list(theme_info.keys())
-
-        # Map old theme names to new ones
-        theme_name_map = {
-            "dark": "dark_mode",
-            "minimal": "minimal_light",
-            "gradient_blue": "ocean_gradient",
-            "gradient_sunset": "sunset_gradient",
-        }
-        default_theme = theme_name_map.get(default_theme, default_theme)
-
-        # Find default theme index
-        default_theme_idx = 0
-        if default_theme in theme_names:
-            default_theme_idx = theme_names.index(default_theme)
-
-        theme = st.selectbox(
-            "Theme",
-            theme_names,
-            index=default_theme_idx,
-            format_func=lambda x: theme_info.get(x, {}).get("label", x),
-            help="Choose the visual style for your slides"
-        )
-
-        # Show theme preview
-        render_theme_preview(theme)
-
-        # Theme description
-        theme_desc = theme_info.get(theme, {}).get("description", "")
-        st.caption(theme_desc)
-
-        st.divider()
-
-        # Generation Options
-        st.subheader("Generation Options")
-
-        # Number of versions
-        versions = st.slider("Content Versions", 1, 3, 1, help="Number of content variations to generate")
-
-        # AI Highlighting
-        use_highlighting = st.checkbox(
-            "AI Keyword Highlighting",
-            value=True,
-            help="Automatically highlight important words"
-        )
-
-        # Contextual Images
-        use_images = st.checkbox(
-            "Contextual Images",
-            value=check_pexels_api_key(),
-            disabled=not check_pexels_api_key(),
-            help="Add contextual stock photos (requires Pexels API key)"
-        )
-
-        if not check_pexels_api_key():
-            st.caption("Add PEXELS_API_KEY to .env for stock photos")
-
-        # Skip humanizer
-        skip_humanizer = st.checkbox("Skip humanization check", value=False)
-
-        # Output name
-        output_name = st.text_input("Output folder name", value="carousel")
-
-        st.divider()
-
-        # Meme Library Management
-        st.subheader("🎭 Meme Library")
-
-        from app.meme_scraper import MemeScraper
-        scraper = MemeScraper()
-        status = scraper.get_all_memes_status()
-        total_memes = len(status)
-        available_memes = sum(1 for info in status.values() if info['exists'])
-
-        st.caption(f"{available_memes}/{total_memes} memes available")
-
-        col1, col2 = st.columns(2)
-        with col1:
-            if st.button("🔄 Refresh Memes", help="Download missing or outdated memes"):
-                with st.spinner("Updating meme library..."):
-                    results = scraper.auto_update_library(max_age_days=30)
-                    updated = sum(1 for s in results.values() if s == "updated")
-                    failed = sum(1 for s in results.values() if s == "failed")
-
-                    if updated > 0:
-                        st.success(f"Updated {updated} memes!")
-                    if failed > 0:
-                        st.warning(f"Failed to update {failed} memes")
-                    st.rerun()
-
-        with col2:
-            if st.button("📊 View Status", help="Show detailed meme library status"):
-                st.session_state.show_meme_status = not st.session_state.get('show_meme_status', False)
-
-        if st.session_state.get('show_meme_status', False):
-            st.caption("Meme Library Status:")
-            for meme_name, info in status.items():
-                status_icon = "✅" if info['exists'] else "❌"
-                st.caption(f"{status_icon} {meme_name}")
-
-        st.divider()
-
-        # Slide Display Options
-        st.subheader("Slide Display")
-
-        # Logo option
-        show_logo = st.checkbox(
-            "Show Logo",
-            value=False,
-            help="Add your logo to slides"
-        )
-
-        logo_path = None
-        if show_logo:
-            # Check for default logo
-            default_logo = Path("assets/logo.png")
-            if default_logo.exists():
-                st.caption(f"Using: assets/logo.png")
-                logo_path = str(default_logo)
-            else:
-                st.caption("Add logo.png to assets/ folder")
-                show_logo = False
-
-        # Slide indicators
-        show_slide_indicator = st.checkbox(
-            "Slide Indicator Dots",
-            value=False,
-            help="Show position dots (● ○ ○)"
-        )
-
-        # Meme integration toggle
-        use_memes = st.checkbox(
-            "Include Memes",
-            value=True,
-            help="Auto-add memes to slides based on content. Uncheck for text-only slides."
-        )
-
-        if not use_memes:
-            st.info("ℹ️ Text-only mode enabled - No memes will be added to slides")
-        else:
-            # Dynamic meme info
-            st.caption("🌐 Memes fetched dynamically from internet based on content analysis")
-
-        st.divider()
-        st.caption("Powered by DeepSeek AI")
+    # Render sidebar and get settings
+    settings = render_sidebar()
 
     # Main content area
-    col1, col2 = st.columns([1, 1])
+    render_header()
+
+    # Show Playwright warning if needed
+    if not PLAYWRIGHT_AVAILABLE:
+        st.warning("""
+        **Playwright not installed!** Install with:
+        ```bash
+        pip install playwright && playwright install chromium
+        ```
+        """)
+
+    # Two-column layout
+    col1, col2 = st.columns([1, 1.2], gap="large")
 
     with col1:
-        st.header("📝 Your Content Idea")
+        # Input Card
+        st.markdown("""
+        <div style="margin-bottom: 0.5rem;">
+            <span style="font-size: 1.125rem; font-weight: 600; color: #1E293B;">Content Input</span>
+        </div>
+        """, unsafe_allow_html=True)
 
-        # Dynamic placeholder based on preset
-        if preset == "The Economic Influence":
-            placeholder_text = "Example: Kenapa gaji kita stuck tapi harga rumah naik terus? Ini breakdown-nya yang jarang orang tau..."
+        # Dynamic placeholder
+        if settings["preset"] == "economic":
+            placeholder = "Example: Kenapa gaji kita stuck tapi harga rumah naik terus? Ini breakdown-nya yang jarang orang tau..."
         else:
-            placeholder_text = "Example: I used to wake up at 5am thinking it made me productive. It just made me tired. Here's what actually worked for me..."
+            placeholder = "Example: I used to wake up at 5am thinking it made me productive. It just made me tired. Here's what actually worked..."
 
-        # Content input
         content = st.text_area(
-            "Enter your rough idea for the carousel:",
-            height=200,
-            placeholder=placeholder_text,
-            help="Be specific! Include personal details for best results."
+            "Your content idea",
+            height=180,
+            placeholder=placeholder,
+            help="Be specific! Include personal details for best results.",
+            label_visibility="collapsed"
         )
 
-        # Tips - dynamic based on preset
-        with st.expander("💡 Tips for better results"):
-            if preset == "The Economic Influence":
+        # Tips Section
+        with st.expander("Tips for better results"):
+            if settings["preset"] == "economic":
                 st.markdown("""
-                **Economics Content Tips:**
-
                 **Hook Ideas:**
-                - Data yang shocking: "10 orang Indonesia = 50 juta rakyat termiskin"
+                - Shocking data: "10 orang Indonesia = 50 juta rakyat termiskin"
                 - Relatable pain: "Gaji naik 5%, inflasi 6%. Congrats, lu makin miskin."
-                - Controversial take: "Subsidi BBM itu regresif. Here's why."
-
-                **Content Pillars:**
-                - Macro economics (inflasi, GDP, resesi)
-                - Personal finance reality (gaji vs biaya hidup)
-                - Wealth inequality (oligarki, wealth gap)
-                - Government policy criticism
 
                 **Style:**
                 - Mix Bahasa + English naturally
                 - Include data/statistics
                 - Be sarcastic but substantive
-                - Always reveal the "system"
                 """)
             else:
                 st.markdown("""
-                **Be specific in your input:**
+                **Be specific:**
                 - Bad: "content about productivity"
-                - Good: "I used to wake up at 5am thinking it made me productive. It just made me tired."
+                - Good: "I used to wake up at 5am thinking it made me productive..."
 
-                **Match tone to audience:**
-                - Casual audience → `santai_gaul`
-                - Professional audience → `profesional`
-                - International audience → `casual_friendly`
-
-                **Choose the right angle:**
-                - Personal story → `story_personal`
-                - Controversial opinion → `hot_take`
-                - Educational value → `tips_listicle`
+                **Match your audience:**
+                - Casual → `santai_gaul`
+                - Professional → `profesional`
                 """)
 
-        # Generate button
+        # Generate Button
         generate_button = st.button(
-            "🚀 Generate Carousel",
+            "Generate Carousel",
             type="primary",
-            disabled=not content.strip()
+            disabled=not content.strip(),
+            use_container_width=True
         )
 
+        # Current settings display
+        # Determine meme status text
+        if settings['use_memes']:
+            meme_status = "AI Original" if settings['use_ai_memes'] else "Template"
+        else:
+            meme_status = "Off"
+
+        st.markdown(f"""
+        <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 1rem; margin-top: 1rem;">
+            <div style="font-size: 0.75rem; color: #64748B; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem;">Current Settings</div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                <div>
+                    <div style="font-size: 0.75rem; color: #64748B; margin-bottom: 0.25rem;">Theme</div>
+                    <div style="font-size: 0.875rem; color: #1E293B; font-weight: 500;">{settings['theme'].replace('_', ' ').title()}</div>
+                </div>
+                <div>
+                    <div style="font-size: 0.75rem; color: #64748B; margin-bottom: 0.25rem;">Language</div>
+                    <div style="font-size: 0.875rem; color: #1E293B; font-weight: 500;">{settings['language'] or 'Auto'}</div>
+                </div>
+                <div>
+                    <div style="font-size: 0.75rem; color: #64748B; margin-bottom: 0.25rem;">Memes</div>
+                    <div style="font-size: 0.875rem; color: #1E293B; font-weight: 500;">{meme_status}</div>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
     with col2:
-        st.header("🖼️ Output Preview")
+        # Output Preview
+        st.markdown("""
+        <div style="margin-bottom: 0.5rem;">
+            <span style="font-size: 1.125rem; font-weight: 600; color: #1E293B;">Output Preview</span>
+        </div>
+        """, unsafe_allow_html=True)
 
         if generate_button and content.strip():
             try:
@@ -518,277 +566,196 @@ def main():
                 from app.rewriter import ContentRewriter
                 from app.humanizer import Humanizer
                 from app.caption_generator import CaptionGenerator
-                from app.meme_search_agent import MemeSearchAgent
                 from app.slide_generator import SlideGenerator
 
-                # Step 1: Rewrite content
-                with st.status("Creating your carousel...", expanded=True) as status:
-                    st.write("✍️ Rewriting content with professional copywriter brain...")
+                # Progress container
+                progress_container = st.container()
 
-                    rewriter = ContentRewriter()
-                    content_versions = rewriter.rewrite_content(
-                        rough_idea=content,
-                        tone=tone,
-                        language=language,
-                        angle=angle,
-                        versions=versions
-                    )
+                with progress_container:
+                    with st.status("Creating your carousel...", expanded=True) as status:
+                        # Step 1: Rewrite
+                        st.write("Writing content with AI copywriter...")
+                        rewriter = ContentRewriter()
+                        content_versions = rewriter.rewrite_content(
+                            rough_idea=content,
+                            tone=settings["tone"] or "santai_gaul",
+                            language=settings["language"] or "bahasa",
+                            angle=settings["angle"] or "story_personal",
+                            versions=settings["versions"]
+                        )
+                        st.write(f"✓ Generated {len(content_versions)} version(s)")
 
-                    st.write(f"✅ Generated {len(content_versions)} version(s)")
+                        selected_version = content_versions[0]
+                        slides = selected_version['slides']
 
-                    # Get slides from first version
-                    selected_version = content_versions[0]
-                    slides = selected_version['slides']
+                        # Step 2: Humanization
+                        if not settings["skip_humanizer"]:
+                            st.write("Checking authenticity...")
+                            humanizer = Humanizer()
+                            needs_improvement = []
+                            for i, slide in enumerate(slides):
+                                score = humanizer.calculate_human_score(slide)
+                                if not score["passes_threshold"]:
+                                    needs_improvement.append((i, slide, score))
 
-                    # Step 2: Humanization check
-                    if not skip_humanizer:
-                        st.write("🔍 Running humanization check...")
-                        humanizer = Humanizer()
+                            if needs_improvement:
+                                st.write(f"Humanizing {len(needs_improvement)} slide(s)...")
+                                humanized_results = humanizer.batch_humanize_slides(slides)
+                                slides = [result["humanized"] for result in humanized_results]
+                            st.write("✓ Content sounds human")
 
-                        needs_improvement = []
-                        for i, slide in enumerate(slides):
-                            score = humanizer.calculate_human_score(slide)
-                            if not score["passes_threshold"]:
-                                needs_improvement.append((i, slide, score))
-
-                        if needs_improvement:
-                            st.write(f"⚠️ {len(needs_improvement)} slide(s) need humanization")
-                            st.write("🔧 Humanizing content...")
-
-                            humanized_results = humanizer.batch_humanize_slides(slides)
-                            slides = [result["humanized"] for result in humanized_results]
-
-                            st.write("✅ Humanization complete")
+                        # Step 3: Meme settings
+                        meme_results = None
+                        if settings["use_memes"]:
+                            if settings["use_ai_memes"]:
+                                st.write("Smart Image Curator - AI searching the web for perfect visuals...")
+                            else:
+                                st.write("Preparing meme template matching...")
+                            meme_results = {"use_dynamic": True}
                         else:
-                            st.write("✅ All slides sound human!")
+                            st.write("Text-only mode")
 
-                    # Step 3: Prepare meme settings (dynamic fetching happens during generation)
-                    meme_results = None
-                    if use_memes:
-                        st.write("🎭 Memes enabled - will fetch fresh memes dynamically...")
-                        # Just pass a flag dict to trigger dynamic fetching
-                        meme_results = {"use_dynamic": True}
-                    else:
-                        st.write("⏭️ Memes disabled - creating text-only slides")
+                        # Step 4: Images
+                        image_assignments = None
+                        if settings["use_images"] and check_pexels_api_key():
+                            st.write("Finding contextual images...")
+                            try:
+                                from app.image_search import ContentImageMatcher
+                                matcher = ContentImageMatcher()
+                                image_assignments = matcher.get_images_for_slides(slides, meme_results)
+                                images_found = sum(1 for a in image_assignments if a.get('has_image'))
+                                st.write(f"✓ Found {images_found} images")
+                            except Exception as e:
+                                st.write(f"Warning: Images skipped: {e}")
 
-                    # Step 4: Get contextual images (if enabled)
-                    image_assignments = None
-                    if use_images and check_pexels_api_key():
-                        st.write("🖼️ Finding contextual images...")
-                        try:
-                            from app.image_search import ContentImageMatcher
-                            matcher = ContentImageMatcher()
-                            image_assignments = matcher.get_images_for_slides(slides, meme_results)
-                            images_found = sum(1 for a in image_assignments if a.get('has_image'))
-                            st.write(f"✅ Found {images_found} contextual images")
-                        except Exception as e:
-                            st.write(f"⚠️ Image search skipped: {e}")
+                        # Step 5: Highlights
+                        highlight_data = None
+                        if settings["use_highlighting"]:
+                            st.write("Identifying keywords...")
+                            try:
+                                highlight_data = rewriter.get_slides_with_highlights(slides)
+                                total_highlights = sum(len(h.get('highlights', [])) for h in highlight_data)
+                                st.write(f"✓ Found {total_highlights} keywords")
+                            except Exception as e:
+                                st.write(f"Warning: Highlights skipped: {e}")
 
-                    # Step 5: Extract highlights (if enabled)
-                    highlight_data = None
-                    if use_highlighting:
-                        st.write("✨ Identifying key words to highlight...")
-                        try:
-                            highlight_data = rewriter.get_slides_with_highlights(slides)
-                            total_highlights = sum(len(h.get('highlights', [])) for h in highlight_data)
-                            st.write(f"✅ Found {total_highlights} keywords to highlight")
-                        except Exception as e:
-                            st.write(f"⚠️ Highlighting skipped: {e}")
+                        # Step 6: Caption
+                        st.write("Generating captions...")
+                        caption_gen = CaptionGenerator()
+                        captions = caption_gen.generate_caption(
+                            slides=slides,
+                            tone=settings["tone"] or "santai_gaul",
+                            language=settings["language"] or "bahasa",
+                            versions=2
+                        )
+                        st.write(f"✓ Generated {len(captions)} caption(s)")
 
-                    # Step 6: Generate caption
-                    st.write("💬 Generating Instagram caption...")
-                    caption_gen = CaptionGenerator()
-                    captions = caption_gen.generate_caption(
-                        slides=slides,
-                        tone=tone,
-                        language=language,
-                        versions=2
-                    )
+                        # Step 7: Render slides
+                        st.write(f"Rendering slides ({settings['theme']})...")
+                        slide_gen = SlideGenerator(theme=settings["theme"])
 
-                    st.write(f"✅ Generated {len(captions)} caption variation(s)")
+                        topic_hint = None
+                        if settings["tone"] in ["ekonomi_edgy", "profesional"] or settings["preset"] == "economic":
+                            topic_hint = "finance"
 
-                    # Step 7: Generate slide images (with dynamic meme fetching)
-                    st.write(f"🎨 Generating slide images ({theme} theme)...")
-                    if use_memes:
-                        st.write("🌐 Fetching fresh memes from internet...")
-                    slide_gen = SlideGenerator(theme=theme)
+                        images, saved_paths = slide_gen.generate_carousel(
+                            slides=slides,
+                            meme_recommendations=meme_results,
+                            image_assignments=image_assignments,
+                            highlight_data=highlight_data,
+                            project_name=settings["output_name"],
+                            show_logo=settings["show_logo"],
+                            logo_path=settings["logo_path"],
+                            show_slide_indicator=settings["show_slide_indicator"],
+                            use_dynamic_memes=settings["use_memes"] and not settings["use_ai_memes"],
+                            topic_hint=topic_hint,
+                            use_ai_meme_agent=settings["use_memes"] and settings["use_ai_memes"],
+                            content_type_override=settings["content_type_override"],
+                            meme_style=settings["meme_style"],
+                            meme_language=settings["meme_language"]
+                        )
+                        st.write(f"✓ Created {len(images)} slides")
 
-                    # Determine topic hint from preset/tone
-                    topic_hint = None
-                    if tone in ["ekonomi_edgy", "profesional"]:
-                        topic_hint = "finance"
-                    elif preset == "The Economic Influence":
-                        topic_hint = "finance"
+                        status.update(label="✓ Carousel ready!", state="complete", expanded=False)
 
-                    images, saved_paths = slide_gen.generate_carousel(
-                        slides=slides,
-                        meme_recommendations=meme_results,
-                        image_assignments=image_assignments,
-                        highlight_data=highlight_data,
-                        project_name=output_name,
-                        show_logo=show_logo,
-                        logo_path=logo_path,
-                        show_slide_indicator=show_slide_indicator,
-                        use_dynamic_memes=use_memes,
-                        topic_hint=topic_hint
-                    )
-                    st.write(f"✅ Created {len(images)} slide images")
-
-                    status.update(label="✅ Carousel created!", state="complete", expanded=False)
-
-                # Store results in session state
-                st.session_state['meme_results'] = meme_results
+                # Store results
                 st.session_state['generated_images'] = images
                 st.session_state['saved_paths'] = saved_paths
                 st.session_state['captions'] = captions
                 st.session_state['slides'] = slides
                 st.session_state['selected_version'] = selected_version
                 st.session_state['slide_gen'] = slide_gen
+                st.session_state['meme_results'] = meme_results
 
-                # Display results
-                st.success("🎉 Your carousel is ready!")
+                # Success message
+                st.success("Your carousel is ready!")
 
-                # Engagement Optimization Display
-                if selected_version.get('engagement_optimization'):
-                    eng_opt = selected_version['engagement_optimization']
-                    st.subheader("📈 Viral Optimization")
-
-                    col_a, col_b, col_c = st.columns(3)
-                    with col_a:
-                        target = eng_opt.get('primary_target', 'N/A')
-                        st.metric("Target", target)
-                    with col_b:
-                        hook = eng_opt.get('hook_type', 'N/A')
-                        st.metric("Hook Type", hook)
-                    with col_c:
-                        triggers = eng_opt.get('triggers', [])
-                        st.metric("Triggers", len(triggers))
-
-                    if triggers:
-                        st.caption(f"**Psychological Triggers:** {', '.join(triggers)}")
-                    if eng_opt.get('performance_reason'):
-                        st.info(f"**Why it will perform:** {eng_opt['performance_reason']}")
-
-                # Slide Images Preview
-                st.subheader("📱 Slide Images")
-
-                # Download All button
+                # Download button
                 zip_data = create_zip_download(images, captions)
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
                 st.download_button(
-                    label="📥 Download All (ZIP)",
+                    label="Download All (ZIP)",
                     data=zip_data,
-                    file_name=f"{output_name}_{timestamp}.zip",
-                    mime="application/zip"
+                    file_name=f"{settings['output_name']}_{timestamp}.zip",
+                    mime="application/zip",
+                    use_container_width=True
                 )
 
-                # Image tabs
-                slide_tabs = st.tabs([f"Slide {i+1}" for i in range(len(images))])
+                # Engagement metrics
+                if selected_version.get('engagement_optimization'):
+                    eng_opt = selected_version['engagement_optimization']
+                    st.markdown("#### Viral Optimization")
+
+                    metric_cols = st.columns(3)
+                    with metric_cols[0]:
+                        st.metric("Target", eng_opt.get('primary_target', 'N/A'))
+                    with metric_cols[1]:
+                        st.metric("Hook", eng_opt.get('hook_type', 'N/A'))
+                    with metric_cols[2]:
+                        st.metric("Triggers", len(eng_opt.get('triggers', [])))
+
+                # Slide tabs
+                st.markdown("#### Slides")
+                slide_tabs = st.tabs([f"#{i+1}" for i in range(len(images))])
 
                 for i, (tab, img) in enumerate(zip(slide_tabs, images)):
                     with tab:
-                        # Display image
-                        st.image(img)
+                        st.image(img, use_container_width=True)
 
-                        # Individual download button
-                        img_bytes = slide_gen.get_image_bytes(img)
-                        st.download_button(
-                            label=f"📥 Download Slide {i+1}",
-                            data=img_bytes,
-                            file_name=f"slide_{i+1:02d}.png",
-                            mime="image/png",
-                            key=f"download_slide_{i}"
-                        )
-
-                        # Show slide text and meme info
-                        col_text, col_meme = st.columns([2, 1])
-                        with col_text:
-                            with st.expander("📝 Slide Text"):
+                        col_a, col_b = st.columns([3, 1])
+                        with col_a:
+                            with st.expander("View text"):
                                 st.text(slides[i])
-                        with col_meme:
-                            # Show meme assignment if any
-                            if meme_results and meme_results.get('available_memes'):
-                                for meme in meme_results['available_memes']:
-                                    if meme.get('slide_num') == i + 1:
-                                        st.success(f"🎭 {meme.get('filename', 'meme')}")
-                                        break
+                        with col_b:
+                            img_bytes = slide_gen.get_image_bytes(img)
+                            st.download_button(
+                                label="Download",
+                                data=img_bytes,
+                                file_name=f"slide_{i+1:02d}.png",
+                                mime="image/png",
+                                key=f"dl_{i}"
+                            )
 
                 # Captions
-                st.subheader("💬 Caption Options")
+                st.markdown("#### Captions")
                 for idx, cap_data in enumerate(captions):
                     strategy = cap_data.get("strategy", f"Version {idx+1}")
                     caption = cap_data.get("caption", "")
-                    hashtags = " ".join(cap_data.get("hashtags", []))
+                    hashtags = cap_data.get("hashtags", [])
 
-                    with st.expander(f"Caption: {strategy}", expanded=(idx == 0)):
+                    with st.expander(f"{strategy}", expanded=(idx == 0)):
                         st.text_area(
                             "Caption",
                             value=caption,
-                            height=150,
-                            key=f"caption_{idx}"
+                            height=120,
+                            key=f"cap_{idx}",
+                            label_visibility="collapsed"
                         )
                         if hashtags:
-                            st.text_input("Hashtags", value=hashtags, key=f"hashtags_{idx}")
+                            st.caption(" ".join(hashtags))
 
-                        # Copy button
-                        full_caption = f"{caption}\n\n{hashtags}" if hashtags else caption
-                        st.code(full_caption, language=None)
-
-                # Hook alternatives
-                if selected_version.get('hook_alternatives'):
-                    st.subheader("🎣 Hook Alternatives")
-                    for i, alt in enumerate(selected_version['hook_alternatives'][:3]):
-                        st.markdown(f"**Option {i+1}:** {alt}")
-
-                # Meme Recommendations Section
-                if 'meme_results' in st.session_state and st.session_state['meme_results']:
-                    meme_results = st.session_state['meme_results']
-
-                    st.subheader("🎭 Meme Recommendations")
-
-                    # Available memes
-                    if meme_results.get('available_memes'):
-                        st.markdown("**✅ Available in your library:**")
-                        for meme in meme_results['available_memes']:
-                            st.success(f"Slide {meme['slide_num']}: `{meme['filename']}` - {meme['reason']}")
-
-                    # Missing memes
-                    if meme_results.get('missing_memes'):
-                        st.markdown("**📥 Need to download:**")
-                        for meme in meme_results['missing_memes']:
-                            with st.expander(f"Slide {meme['slide_num']}: {meme['meme_name']}", expanded=False):
-                                st.markdown(f"**Save as:** `{meme['suggested_filename']}`")
-                                st.markdown(f"**Why:** {meme['reason']}")
-                                st.markdown(f"**Search:** {', '.join(meme.get('search_keywords', []))}")
-
-                                # Show suggested metadata
-                                if meme.get('suggested_metadata'):
-                                    meta = meme['suggested_metadata']
-                                    st.markdown(f"**Emotions:** {', '.join(meta.get('emotions', []))}")
-                                    st.markdown(f"**Best for:** {', '.join(meta.get('best_for', []))}")
-
-                                st.markdown("---")
-                                st.markdown("**Quick download links:**")
-                                search_query = meme['meme_name'].replace(' ', '+') + '+meme+template'
-                                st.markdown(f"- [Google Images](https://www.google.com/search?tbm=isch&q={search_query})")
-                                st.markdown(f"- [Know Your Meme](https://knowyourmeme.com/search?q={search_query})")
-                                st.markdown(f"- [Imgflip](https://imgflip.com/memesearch?q={meme['meme_name'].replace(' ', '%20')})")
-
-                    # Show analysis details
-                    with st.expander("📊 Full Meme Analysis", expanded=False):
-                        for analysis in meme_results.get('analysis', []):
-                            slide_num = analysis.get('slide_num', '?')
-                            emotion = analysis.get('emotional_beat', 'N/A')
-                            needs_meme = analysis.get('needs_meme', False)
-                            suggestion = analysis.get('meme_suggestion', 'None')
-
-                            if needs_meme:
-                                st.markdown(f"**Slide {slide_num}:** {emotion} → `{suggestion}`")
-                            else:
-                                st.markdown(f"**Slide {slide_num}:** {emotion} → *Text only recommended*")
-
-                # Store in session state
+                # Store result
                 st.session_state['last_result'] = {
                     'slides': slides,
                     'captions': captions,
@@ -803,43 +770,45 @@ def main():
         elif 'last_result' in st.session_state:
             # Show previous result
             result = st.session_state['last_result']
-            st.info("Showing previous result. Enter new content and click Generate to create a new carousel.")
+            st.info("Previous result shown. Enter new content to regenerate.")
 
-            # Show previous images if available
             if 'images' in result and result['images']:
                 images = result['images']
-                slide_tabs = st.tabs([f"Slide {i+1}" for i in range(len(images))])
-
+                slide_tabs = st.tabs([f"#{i+1}" for i in range(len(images))])
                 for i, (tab, img) in enumerate(zip(slide_tabs, images)):
                     with tab:
-                        st.image(img)
-            else:
-                # Fallback to text-only display
-                slides = result['slides']
-                slide_tabs = st.tabs([f"Slide {i+1}" for i in range(len(slides))])
-
-                for i, (tab, slide) in enumerate(zip(slide_tabs, slides)):
-                    with tab:
-                        st.markdown(f"**{'Hook' if i == 0 else f'Slide {i+1}'}**")
-                        st.info(slide)
+                        st.image(img, use_container_width=True)
         else:
-            st.info("Enter your content idea and click **Generate Carousel** to get started!")
+            # Empty state
+            render_empty_state()
+            render_feature_grid()
 
-            # Show system status
-            if PLAYWRIGHT_AVAILABLE:
-                st.success("Playwright rendering ready")
-            else:
-                st.error("Playwright not installed - rendering unavailable")
-
-            # Show theme previews
-            st.subheader("🎨 Available Themes")
-            theme_cols = st.columns(3)
+            # Theme previews
+            st.markdown("#### Available Themes")
             theme_info = get_theme_info()
+            theme_cols = st.columns(4)
 
-            for i, (theme_key, theme_data) in enumerate(list(theme_info.items())[:6]):
-                with theme_cols[i % 3]:
-                    st.caption(theme_data["label"])
-                    render_theme_preview(theme_key)
+            for i, (theme_key, theme_data) in enumerate(list(theme_info.items())[:4]):
+                with theme_cols[i]:
+                    colors = theme_data["colors"]
+                    is_gradient = "gradient" in theme_key
+
+                    if is_gradient:
+                        gradient_map = {
+                            "ocean_gradient": "linear-gradient(135deg, #1a2980, #26d0ce)",
+                            "sunset_gradient": "linear-gradient(135deg, #ee9ca7, #ffdde1)",
+                            "dark_gradient": "linear-gradient(135deg, #0f0c29, #302b63)"
+                        }
+                        bg_style = gradient_map.get(theme_key, f"background-color: {colors['bg']}")
+                    else:
+                        bg_style = f"background-color: {colors['bg']}"
+
+                    st.markdown(f"""
+                    <div style="{bg_style}; padding: 1.5rem; border-radius: 8px; text-align: center; margin-bottom: 0.5rem;">
+                        <span style="color: {colors['text']}; font-weight: 600;">Aa</span>
+                    </div>
+                    <div style="font-size: 0.75rem; text-align: center; color: #64748B;">{theme_data['label']}</div>
+                    """, unsafe_allow_html=True)
 
 
 if __name__ == "__main__":
