@@ -529,11 +529,11 @@ def render_sidebar():
         "show_logo": show_logo if preset == "custom" else False,
         "logo_path": logo_path if preset == "custom" else None,
         "show_slide_indicator": show_slide_indicator if preset == "custom" else False,
-        "use_memes": use_memes if preset == "custom" else True,
-        "use_ai_memes": use_ai_memes if preset == "custom" else True,
-        "content_type_override": content_type_override if preset == "custom" else None,
-        "meme_style": meme_style if preset == "custom" else "dark_minimal",
-        "meme_language": meme_language if preset == "custom" else "en",
+        "use_memes": use_memes,  # Always respect user's checkbox regardless of preset
+        "use_ai_memes": use_ai_memes if use_memes else False,
+        "content_type_override": content_type_override if use_memes else None,
+        "meme_style": meme_style if use_memes else "dark_minimal",
+        "meme_language": meme_language if use_memes else "en",
     }
 
 
