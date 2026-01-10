@@ -338,6 +338,116 @@ Be VERY specific with proper names and locations."""
             "avoid_keywords": ["meme", "cartoon"]
         }
 
+    def analyze_entertainment_for_visuals(self, text: str, topic: str = None, content_type: str = "meme_reaction") -> Dict:
+        """
+        AI analysis for ENTERTAINMENT content (movies, memes, cartoons).
+
+        Creates search queries optimized for finding:
+        - Movie/TV scenes that match the emotional context
+        - Popular memes and reaction images
+        - Cartoons and illustrations
+        """
+        is_indonesian = self._detect_indonesian(text)
+
+        # Define content-specific instructions
+        if content_type == "movie_scene":
+            content_instruction = """
+FIND: Iconic movie or TV show scenes that match the emotion/situation.
+THINK: "What famous movie scene captures this feeling?"
+EXAMPLES:
+- Frustration/disappointment → "The Office Jim stare at camera"
+- Realization/shock → "Inception spinning top scene"
+- Victory/success → "Wolf of Wall Street celebration"
+- Confusion → "Pulp Fiction confused Travolta"
+SEARCH TERMS: Include "movie scene", "film still", character names"""
+
+        elif content_type == "cartoon":
+            content_instruction = """
+FIND: Cartoons, illustrations, or animated content that match the emotion.
+THINK: "What cartoon character or scene shows this feeling?"
+EXAMPLES:
+- Thinking hard → "thinking cartoon character"
+- Stressed → "stressed cartoon illustration"
+- Happy → "celebration cartoon"
+- Confused → "question marks cartoon"
+SEARCH TERMS: Include "cartoon", "illustration", "animated", avoid real photos"""
+
+        else:  # meme_reaction (default)
+            content_instruction = """
+FIND: Popular memes and reaction images that match the emotion.
+THINK: "What meme template perfectly captures this feeling?"
+EXAMPLES:
+- Realization → "Galaxy brain meme", "Wait it's all meme"
+- Disappointment → "Disappointed cricket fan", "Sad Pablo Escobar"
+- Success → "Success kid meme", "Stonks meme"
+- Confusion → "Confused math lady", "Nick Young question marks"
+SEARCH TERMS: Include "meme", "reaction", specific meme names"""
+
+        prompt = f"""You are an expert at finding the PERFECT meme/movie/cartoon to match content.
+
+TEXT: "{text}"
+TOPIC: {topic or "general"}
+LANGUAGE: {"Indonesian" if is_indonesian else "English"}
+CONTENT TYPE: {content_type.upper()}
+
+{content_instruction}
+
+YOUR JOB:
+1. Understand the EMOTION and SITUATION in the text
+2. Think of SPECIFIC {content_type.replace('_', ' ')}s that match this feeling
+3. Create search queries using SPECIFIC names/titles when possible
+
+IMPORTANT:
+- Be SPECIFIC - "confused Travolta Pulp Fiction" NOT "confused person"
+- Reference ACTUAL popular {content_type.replace('_', ' ')}s by name
+- If Indonesian content, translate the emotion to universal references
+
+Return ONLY a JSON object:
+{{
+    "emotional_context": "the emotion/situation described",
+    "content_match": "specific {content_type.replace('_', ' ')} that matches",
+    "search_query": "specific search with names/titles",
+    "backup_queries": [
+        "alternative specific search 1",
+        "alternative specific search 2",
+        "generic fallback search"
+    ],
+    "mood": "one word emotion"
+}}"""
+
+        try:
+            response = self.ai_client.chat(
+                messages=[{"role": "user", "content": prompt}],
+                max_tokens=400,
+                temperature=0.7
+            )
+
+            import json
+            json_match = re.search(r'\{.*\}', response, re.DOTALL)
+            if json_match:
+                analysis = json.loads(json_match.group())
+                logger.info(f"Content match: {analysis.get('content_match', 'N/A')}")
+                logger.info(f"Search: {analysis.get('search_query', 'N/A')}")
+                return analysis
+
+        except Exception as e:
+            logger.warning(f"Entertainment analysis failed: {e}")
+
+        # Fallback based on content type
+        fallback_queries = {
+            "movie_scene": ["iconic movie scene reaction", "famous film still emotion"],
+            "meme_reaction": ["popular reaction meme", "viral meme template"],
+            "cartoon": ["cartoon character reaction", "illustration emotion"]
+        }
+
+        return {
+            "emotional_context": "general emotion",
+            "content_match": f"generic {content_type.replace('_', ' ')}",
+            "search_query": fallback_queries.get(content_type, ["reaction image"])[0],
+            "backup_queries": fallback_queries.get(content_type, ["reaction image"]),
+            "mood": "neutral"
+        }
+
     def scrape_google_images(self, query: str, limit: int = 10) -> List[str]:
         """
         Scrape image URLs from Google Images.
@@ -680,12 +790,15 @@ Be VERY specific with proper names and locations."""
         if not content_type:
             content_type = self._detect_content_type(text, topic)
 
-        logger.info(f"Content type detected: {content_type.upper()}")
+        logger.info(f"Content type: {content_type.upper()}")
 
-        # Step 2: Route to appropriate analysis method
+        # Step 2: Route to appropriate analysis method based on content type
         if content_type == "news":
             analysis = self.analyze_news_for_visuals(text, topic)
-        else:  # emotional/meme content
+        elif content_type in ["movie_scene", "meme_reaction", "cartoon"]:
+            # NEW: Specialized analysis for entertainment content
+            analysis = self.analyze_entertainment_for_visuals(text, topic, content_type)
+        else:  # emotional/meme content (default)
             analysis = self.analyze_content_for_visuals(text, topic)
 
         logger.info(f"Search query: {analysis['search_query']}")
@@ -708,8 +821,36 @@ Be VERY specific with proper names and locations."""
             bing_urls = self.scrape_bing_images(f"{analysis['search_query']} news photo", limit=5)
             all_urls.extend([(url, 'bing') for url in bing_urls])
 
+        elif content_type == "movie_scene":
+            # MOVIE/TV SOURCES: Search for iconic scenes
+            bing_urls = self.scrape_bing_images(f"{analysis['search_query']} movie scene", limit=max_results)
+            all_urls.extend([(url, 'bing') for url in bing_urls])
+
+            google_urls = self.scrape_google_images(f"{analysis['search_query']} film scene screenshot", limit=max_results)
+            all_urls.extend([(url, 'google') for url in google_urls])
+
+        elif content_type == "meme_reaction":
+            # MEME/REACTION SOURCES: Search for popular memes
+            bing_urls = self.scrape_bing_images(f"{analysis['search_query']} meme reaction", limit=max_results)
+            all_urls.extend([(url, 'bing') for url in bing_urls])
+
+            google_urls = self.scrape_google_images(f"{analysis['search_query']} reaction meme", limit=max_results)
+            all_urls.extend([(url, 'google') for url in google_urls])
+
+            # Also try imgur for memes
+            imgur_urls = self.scrape_imgur_images(analysis['search_query'], limit=5)
+            all_urls.extend([(url, 'imgur') for url in imgur_urls])
+
+        elif content_type == "cartoon":
+            # CARTOON/ILLUSTRATION SOURCES
+            bing_urls = self.scrape_bing_images(f"{analysis['search_query']} cartoon illustration", limit=max_results)
+            all_urls.extend([(url, 'bing') for url in bing_urls])
+
+            google_urls = self.scrape_google_images(f"{analysis['search_query']} animated cartoon", limit=max_results)
+            all_urls.extend([(url, 'google') for url in google_urls])
+
         else:
-            # EMOTIONAL SOURCES: Bing, Google (existing)
+            # DEFAULT: EMOTIONAL SOURCES: Bing, Google (existing)
             bing_urls = self.scrape_bing_images(analysis['search_query'], limit=max_results)
             all_urls.extend([(url, 'bing') for url in bing_urls])
 

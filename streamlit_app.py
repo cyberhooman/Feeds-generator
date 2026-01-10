@@ -406,72 +406,47 @@ def render_sidebar():
 
             show_slide_indicator = st.checkbox("Slide Indicators", value=False)
 
+            # Text-only is default (more professional)
             use_memes = st.checkbox(
-                "Include Pictures",
-                value=True,
-                help="Auto-add contextual images to your slides"
+                "Add Visual Images",
+                value=False,  # DEFAULT: Text-only for professional look
+                help="Add memes, cartoons, or movie scenes to slides (text-only is more professional)"
             )
 
             if use_memes:
-                # Picture source selection
+                st.caption("💡 Pro tip: Text-only carousels often perform better!")
+
+                # Picture source selection - Only meme/cartoon/movie options
                 picture_mode = st.radio(
-                    "Picture Source",
-                    ["AI Web Search", "Stock Photos (Pexels)", "Meme Templates"],
+                    "Image Style",
+                    ["🎬 Movie/TV Scenes", "😂 Memes & Reactions", "🎨 Cartoons & Illustrations"],
                     index=0,
-                    help="AI Web Search: AI finds relevant images from the web\nStock Photos: Professional stock photos from Pexels\nMeme Templates: Use existing meme templates",
+                    help="Choose the style of images to include",
                     horizontal=False
                 )
 
-                if picture_mode == "AI Web Search":
-                    use_ai_memes = True
-                    st.caption("AI will intelligently search the web for perfect images")
+                use_ai_memes = True  # Always use AI search for these
+                meme_style = "dark_minimal"
+                meme_language = "en"
 
-                    # Content type selector
-                    content_type_mode = st.radio(
-                        "Image Type",
-                        ["Auto-detect", "News/Documentary Photos", "Reaction/Meme Images"],
-                        index=0,
-                        help="Auto-detect: AI decides based on your content\nNews Photos: Professional news photography\nReaction Images: Memes and reaction images",
-                        horizontal=False
-                    )
+                if picture_mode == "🎬 Movie/TV Scenes":
+                    content_type_override = "movie_scene"
+                    st.caption("Sources: Movie stills, TV show scenes, iconic moments")
 
-                    # Map to internal content_type value
-                    if content_type_mode == "News/Documentary Photos":
-                        content_type_override = "news"
-                        st.caption("📰 Sources: Reuters, AP, Getty, Bing News")
-                    elif content_type_mode == "Reaction/Meme Images":
-                        content_type_override = "emotional"
-                        st.caption("😄 Sources: Google Images, Bing, Imgur")
-                    else:
-                        content_type_override = None
-                        st.caption("🤖 AI will automatically detect the best image type")
+                elif picture_mode == "😂 Memes & Reactions":
+                    content_type_override = "meme_reaction"
+                    st.caption("Sources: Popular memes, reaction images, viral moments")
 
-                    meme_style = "dark_minimal"
-                    meme_language = "en"
+                else:  # Cartoons & Illustrations
+                    content_type_override = "cartoon"
+                    st.caption("Sources: Cartoons, illustrations, animated content")
 
-                elif picture_mode == "Stock Photos (Pexels)":
-                    use_ai_memes = False
-                    content_type_override = None
-                    meme_style = "dark_minimal"
-                    meme_language = "en"
-                    if check_pexels_api_key():
-                        st.caption("📸 Using Pexels stock photos")
-                    else:
-                        st.warning("⚠️ Add PEXELS_API_KEY to .env to use stock photos")
-                        use_memes = False
-
-                else:  # Meme Templates
-                    use_ai_memes = False
-                    content_type_override = None
-                    meme_style = "dark_minimal"
-                    meme_language = "en"
-                    st.caption("🎭 Using classic meme template matching")
             else:
                 use_ai_memes = False
                 content_type_override = None
                 meme_style = "dark_minimal"
                 meme_language = "en"
-                st.info("📝 Text-only mode (no images)")
+                st.info("✨ Text-only mode - Clean, professional look!")
 
         st.markdown('<hr style="border: none; border-top: 1px solid #E2E8F0; margin: 1.5rem 0;">', unsafe_allow_html=True)
 
