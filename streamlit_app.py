@@ -353,60 +353,71 @@ def render_sidebar():
             show_slide_indicator = st.checkbox("Slide Indicators", value=False)
 
             use_memes = st.checkbox(
-                "Include Memes",
+                "Include Pictures",
                 value=True,
-                help="Auto-add memes based on content"
+                help="Auto-add contextual images to your slides"
             )
 
             if use_memes:
-                # Meme generation mode selection
-                meme_mode = st.radio(
-                    "Meme Generation",
-                    ["AI Original", "Template Match"],
+                # Picture source selection
+                picture_mode = st.radio(
+                    "Picture Source",
+                    ["AI Web Search", "Stock Photos (Pexels)", "Meme Templates"],
                     index=0,
-                    help="AI Original: Creates unique memes with AI\nTemplate Match: Uses existing meme templates",
-                    horizontal=True
+                    help="AI Web Search: AI finds relevant images from the web\nStock Photos: Professional stock photos from Pexels\nMeme Templates: Use existing meme templates",
+                    horizontal=False
                 )
 
-                use_ai_memes = meme_mode == "AI Original"
-
-                if use_ai_memes:
-                    st.caption("AI will find perfect images from the web")
+                if picture_mode == "AI Web Search":
+                    use_ai_memes = True
+                    st.caption("AI will intelligently search the web for perfect images")
 
                     # Content type selector
                     content_type_mode = st.radio(
-                        "Content Type",
-                        ["Auto-detect", "News Photos", "Meme/Reaction"],
+                        "Image Type",
+                        ["Auto-detect", "News/Documentary Photos", "Reaction/Meme Images"],
                         index=0,
-                        help="Auto-detect: AI decides based on keywords\nNews Photos: Force news agency sources\nMeme/Reaction: Force reaction images",
-                        horizontal=True
+                        help="Auto-detect: AI decides based on your content\nNews Photos: Professional news photography\nReaction Images: Memes and reaction images",
+                        horizontal=False
                     )
 
                     # Map to internal content_type value
-                    if content_type_mode == "News Photos":
+                    if content_type_mode == "News/Documentary Photos":
                         content_type_override = "news"
-                        st.caption("Sources: Reuters, AP, Getty, Bing news")
-                    elif content_type_mode == "Meme/Reaction":
+                        st.caption("📰 Sources: Reuters, AP, Getty, Bing News")
+                    elif content_type_mode == "Reaction/Meme Images":
                         content_type_override = "emotional"
-                        st.caption("Sources: Google, Bing, Imgur")
+                        st.caption("😄 Sources: Google Images, Bing, Imgur")
                     else:
                         content_type_override = None
-                        st.caption("AI will detect: news vs emotional content")
+                        st.caption("🤖 AI will automatically detect the best image type")
 
-                    # Keep these for compatibility but they're not used by Smart Curator
                     meme_style = "dark_minimal"
                     meme_language = "en"
-                else:
+
+                elif picture_mode == "Stock Photos (Pexels)":
+                    use_ai_memes = False
                     content_type_override = None
                     meme_style = "dark_minimal"
                     meme_language = "en"
-                    st.caption("Using meme template matching")
+                    if check_pexels_api_key():
+                        st.caption("📸 Using Pexels stock photos")
+                    else:
+                        st.warning("⚠️ Add PEXELS_API_KEY to .env to use stock photos")
+                        use_memes = False
+
+                else:  # Meme Templates
+                    use_ai_memes = False
+                    content_type_override = None
+                    meme_style = "dark_minimal"
+                    meme_language = "en"
+                    st.caption("🎭 Using classic meme template matching")
             else:
                 use_ai_memes = False
                 content_type_override = None
                 meme_style = "dark_minimal"
                 meme_language = "en"
-                st.info("Text-only mode enabled")
+                st.info("📝 Text-only mode (no images)")
 
         st.markdown('<hr style="border: none; border-top: 1px solid #E2E8F0; margin: 1.5rem 0;">', unsafe_allow_html=True)
 
@@ -623,11 +634,14 @@ def main():
         )
 
         # Current settings display
-        # Determine meme status text
+        # Determine picture status text
         if settings['use_memes']:
-            meme_status = "AI Original" if settings['use_ai_memes'] else "Template"
+            if settings['use_ai_memes']:
+                picture_status = "AI Search"
+            else:
+                picture_status = "Stock/Templates"
         else:
-            meme_status = "Off"
+            picture_status = "Text Only"
 
         st.markdown(f"""
         <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 1rem; margin-top: 1rem;">
@@ -642,8 +656,8 @@ def main():
                     <div style="font-size: 0.875rem; color: #1E293B; font-weight: 500;">{settings['language'] or 'Auto'}</div>
                 </div>
                 <div>
-                    <div style="font-size: 0.75rem; color: #64748B; margin-bottom: 0.25rem;">Memes</div>
-                    <div style="font-size: 0.875rem; color: #1E293B; font-weight: 500;">{meme_status}</div>
+                    <div style="font-size: 0.75rem; color: #64748B; margin-bottom: 0.25rem;">Pictures</div>
+                    <div style="font-size: 0.875rem; color: #1E293B; font-weight: 500;">{picture_status}</div>
                 </div>
             </div>
         </div>
