@@ -241,21 +241,75 @@ def render_sidebar():
                     index=0
                 )
 
-                all_tones = get_available_tones()
-                available_tones = all_tones.get(language, [])
-                if available_tones:
-                    default_idx = available_tones.index("santai_gaul") if "santai_gaul" in available_tones else 0
-                    tone = st.selectbox("Tone", available_tones, index=default_idx)
-                else:
-                    tone = "santai_gaul"
-                    st.caption("No tones found")
+                # Tone selection with manual input option
+                st.markdown("**Tone**")
+                tone_mode = st.radio(
+                    "Tone Input Mode",
+                    ["Select from presets", "Write custom tone"],
+                    index=0,
+                    label_visibility="collapsed",
+                    horizontal=True,
+                    key="tone_mode"
+                )
 
-                available_angles = get_available_angles()
-                if available_angles:
-                    default_idx = available_angles.index("story_personal") if "story_personal" in available_angles else 0
-                    angle = st.selectbox("Content Angle", available_angles, index=default_idx)
+                if tone_mode == "Select from presets":
+                    all_tones = get_available_tones()
+                    available_tones = all_tones.get(language, [])
+                    if available_tones:
+                        default_idx = available_tones.index("santai_gaul") if "santai_gaul" in available_tones else 0
+                        tone = st.selectbox(
+                            "Select Tone",
+                            available_tones,
+                            index=default_idx,
+                            label_visibility="collapsed"
+                        )
+                    else:
+                        tone = "santai_gaul"
+                        st.caption("⚠️ No preset tones found")
                 else:
-                    angle = "story_personal"
+                    tone = st.text_input(
+                        "Custom Tone",
+                        value="professional, friendly, informative",
+                        placeholder="e.g., casual, witty, educational",
+                        help="Describe the tone/voice you want (e.g., 'sarcastic but helpful', 'warm and empathetic')",
+                        label_visibility="collapsed"
+                    )
+
+                st.markdown("---")
+
+                # Content Angle selection with manual input option
+                st.markdown("**Content Angle**")
+                angle_mode = st.radio(
+                    "Angle Input Mode",
+                    ["Select from presets", "Write custom angle"],
+                    index=0,
+                    label_visibility="collapsed",
+                    horizontal=True,
+                    key="angle_mode"
+                )
+
+                if angle_mode == "Select from presets":
+                    available_angles = get_available_angles()
+                    if available_angles:
+                        default_idx = available_angles.index("story_personal") if "story_personal" in available_angles else 0
+                        angle = st.selectbox(
+                            "Select Angle",
+                            available_angles,
+                            index=default_idx,
+                            label_visibility="collapsed"
+                        )
+                    else:
+                        angle = "story_personal"
+                        st.caption("⚠️ No preset angles found")
+                else:
+                    angle = st.text_area(
+                        "Custom Content Angle",
+                        value="Tell a personal story with lessons learned",
+                        placeholder="e.g., 'Start with a mistake, then show the solution', 'Controversial take with data backing'",
+                        help="Describe the content structure/approach you want",
+                        height=80,
+                        label_visibility="collapsed"
+                    )
 
         st.markdown('<hr style="border: none; border-top: 1px solid #E2E8F0; margin: 1.5rem 0;">', unsafe_allow_html=True)
 

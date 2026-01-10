@@ -347,6 +347,32 @@ def inject_custom_css():
         overflow-x: hidden !important;
     }
 
+    /* Fix dropdown arrow overlapping with text */
+    [data-testid="stSidebar"] [data-baseweb="select"] {
+        position: relative !important;
+    }
+
+    [data-testid="stSidebar"] [data-baseweb="select"] > div {
+        padding-right: 2.5rem !important; /* Extra space for arrow */
+    }
+
+    /* Position dropdown arrow properly */
+    [data-testid="stSidebar"] [data-baseweb="select"] svg {
+        position: absolute !important;
+        right: 0.75rem !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        pointer-events: none !important;
+    }
+
+    /* Ensure text doesn't overlap with arrow */
+    [data-testid="stSidebar"] [data-baseweb="select"] [data-baseweb="select-value"] {
+        max-width: calc(100% - 2rem) !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+
     /* Sidebar text elements - prevent overlap */
     [data-testid="stSidebar"] label {
         display: block !important;
