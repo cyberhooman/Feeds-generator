@@ -427,6 +427,47 @@ def render_sidebar():
         else:
             st.markdown(render_status_badge("error", "API Key"), unsafe_allow_html=True)
 
+        # Draft History Section
+        st.markdown('<hr style="border: none; border-top: 1px solid #E2E8F0; margin: 1.5rem 0;">', unsafe_allow_html=True)
+        st.markdown('<h3 style="color: #71717A; font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin: 1.5rem 0 0.75rem 0;">Draft History</h3>', unsafe_allow_html=True)
+
+        # Initialize draft history in session state
+        if 'draft_history' not in st.session_state:
+            st.session_state.draft_history = []
+
+        # Show save current draft button
+        if st.session_state.get('content_draft', '').strip():
+            if st.button("💾 Save Current Draft", use_container_width=True, help="Save draft to history"):
+                timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
+                preview = st.session_state.content_draft[:50] + "..." if len(st.session_state.content_draft) > 50 else st.session_state.content_draft
+                st.session_state.draft_history.insert(0, {
+                    'content': st.session_state.content_draft,
+                    'timestamp': timestamp,
+                    'preview': preview
+                })
+                # Keep only last 5 drafts
+                st.session_state.draft_history = st.session_state.draft_history[:5]
+                st.success("Draft saved!")
+                st.rerun()
+
+        # Display saved drafts
+        if st.session_state.draft_history:
+            for idx, draft in enumerate(st.session_state.draft_history):
+                with st.expander(f"📝 {draft['timestamp']}", expanded=False):
+                    st.caption(draft['preview'])
+                    col_load, col_del = st.columns([3, 1])
+                    with col_load:
+                        if st.button("Load", key=f"load_draft_{idx}", use_container_width=True):
+                            st.session_state.content_draft = draft['content']
+                            st.success("Draft loaded!")
+                            st.rerun()
+                    with col_del:
+                        if st.button("🗑️", key=f"del_draft_{idx}", help="Delete this draft"):
+                            st.session_state.draft_history.pop(idx)
+                            st.rerun()
+        else:
+            st.caption("No saved drafts yet")
+
         # Footer
         st.markdown("""
         <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #E2E8F0; text-align: center;">
@@ -507,6 +548,10 @@ def main():
         </div>
         """, unsafe_allow_html=True)
 
+        # Auto-save: Initialize draft from session state
+        if 'content_draft' not in st.session_state:
+            st.session_state.content_draft = ""
+
         # Dynamic placeholder
         if settings["preset"] == "economic":
             placeholder = "Example: Kenapa gaji kita stuck tapi harga rumah naik terus? Ini breakdown-nya yang jarang orang tau..."
@@ -515,11 +560,35 @@ def main():
 
         content = st.text_area(
             "Your content idea",
+            value=st.session_state.content_draft,
             height=180,
             placeholder=placeholder,
-            help="Be specific! Include personal details for best results.",
-            label_visibility="collapsed"
+            help="Be specific! Include personal details for best results. ✨ Auto-saved!",
+            label_visibility="collapsed",
+            key="content_input"
         )
+
+        # Auto-save: Update session state when content changes
+        if content != st.session_state.content_draft:
+            st.session_state.content_draft = content
+
+        # Auto-save indicator & Clear button
+        if content.strip():
+            col_save, col_clear = st.columns([3, 1])
+            with col_save:
+                st.markdown("""
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <circle cx="6" cy="6" r="5" fill="#10B981"/>
+                        <path d="M3.5 6L5.5 8L8.5 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span style="font-size: 0.75rem; color: #10B981; font-weight: 500;">Draft auto-saved</span>
+                </div>
+                """, unsafe_allow_html=True)
+            with col_clear:
+                if st.button("🗑️ Clear", key="clear_draft", help="Clear your draft"):
+                    st.session_state.content_draft = ""
+                    st.rerun()
 
         # Tips Section
         with st.expander("Tips for better results"):
