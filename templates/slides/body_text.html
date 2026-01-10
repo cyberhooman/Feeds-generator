@@ -2,66 +2,108 @@
 
 {% block extra_styles %}
 <style>
-    .body-content {
+    /* ============================================
+       PREMIUM TEXT-ONLY SLIDE - Million Follower Quality
+       ============================================ */
+
+    .premium-text-content {
         display: flex;
         flex-direction: column;
         justify-content: center;
-        align-items: center;
+        align-items: flex-start;
         height: 100%;
-        max-height: 1200px;
-        padding: 100px 70px;
-        text-align: center;
+        padding: 100px 90px;
+        text-align: left;
         overflow: hidden;
+    }
+
+    /* Centered variant */
+    .premium-text-content.centered {
+        align-items: center;
+        text-align: center;
     }
 
     .body-text {
-        font-size: clamp(28px, 4vw, 46px);
-        font-weight: 600;
-        line-height: 1.45;
+        font-size: 48px;
+        font-weight: 700;
+        line-height: 1.35;
         color: var(--text-primary);
-        letter-spacing: -0.01em;
-        max-width: 920px;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        letter-spacing: -0.025em;
+        max-width: 100%;
     }
 
-    /* Adjust font size based on text length */
+    /* Adaptive font sizing based on content length */
+    .body-text.compact {
+        font-size: 56px;
+        line-height: 1.25;
+    }
+
+    .body-text.medium {
+        font-size: 46px;
+        line-height: 1.35;
+    }
+
     .body-text.long {
-        font-size: clamp(24px, 3.5vw, 40px);
+        font-size: 40px;
+        line-height: 1.4;
     }
 
     .body-text.very-long {
-        font-size: clamp(22px, 3vw, 36px);
-        line-height: 1.5;
+        font-size: 34px;
+        line-height: 1.45;
+    }
+
+    /* Premium highlight styling */
+    .highlight {
+        background: var(--highlight-bg, #FFD93D);
+        color: var(--highlight-text, #000);
+        padding: 8px 18px;
+        border-radius: 8px;
+        display: inline;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
+        font-weight: 800;
+        box-shadow: 0 4px 15px rgba(255, 217, 61, 0.3);
     }
 
     /* Slide number badge */
     .slide-badge {
         position: absolute;
-        top: 50px;
-        right: 50px;
-        font-size: 16px;
-        font-weight: 600;
+        top: 45px;
+        right: 55px;
+        font-size: 14px;
+        font-weight: 700;
         color: var(--text-secondary);
-        opacity: 0.6;
+        opacity: 0.35;
+        letter-spacing: 0.1em;
     }
 
-    /* Quote styling for specific content */
+    /* Quote styling for testimonials/quotes */
     .body-text.quote {
         font-style: italic;
         position: relative;
-        padding-left: 30px;
+        padding-left: 40px;
     }
 
     .body-text.quote::before {
         content: '"';
-        font-size: 120px;
+        font-size: 140px;
         position: absolute;
-        left: -20px;
-        top: -40px;
-        color: var(--accent);
-        opacity: 0.3;
+        left: -25px;
+        top: -50px;
+        color: var(--highlight-bg, #FFD93D);
+        opacity: 0.4;
         font-family: Georgia, serif;
+        font-weight: 700;
+    }
+
+    /* Decorative accent line */
+    .accent-line {
+        width: 60px;
+        height: 4px;
+        background: var(--highlight-bg, #FFD93D);
+        border-radius: 2px;
+        margin-bottom: 40px;
     }
 </style>
 {% endblock %}
@@ -71,7 +113,7 @@
 <div class="slide-badge">{{ slide_number }}/{{ total_slides }}</div>
 {% endif %}
 
-<div class="body-content">
+<div class="premium-text-content {{ 'centered' if text_align == 'center' else '' }}">
     <p class="body-text {{ text_size_class|default('') }} {{ 'quote' if is_quote else '' }}">
         {{ formatted_text|safe }}
     </p>

@@ -2,166 +2,209 @@
 
 {% block extra_styles %}
 <style>
-    .split-content {
+    /* ============================================
+       PREMIUM LAYOUT - Million Follower Quality
+       ============================================ */
+
+    .premium-layout {
         display: flex;
-        flex-direction: {{ 'column' if meme_position == 'bottom' else 'column-reverse' if meme_position == 'top' else 'row' }};
+        flex-direction: column;
         height: 100%;
-        padding: 50px;
-        gap: 30px;
+        padding: 0;
         box-sizing: border-box;
     }
 
-    /* Horizontal layout (meme left/right) */
-    .split-content.horizontal {
+    /* === TEXT-FIRST LAYOUT (Image at bottom, takes ~55% of space) === */
+    .premium-layout.text-first {
+        padding: 80px 80px 50px 80px;
+    }
+
+    .premium-layout.text-first .text-section {
+        flex: 0 0 auto;
+        margin-bottom: 50px;
+    }
+
+    .premium-layout.text-first .image-section {
+        flex: 1;
+        min-height: 450px;
+    }
+
+    /* === IMAGE-FIRST LAYOUT (Image at top, ~60% space) === */
+    .premium-layout.image-first {
+        padding: 50px 80px 80px 80px;
+    }
+
+    .premium-layout.image-first .image-section {
+        flex: 1;
+        min-height: 500px;
+        margin-bottom: 50px;
+    }
+
+    .premium-layout.image-first .text-section {
+        flex: 0 0 auto;
+    }
+
+    /* === SIDE-BY-SIDE LAYOUT (50/50 split) === */
+    .premium-layout.side-by-side {
         flex-direction: row;
+        padding: 80px;
+        gap: 60px;
         align-items: center;
     }
 
-    .split-content.horizontal .text-section {
+    .premium-layout.side-by-side .text-section {
         flex: 1;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        max-height: 100%;
-        overflow: hidden;
     }
 
-    .split-content.horizontal .meme-section {
+    .premium-layout.side-by-side .image-section {
         flex: 1;
+        height: 100%;
         display: flex;
         align-items: center;
-        justify-content: center;
-        max-height: 100%;
     }
 
-    /* Vertical layout (meme top/bottom) - MEME DOMINANT */
-    .split-content.vertical {
-        flex-direction: column;
+    /* === FULL BLEED IMAGE (Image covers entire slide) === */
+    .premium-layout.full-bleed {
+        padding: 0;
+        position: relative;
     }
 
-    .split-content.vertical.meme-top {
-        flex-direction: column;
+    .premium-layout.full-bleed .image-section {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
     }
 
-    .split-content.vertical.meme-bottom {
-        flex-direction: column;
+    .premium-layout.full-bleed .image-section::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+            180deg,
+            rgba(0, 0, 0, 0.6) 0%,
+            rgba(0, 0, 0, 0.2) 35%,
+            rgba(0, 0, 0, 0.2) 65%,
+            rgba(0, 0, 0, 0.75) 100%
+        );
+        z-index: 2;
     }
 
-    /* Ratio-based sizing - BALANCED (50/50) */
-    .split-content.vertical.ratio-50-50 .text-section {
-        flex: 1 1 50%;
-        min-height: 0;
-        max-height: 50%;
-    }
-
-    .split-content.vertical.ratio-50-50 .meme-section {
-        flex: 1 1 50%;
-        min-height: 0;
-        max-height: 50%;
-    }
-
-    /* Ratio-based sizing - TEXT PRIORITY (60/40) */
-    .split-content.vertical.ratio-60-40 .text-section {
-        flex: 1 1 60%;
-        min-height: 0;
-        max-height: 60%;
-    }
-
-    .split-content.vertical.ratio-60-40 .meme-section {
-        flex: 1 1 40%;
-        min-height: 0;
-        max-height: 40%;
-    }
-
-    /* Ratio-based sizing - VISUAL PRIORITY (40/60) */
-    .split-content.vertical.ratio-40-60 .text-section {
-        flex: 1 1 40%;
-        min-height: 0;
-        max-height: 40%;
-    }
-
-    .split-content.vertical.ratio-40-60 .meme-section {
-        flex: 1 1 60%;
-        min-height: 0;
-        max-height: 60%;
-    }
-
-    /* Both sections need proper overflow handling */
-    .split-content.vertical .text-section {
+    .premium-layout.full-bleed .text-section {
+        position: relative;
+        z-index: 10;
+        height: 100%;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        padding: 30px 40px;
-        overflow: hidden;
+        padding: 100px;
     }
 
-    .split-content.vertical .meme-section {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-        padding: 20px;
+    .premium-layout.full-bleed .body-text {
+        color: #FFFFFF !important;
+        text-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
     }
 
-    /* Body text - responsive sizing with more generous sizes */
+    .premium-layout.full-bleed .highlight {
+        background: rgba(255, 217, 61, 0.95);
+        color: #000;
+        text-shadow: none;
+    }
+
+    /* === PREMIUM TEXT STYLING === */
     .body-text {
-        font-size: clamp(26px, 3.5vw, 42px);
-        font-weight: 600;
-        line-height: 1.4;
+        font-size: 46px;
+        font-weight: 700;
+        line-height: 1.35;
         color: var(--text-primary);
-        text-align: {{ text_align|default('center') }};
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 8;
-        -webkit-box-orient: vertical;
+        text-align: left;
+        letter-spacing: -0.025em;
     }
 
-    .body-text.small {
-        font-size: clamp(24px, 3.2vw, 38px);
+    /* Adaptive text sizing */
+    .body-text.compact {
+        font-size: 52px;
+        line-height: 1.25;
+    }
+
+    .body-text.medium {
+        font-size: 44px;
+        line-height: 1.35;
     }
 
     .body-text.long {
-        font-size: clamp(22px, 3vw, 34px);
-        -webkit-line-clamp: 10;
+        font-size: 38px;
+        line-height: 1.4;
     }
 
     .body-text.very-long {
-        font-size: clamp(20px, 2.8vw, 30px);
-        line-height: 1.35;
-        -webkit-line-clamp: 12;
+        font-size: 34px;
+        line-height: 1.45;
     }
 
-    /* Meme container - NO CLIPPING */
-    .meme-container {
+    /* === PREMIUM IMAGE CONTAINER === */
+    .image-container {
         width: 100%;
         height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-radius: 16px;
+        border-radius: 28px;
         overflow: hidden;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+        box-shadow:
+            0 25px 80px rgba(0, 0, 0, 0.4),
+            0 10px 30px rgba(0, 0, 0, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
 
-    .meme-container img {
-        max-width: 100%;
-        max-height: 100%;
-        width: auto;
-        height: auto;
-        object-fit: contain;
+    .image-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
         display: block;
     }
 
-    /* Slide badge */
+    /* Full-bleed has no border radius */
+    .premium-layout.full-bleed .image-container {
+        border-radius: 0;
+        box-shadow: none;
+        background: none;
+    }
+
+    /* === PREMIUM HIGHLIGHT STYLING === */
+    .highlight {
+        background: var(--highlight-bg, #FFD93D);
+        color: var(--highlight-text, #000);
+        padding: 8px 18px;
+        border-radius: 8px;
+        display: inline;
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
+        font-weight: 800;
+        box-shadow: 0 4px 15px rgba(255, 217, 61, 0.3);
+    }
+
+    /* === SLIDE NUMBER BADGE === */
     .slide-badge {
         position: absolute;
-        top: 35px;
-        right: 45px;
+        top: 45px;
+        right: 55px;
         font-size: 14px;
-        font-weight: 600;
+        font-weight: 700;
         color: var(--text-secondary);
-        opacity: 0.5;
+        opacity: 0.35;
+        letter-spacing: 0.1em;
+        z-index: 100;
+    }
+
+    .premium-layout.full-bleed .slide-badge {
+        color: rgba(255, 255, 255, 0.5);
     }
 </style>
 {% endblock %}
@@ -171,28 +214,81 @@
 <div class="slide-badge">{{ slide_number }}/{{ total_slides }}</div>
 {% endif %}
 
-<div class="split-content {{ 'horizontal' if meme_position in ['left', 'right'] else 'vertical' }} {{ 'meme-top' if meme_position == 'top' else 'meme-bottom' if meme_position == 'bottom' else '' }} ratio-{{ split_ratio|default('50-50') }}">
+{% set layout_class = 'text-first' %}
+{% if meme_position == 'top' %}
+    {% set layout_class = 'image-first' %}
+{% elif meme_position in ['left', 'right'] %}
+    {% set layout_class = 'side-by-side' %}
+{% elif meme_position == 'full' %}
+    {% set layout_class = 'full-bleed' %}
+{% endif %}
 
-    {% if meme_position in ['top', 'left'] %}
-    <div class="meme-section">
-        <div class="meme-container">
-            <img src="{{ meme_path }}" alt="Meme">
+<div class="premium-layout {{ layout_class }}">
+
+    {% if layout_class == 'full-bleed' %}
+        <!-- Full bleed: image covers entire slide -->
+        <div class="image-section">
+            <div class="image-container">
+                <img src="{{ meme_path }}" alt="Visual">
+            </div>
         </div>
-    </div>
-    {% endif %}
-
-    <div class="text-section">
-        <p class="body-text {{ text_size_class|default('') }}">
-            {{ formatted_text|safe }}
-        </p>
-    </div>
-
-    {% if meme_position in ['bottom', 'right'] %}
-    <div class="meme-section">
-        <div class="meme-container">
-            <img src="{{ meme_path }}" alt="Meme">
+        <div class="text-section">
+            <p class="body-text {{ text_size_class|default('') }}">
+                {{ formatted_text|safe }}
+            </p>
         </div>
-    </div>
+
+    {% elif layout_class == 'image-first' %}
+        <!-- Large image on top -->
+        <div class="image-section">
+            <div class="image-container">
+                <img src="{{ meme_path }}" alt="Visual">
+            </div>
+        </div>
+        <div class="text-section">
+            <p class="body-text {{ text_size_class|default('') }}">
+                {{ formatted_text|safe }}
+            </p>
+        </div>
+
+    {% elif layout_class == 'side-by-side' %}
+        <!-- Side by side 50/50 -->
+        {% if meme_position == 'left' %}
+        <div class="image-section">
+            <div class="image-container">
+                <img src="{{ meme_path }}" alt="Visual">
+            </div>
+        </div>
+        <div class="text-section">
+            <p class="body-text {{ text_size_class|default('') }}">
+                {{ formatted_text|safe }}
+            </p>
+        </div>
+        {% else %}
+        <div class="text-section">
+            <p class="body-text {{ text_size_class|default('') }}">
+                {{ formatted_text|safe }}
+            </p>
+        </div>
+        <div class="image-section">
+            <div class="image-container">
+                <img src="{{ meme_path }}" alt="Visual">
+            </div>
+        </div>
+        {% endif %}
+
+    {% else %}
+        <!-- Text first (default) - large image at bottom -->
+        <div class="text-section">
+            <p class="body-text {{ text_size_class|default('') }}">
+                {{ formatted_text|safe }}
+            </p>
+        </div>
+        <div class="image-section">
+            <div class="image-container">
+                <img src="{{ meme_path }}" alt="Visual">
+            </div>
+        </div>
     {% endif %}
 
 </div>
