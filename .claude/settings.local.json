@@ -38,7 +38,12 @@
       "Bash(powershell -Command \"Expand-Archive -Path frontend-design.zip -DestinationPath . -Force\")",
       "Bash(xcopy:*)",
       "Bash(robocopy:*)",
-      "Bash(powershell -Command:*)"
+      "Bash(powershell -Command:*)",
+      "Bash(wc:*)",
+      "Bash(for f in app/*.py)",
+      "Bash(do python -m py_compile:*)",
+      "Bash(echo:*)",
+      "Bash(done)"
     ],
     "deny": [],
     "ask": []

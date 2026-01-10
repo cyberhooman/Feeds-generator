@@ -39,10 +39,8 @@ from app.ui_components import (
     inject_custom_css,
     render_header,
     render_status_badge,
-    render_theme_preview_card,
-    render_feature_grid,
     render_empty_state,
-    render_caption_card
+    render_metric_card
 )
 
 # Inject custom CSS
@@ -173,24 +171,44 @@ def render_sidebar():
         """, unsafe_allow_html=True)
 
         # Quick Presets
-        st.markdown('<h3>Style Preset</h3>', unsafe_allow_html=True)
+        st.markdown('<h3 style="color: #71717A; font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin: 1.5rem 0 0.75rem 0;">Style Preset</h3>', unsafe_allow_html=True)
 
         preset_options = {
-            "custom": {"name": "Custom", "desc": "Configure your own settings"},
-            "economic": {"name": "Economic Influence", "desc": "Dark, edgy economics content"},
-            "casual": {"name": "Casual Story", "desc": "Warm, personal storytelling"},
-            "professional": {"name": "Professional", "desc": "Clean, business content"}
+            "custom": {"name": "Custom", "desc": "Configure your own settings", "icon": "⚙️"},
+            "economic": {"name": "Economic Influence", "desc": "Dark, edgy economics content", "icon": "📊"},
+            "casual": {"name": "Casual Story", "desc": "Warm, personal storytelling", "icon": "✨"},
+            "professional": {"name": "Professional", "desc": "Clean, business content", "icon": "💼"}
         }
 
-        preset = st.selectbox(
-            "Quick Start",
-            list(preset_options.keys()),
-            format_func=lambda x: preset_options[x]['name'],
-            help="Choose a preset to quickly configure settings"
-        )
+        # Initialize session state for preset
+        if 'selected_preset' not in st.session_state:
+            st.session_state.selected_preset = 'custom'
 
-        # Show preset description
-        st.markdown(f'<p style="color: #64748B; font-size: 0.875rem; margin-top: -0.5rem;">{preset_options[preset]["desc"]}</p>', unsafe_allow_html=True)
+        # Render preset buttons in 2x2 grid
+        cols = st.columns(2)
+        preset_keys = list(preset_options.keys())
+
+        for idx, key in enumerate(preset_keys):
+            with cols[idx % 2]:
+                option = preset_options[key]
+                is_selected = st.session_state.selected_preset == key
+
+                # Use Streamlit button with custom styling
+                button_label = f"{option['icon']} {option['name']}"
+
+                if st.button(
+                    button_label,
+                    key=f"preset_{key}",
+                    use_container_width=True,
+                    type="primary" if is_selected else "secondary"
+                ):
+                    st.session_state.selected_preset = key
+                    st.rerun()
+
+                # Show description below button
+                st.caption(option['desc'])
+
+        preset = st.session_state.selected_preset
 
         # Apply preset settings
         if preset == "economic":
@@ -242,7 +260,7 @@ def render_sidebar():
         st.markdown('<hr style="border: none; border-top: 1px solid #E2E8F0; margin: 1.5rem 0;">', unsafe_allow_html=True)
 
         # Theme Selection
-        st.markdown('<h3 style="color: #64748B; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin: 1.5rem 0 0.75rem 0;">Visual Theme</h3>', unsafe_allow_html=True)
+        st.markdown('<h3 style="color: #71717A; font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin: 1.5rem 0 0.75rem 0;">Visual Theme</h3>', unsafe_allow_html=True)
 
         theme_info = get_theme_info()
         theme_names = list(theme_info.keys())
@@ -253,10 +271,11 @@ def render_sidebar():
             "Choose Theme",
             theme_names,
             index=default_theme_idx,
-            format_func=lambda x: theme_info[x]["label"]
+            format_func=lambda x: theme_info[x]["label"],
+            label_visibility="collapsed"
         )
 
-        # Theme preview
+        # Theme preview - improved with clear spacing
         colors = theme_info[theme]["colors"]
         is_gradient = "gradient" in theme
 
@@ -270,14 +289,22 @@ def render_sidebar():
         else:
             bg_style = f"background-color: {colors['bg']}"
 
+        # Smart text color based on background
+        if theme in ['dark_mode', 'neon_nights', 'dark_gradient', 'ocean_gradient']:
+            preview_text_color = '#FFFFFF'
+            preview_bg = colors['bg']
+        else:
+            preview_text_color = '#18181B'
+            preview_bg = colors['bg']
+
         st.markdown(f"""
-        <div style="{bg_style}; padding: 1rem; border-radius: 8px; text-align: center; margin: 0.5rem 0;">
-            <span style="color: {colors['text']}; font-weight: 600;">Aa</span>
-            <span style="background-color: {colors['accent']}; color: {colors['bg']}; padding: 2px 8px; border-radius: 4px; margin-left: 8px; font-size: 0.875rem;">Key</span>
+        <div style="{bg_style}; padding: 1.5rem; border-radius: 10px; text-align: center; margin: 0.75rem 0 0.5rem 0; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.1);">
+            <div style="color: {preview_text_color}; font-weight: 700; font-size: 1.5rem; margin-bottom: 0.75rem; letter-spacing: -0.02em;">Aa Bb Cc</div>
+            <div style="background: {colors['accent']}; color: {preview_bg}; padding: 6px 14px; border-radius: 6px; display: inline-block; font-size: 0.8125rem; font-weight: 600; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">Highlight Text</div>
         </div>
         """, unsafe_allow_html=True)
 
-        st.markdown(f'<p style="color: #64748B; font-size: 0.875rem; margin-top: 0.5rem;">{theme_info[theme]["description"]}</p>', unsafe_allow_html=True)
+        st.caption(theme_info[theme]["description"])
 
         st.markdown('<hr style="border: none; border-top: 1px solid #E2E8F0; margin: 1.5rem 0;">', unsafe_allow_html=True)
 
@@ -384,20 +411,21 @@ def render_sidebar():
         st.markdown('<hr style="border: none; border-top: 1px solid #E2E8F0; margin: 1.5rem 0;">', unsafe_allow_html=True)
 
         # System Status
-        st.markdown('<h3 style="color: #64748B; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin: 1.5rem 0 0.75rem 0;">Status</h3>', unsafe_allow_html=True)
+        st.markdown('<h3 style="color: #71717A; font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin: 1.5rem 0 0.75rem 0;">System Status</h3>', unsafe_allow_html=True)
 
-        col1, col2 = st.columns(2)
-        with col1:
-            if PLAYWRIGHT_AVAILABLE:
-                st.markdown(render_status_badge("success", "Renderer"), unsafe_allow_html=True)
-            else:
-                st.markdown(render_status_badge("error", "Renderer"), unsafe_allow_html=True)
+        # Renderer status
+        if PLAYWRIGHT_AVAILABLE:
+            st.markdown(render_status_badge("success", "Renderer"), unsafe_allow_html=True)
+        else:
+            st.markdown(render_status_badge("error", "Renderer"), unsafe_allow_html=True)
 
-        with col2:
-            if check_api_key():
-                st.markdown(render_status_badge("success", "API Key"), unsafe_allow_html=True)
-            else:
-                st.markdown(render_status_badge("error", "API Key"), unsafe_allow_html=True)
+        st.markdown('<div style="height: 0.5rem;"></div>', unsafe_allow_html=True)
+
+        # API Key status
+        if check_api_key():
+            st.markdown(render_status_badge("success", "API Key"), unsafe_allow_html=True)
+        else:
+            st.markdown(render_status_badge("error", "API Key"), unsafe_allow_html=True)
 
         # Footer
         st.markdown("""
@@ -781,7 +809,6 @@ def main():
         else:
             # Empty state
             render_empty_state()
-            render_feature_grid()
 
             # Theme previews
             st.markdown("#### Available Themes")

@@ -12,6 +12,29 @@ Not to be clever. Not to be profound. To get:
 
 Everything you write should optimize for one of these actions.
 
+## ⚠️ CRITICAL RULE: NO SELLING
+
+**NEVER suggest selling products, courses, books, or services.**
+
+This content is purely educational and value-driven. We provide insights to help people, not to sell them anything.
+
+❌ FORBIDDEN:
+- "Grab my trading journal book"
+- "Link in bio for the course"
+- "DM me to buy"
+- "Get the full guide for $X"
+- "Join my paid community"
+- Any mention of products, prices, or purchases
+
+✅ ALLOWED:
+- "Save this for later"
+- "Share with someone who needs this"
+- "Comment your experience"
+- "Follow for more content like this"
+- "Tag a friend"
+
+**If the content mentions a product/book, reframe it as educational content sharing knowledge, NOT as a sales pitch.**
+
 ## CAPTION STRUCTURE:
 
 ### THE HOOK (Line 1)
@@ -226,6 +249,8 @@ Before finalizing, ensure:
 ✅ No AI-sounding phrases
 ✅ Natural conversational flow
 ✅ Personal voice comes through
+✅ **ZERO sales language or product mentions** (CRITICAL!)
+✅ **Pure educational/value focus** - no selling anything
 
 ## BAD CAPTION PATTERNS TO AVOID:
 
@@ -237,6 +262,9 @@ Before finalizing, ensure:
 ❌ Essay-length captions with no line breaks
 ❌ Perfect grammar (be conversational!)
 ❌ No personality/voice
+❌ **ANY sales language** (books, courses, products, "grab", "buy", "purchase")
+❌ **Product pitches disguised as value** ("This book will help you..." = NO)
+❌ **Link in bio references** for paid products
 
 ## YOUR OUTPUT FORMAT:
 
