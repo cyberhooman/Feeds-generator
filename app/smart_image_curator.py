@@ -352,14 +352,23 @@ Be VERY specific with proper names and locations."""
         # Define content-specific instructions
         if content_type == "movie_scene":
             content_instruction = """
-FIND: Iconic movie or TV show scenes that match the emotion/situation.
-THINK: "What famous movie scene captures this feeling?"
+FIND: Iconic movie/TV scenes that match the SITUATION and ACTION, not just emotion.
+CRITICAL: Match the CONTEXT, not just the feeling.
+
+THINK: "What movie scene shows this EXACT situation happening?"
+
 EXAMPLES:
-- Frustration/disappointment → "The Office Jim stare at camera"
-- Realization/shock → "Inception spinning top scene"
-- Victory/success → "Wolf of Wall Street celebration"
-- Confusion → "Pulp Fiction confused Travolta"
-SEARCH TERMS: Include "movie scene", "film still", character names"""
+- "Bored reading books" → "Someone falling asleep with book" NOT just "bored face"
+- "Business failure" → "Wolf of Wall Street disaster scene" NOT just "sad person"
+- "Mind-blown by plot twist" → "Inception reality-breaking moment" NOT just "shocked face"
+- "Training/improvement" → "Rocky training montage" NOT just "sweaty person"
+- "Reading sci-fi" → "Person absorbed in book / futuristic scene" NOT random action
+
+SEARCH STRATEGY:
+1. Identify the SITUATION/ACTION in the text (reading, failing, discovering, training)
+2. Find movie scene showing that EXACT action
+3. Include character names + movie title + action
+4. Avoid generic emotions - focus on WHAT'S HAPPENING"""
 
         elif content_type == "cartoon":
             content_instruction = """
@@ -383,7 +392,7 @@ EXAMPLES:
 - Confusion → "Confused math lady", "Nick Young question marks"
 SEARCH TERMS: Include "meme", "reaction", specific meme names"""
 
-        prompt = f"""You are an expert at finding the PERFECT meme/movie/cartoon to match content.
+        prompt = f"""You are an expert at finding the PERFECT visual to match content CONTEXT, not just emotion.
 
 TEXT: "{text}"
 TOPIC: {topic or "general"}
@@ -393,24 +402,28 @@ CONTENT TYPE: {content_type.upper()}
 {content_instruction}
 
 YOUR JOB:
-1. Understand the EMOTION and SITUATION in the text
-2. Think of SPECIFIC {content_type.replace('_', ' ')}s that match this feeling
-3. Create search queries using SPECIFIC names/titles when possible
+1. Identify the SITUATION/ACTION happening in the text (not just the emotion)
+2. Think: "What movie scene shows this EXACT situation?"
+3. Create search with SPECIFIC movie/character + action
 
-IMPORTANT:
-- Be SPECIFIC - "confused Travolta Pulp Fiction" NOT "confused person"
-- Reference ACTUAL popular {content_type.replace('_', ' ')}s by name
-- If Indonesian content, translate the emotion to universal references
+CRITICAL FOR MOVIE SCENES:
+- "bored reading books" → Search "person falling asleep reading book movie scene"
+- "business failed" → Search "Wolf of Wall Street office disaster scene"
+- "plot twist mind blown" → Search "Inception reality bending scene Leo DiCaprio"
+- "training improved" → Search "Rocky training montage stairs"
+
+AVOID: Just searching emotions like "confused face" or "happy person"
+DO: Search situation + character + movie: "Hermione reading library Harry Potter scene"
 
 Return ONLY a JSON object:
 {{
-    "emotional_context": "the emotion/situation described",
-    "content_match": "specific {content_type.replace('_', ' ')} that matches",
-    "search_query": "specific search with names/titles",
+    "situation_context": "what's happening in the text (action/situation)",
+    "content_match": "specific movie/scene showing this situation",
+    "search_query": "movie title + character + action (NOT just emotion)",
     "backup_queries": [
-        "alternative specific search 1",
-        "alternative specific search 2",
-        "generic fallback search"
+        "alternative scene showing same situation",
+        "different movie same action",
+        "generic situation search"
     ],
     "mood": "one word emotion"
 }}"""
