@@ -223,6 +223,7 @@ class Humanizer:
         # CRITICAL: Zero emojis policy - emojis are instant AI tells
         emoji_pattern = r'[\U0001F300-\U0001F9FF]'
         emoji_count = len(re.findall(emoji_pattern, text))
+        words = len(text.split())  # Calculate word count for brevity check
 
         if emoji_count > 0:
             # ANY emoji usage is penalized heavily (screams AI-generated)
