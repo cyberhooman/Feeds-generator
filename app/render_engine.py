@@ -139,16 +139,22 @@ class TextFormatter:
         """
         Determine font size class based on text length.
 
-        Returns: "", "long", or "very-long"
+        Returns: "compact", "medium", "long", "very-long", or "ultra-long"
         """
         # Remove HTML tags for length calculation
         clean_text = re.sub(r'<[^>]+>', '', text)
         length = len(clean_text)
 
-        if length > 200:
+        if length > 400:
+            return "ultra-long"
+        elif length > 280:
             return "very-long"
-        elif length > 120:
+        elif length > 180:
             return "long"
+        elif length > 100:
+            return "medium"
+        elif length < 60:
+            return "compact"
         return ""
 
 

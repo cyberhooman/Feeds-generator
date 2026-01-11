@@ -44,7 +44,8 @@
       "Bash(do python -m py_compile:*)",
       "Bash(echo:*)",
       "Bash(done)",
-      "Bash(ls -la \"d:\\\\code\\\\Instagram feeds generator\\\\templates\\\\slides\"\" 2>/dev/null || echo \"Directory not found \")"
+      "Bash(ls -la \"d:\\\\code\\\\Instagram feeds generator\\\\templates\\\\slides\"\" 2>/dev/null || echo \"Directory not found \")",
+      "Bash(tasklist:*)"
     ],
     "deny": [],
     "ask": []
