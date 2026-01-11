@@ -416,10 +416,10 @@ def render_sidebar():
             if use_memes:
                 st.caption("💡 Pro tip: Text-only carousels often perform better!")
 
-                # Picture source selection - Including blend mode
+                # Picture source selection - Including blend mode and smart infographics
                 picture_mode = st.radio(
                     "Image Style",
-                    ["🎬 Movie/TV Scenes", "😂 Memes & Reactions", "🎨 Cartoons & Illustrations", "🎭 Blend (Mix All 3)"],
+                    ["🎬 Movie/TV Scenes", "😂 Memes & Reactions", "🎨 Cartoons & Illustrations", "🎭 Blend (Mix All 3)", "📊 Smart Infographics (AI Decides)"],
                     index=0,
                     help="Choose the style of images to include",
                     horizontal=False
@@ -441,9 +441,13 @@ def render_sidebar():
                     content_type_override = "cartoon"
                     st.caption("Sources: Cartoons, illustrations, animated content")
 
-                else:  # Blend mode - mix all 3 types
+                elif picture_mode == "🎭 Blend (Mix All 3)":
                     content_type_override = "blend"
                     st.caption("🎭 Dynamic mix: Movies, memes, and cartoons for maximum variety!")
+
+                else:  # Smart Infographics mode
+                    content_type_override = "smart_infographic"
+                    st.caption("📊 AI analyzes each slide and adds charts/graphs/theory diagrams only where needed")
 
             else:
                 use_ai_memes = False

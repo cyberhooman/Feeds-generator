@@ -461,6 +461,84 @@ Return ONLY a JSON object:
             "mood": "neutral"
         }
 
+    def analyze_if_needs_infographic(self, text: str, topic: str = None) -> Dict:
+        """
+        AI decides if this slide needs an infographic/chart/graph/theory visual.
+
+        Returns:
+            - needs_visual: bool
+            - visual_type: "chart", "graph", "diagram", "theory", "framework", "none"
+            - reason: why it needs/doesn't need a visual
+            - search_query: what to search for if needs visual
+        """
+        is_indonesian = self._detect_indonesian(text)
+
+        prompt = f"""You are an expert content strategist deciding if this slide needs an EDUCATIONAL VISUAL (chart/graph/diagram/theory).
+
+TEXT: "{text}"
+TOPIC: {topic or "general"}
+LANGUAGE: {"Indonesian" if is_indonesian else "English"}
+
+RULES FOR WHEN TO ADD VISUALS:
+✅ ADD VISUAL IF:
+- Contains data, statistics, percentages, numbers that need visualization
+- Explains a process, system, or framework (needs diagram)
+- Compares multiple things (needs comparison chart)
+- Shows trends, growth, change over time (needs graph)
+- Explains a theory, model, or concept (needs theory diagram)
+- Lists steps or stages (needs flowchart/infographic)
+
+❌ SKIP VISUAL IF:
+- Pure storytelling or personal narrative
+- Emotional/motivational content
+- Opinion or hot take without data
+- Simple statement or quote
+- Hook/intro slide (text-only stronger)
+- Call-to-action slide (text-only stronger)
+
+EXAMPLES:
+✅ "Pasar kripto naik 300% dalam 5 tahun terakhir" → NEEDS chart/graph
+✅ "Ada 3 tahap membangun bisnis: ideation, validation, scaling" → NEEDS framework diagram
+✅ "Hukum supply & demand mengatur harga" → NEEDS theory diagram
+❌ "Dulu gue miskin, sekarang sukses" → NO VISUAL (story)
+❌ "Hot take: Hustle culture itu toxic" → NO VISUAL (opinion)
+❌ "Save this carousel! Tag teman yang butuh ini" → NO VISUAL (CTA)
+
+Return ONLY a JSON object:
+{{
+    "needs_visual": true/false,
+    "visual_type": "chart" | "graph" | "diagram" | "theory" | "framework" | "infographic" | "none",
+    "reason": "brief explanation why needs/doesn't need visual",
+    "search_query": "specific search query for the visual (if needs_visual=true)",
+    "backup_queries": ["alternative searches if needed"]
+}}"""
+
+        try:
+            response = self.ai_client.chat(
+                messages=[{"role": "user", "content": prompt}],
+                max_tokens=300,
+                temperature=0.3  # Lower temp for more consistent decision-making
+            )
+
+            import json
+            json_match = re.search(r'\{.*\}', response, re.DOTALL)
+            if json_match:
+                analysis = json.loads(json_match.group())
+                logger.info(f"Infographic decision: {analysis.get('needs_visual')} - {analysis.get('reason')}")
+                return analysis
+
+        except Exception as e:
+            logger.warning(f"Infographic analysis failed: {e}")
+
+        # Fallback: Skip visual by default (text-only safer)
+        return {
+            "needs_visual": False,
+            "visual_type": "none",
+            "reason": "Analysis failed, defaulting to text-only",
+            "search_query": "",
+            "backup_queries": []
+        }
+
     def scrape_google_images(self, query: str, limit: int = 10) -> List[str]:
         """
         Scrape image URLs from Google Images.
@@ -809,11 +887,24 @@ Return ONLY a JSON object:
             content_type = random.choice(["movie_scene", "meme_reaction", "cartoon"])
             logger.info(f"Blend mode: Selected {content_type.upper()} for this slide")
 
+        # SMART INFOGRAPHIC MODE: AI decides if this slide needs a chart/graph/theory visual
+        if content_type == "smart_infographic":
+            needs_infographic = self.analyze_if_needs_infographic(text, topic)
+            if not needs_infographic['needs_visual']:
+                logger.info(f"Smart mode: Skipping visual for this slide - {needs_infographic['reason']}")
+                return None
+            # Switch to infographic content type
+            content_type = "infographic"
+            logger.info(f"Smart mode: Adding {needs_infographic['visual_type']} - {needs_infographic['reason']}")
+
         logger.info(f"Content type: {content_type.upper()}")
 
         # Step 2: Route to appropriate analysis method based on content type
         if content_type == "news":
             analysis = self.analyze_news_for_visuals(text, topic)
+        elif content_type == "infographic":
+            # INFOGRAPHIC: Use the analysis from analyze_if_needs_infographic
+            analysis = needs_infographic  # Already analyzed above
         elif content_type in ["movie_scene", "meme_reaction", "cartoon"]:
             # NEW: Specialized analysis for entertainment content
             analysis = self.analyze_entertainment_for_visuals(text, topic, content_type)
@@ -867,6 +958,37 @@ Return ONLY a JSON object:
 
             google_urls = self.scrape_google_images(f"{analysis['search_query']} animated cartoon", limit=max_results)
             all_urls.extend([(url, 'google') for url in google_urls])
+
+        elif content_type == "infographic":
+            # INFOGRAPHIC/EDUCATIONAL SOURCES: Search for charts, graphs, diagrams, theory visuals
+            visual_type = analysis.get('visual_type', 'infographic')
+
+            # Add specific keywords based on visual type
+            search_suffixes = {
+                "chart": "chart diagram infographic",
+                "graph": "graph data visualization",
+                "diagram": "diagram flowchart illustration",
+                "theory": "theory framework diagram",
+                "framework": "framework model infographic",
+                "infographic": "infographic visual explanation"
+            }
+            suffix = search_suffixes.get(visual_type, "infographic diagram")
+
+            # Primary search: General infographics and educational visuals
+            bing_urls = self.scrape_bing_images(f"{analysis['search_query']} {suffix}", limit=max_results)
+            all_urls.extend([(url, 'bing') for url in bing_urls])
+
+            google_urls = self.scrape_google_images(f"{analysis['search_query']} {suffix} educational", limit=max_results)
+            all_urls.extend([(url, 'google') for url in google_urls])
+
+            # Academic sources: Search for journal papers, dissertations, research visuals
+            # These often have high-quality charts, graphs, and theory diagrams
+            journal_urls = self.scrape_bing_images(f"{analysis['search_query']} journal paper figure", limit=5)
+            all_urls.extend([(url, 'bing_academic') for url in journal_urls])
+
+            # Research gate, academia.edu often have good academic visuals
+            research_urls = self.scrape_google_images(f"{analysis['search_query']} research paper graph filetype:pdf", limit=5)
+            all_urls.extend([(url, 'google_academic') for url in research_urls])
 
         else:
             # DEFAULT: EMOTIONAL SOURCES: Bing, Google (existing)
