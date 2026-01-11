@@ -790,6 +790,12 @@ Return ONLY a JSON object:
         if not content_type:
             content_type = self._detect_content_type(text, topic)
 
+        # BLEND MODE: Randomly select between movie_scene, meme_reaction, cartoon for variety
+        if content_type == "blend":
+            import random
+            content_type = random.choice(["movie_scene", "meme_reaction", "cartoon"])
+            logger.info(f"Blend mode: Selected {content_type.upper()} for this slide")
+
         logger.info(f"Content type: {content_type.upper()}")
 
         # Step 2: Route to appropriate analysis method based on content type

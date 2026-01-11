@@ -416,10 +416,10 @@ def render_sidebar():
             if use_memes:
                 st.caption("💡 Pro tip: Text-only carousels often perform better!")
 
-                # Picture source selection - Only meme/cartoon/movie options
+                # Picture source selection - Including blend mode
                 picture_mode = st.radio(
                     "Image Style",
-                    ["🎬 Movie/TV Scenes", "😂 Memes & Reactions", "🎨 Cartoons & Illustrations"],
+                    ["🎬 Movie/TV Scenes", "😂 Memes & Reactions", "🎨 Cartoons & Illustrations", "🎭 Blend (Mix All 3)"],
                     index=0,
                     help="Choose the style of images to include",
                     horizontal=False
@@ -437,9 +437,13 @@ def render_sidebar():
                     content_type_override = "meme_reaction"
                     st.caption("Sources: Popular memes, reaction images, viral moments")
 
-                else:  # Cartoons & Illustrations
+                elif picture_mode == "🎨 Cartoons & Illustrations":
                     content_type_override = "cartoon"
                     st.caption("Sources: Cartoons, illustrations, animated content")
+
+                else:  # Blend mode - mix all 3 types
+                    content_type_override = "blend"
+                    st.caption("🎭 Dynamic mix: Movies, memes, and cartoons for maximum variety!")
 
             else:
                 use_ai_memes = False
