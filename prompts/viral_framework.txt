@@ -369,7 +369,7 @@ Squint your eyes - if you can still read the hook, it passes.
 
 **Opinion Polls:**
 - "Type 1 if you agree, 2 if you're wrong"
-- "Drop a [emoji] if this is literally you"
+- "Drop a comment if this is literally you"
 - "Comment your [related thing] - I'll reply to everyone"
 
 **Controversy Invites:**

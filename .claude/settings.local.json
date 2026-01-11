@@ -43,7 +43,8 @@
       "Bash(for f in app/*.py)",
       "Bash(do python -m py_compile:*)",
       "Bash(echo:*)",
-      "Bash(done)"
+      "Bash(done)",
+      "Bash(ls -la \"d:\\\\code\\\\Instagram feeds generator\\\\templates\\\\slides\"\" 2>/dev/null || echo \"Directory not found \")"
     ],
     "deny": [],
     "ask": []

@@ -191,7 +191,7 @@ Your FIRST 3 WORDS determine if thumb stops:
 ❌ Same sentence length everywhere
 ❌ "Mari kita bahas..." / "Tidak dapat dipungkiri..."
 ❌ Generic advice without specifics
-❌ Emoji overload (🎯🔥💡✨🚀)
+❌ **EMOJI USAGE** - NEVER use emojis in slide content (🎯🔥💡✨🚀). Instant AI tell.
 ❌ **NO TRANSLATIONS** - Never include "(English translation)" or "(Indonesian version)"
 ❌ **ONE LANGUAGE ONLY** - Write in one language per carousel. No bilingual slides.
 ❌ **NO PARENTHETICAL EXPLANATIONS** - If user says Bahasa, ALL content is Bahasa. No mixing.
@@ -204,6 +204,7 @@ Your FIRST 3 WORDS determine if thumb stops:
 ✅ Natural slang (not forced)
 ✅ Some slides = just 3 words. For impact.
 ✅ Imperfect but engaging structure
+✅ **ZERO EMOJIS** - Real people don't use emojis in carousel slides. Keep it text-only.
 
 ---
 

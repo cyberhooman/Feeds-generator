@@ -220,24 +220,18 @@ class Humanizer:
             breakdown["natural_flow"] = 0
 
         # === 6. Emoji usage check ===
+        # CRITICAL: Zero emojis policy - emojis are instant AI tells
         emoji_pattern = r'[\U0001F300-\U0001F9FF]'
         emoji_count = len(re.findall(emoji_pattern, text))
-        words = len(text.split())
 
-        if words > 0:
-            emoji_ratio = emoji_count / words
-            if emoji_ratio > 0.15:  # More than 1 emoji per 6-7 words
-                score -= 10
-                issues.append("Emoji overload (looks like spam)")
-                breakdown["emoji_usage"] = -10
-            elif emoji_ratio > 0.08:
-                score -= 5
-                issues.append("Too many emojis")
-                breakdown["emoji_usage"] = -5
-            elif emoji_count > 0:
-                breakdown["emoji_usage"] = 5  # Some emojis = human
-            else:
-                breakdown["emoji_usage"] = 0
+        if emoji_count > 0:
+            # ANY emoji usage is penalized heavily (screams AI-generated)
+            score -= 20
+            issues.append(f"Contains {emoji_count} emoji(s) - instant AI tell")
+            breakdown["emoji_usage"] = -20
+        else:
+            # No emojis = professional, human-like content
+            breakdown["emoji_usage"] = 10
 
         # === 7. Specificity check (numbers, details) ===
         specific_indicators = [
@@ -293,11 +287,29 @@ class Humanizer:
             "passes_threshold": score >= Config.MIN_HUMAN_SCORE
         }
 
+    def remove_emojis(self, text: str) -> str:
+        """
+        Remove ALL emojis from text - zero emoji policy.
+        Emojis are instant AI tells and make content look unprofessional.
+        """
+        # Remove all emoji characters
+        emoji_pattern = r'[\U0001F300-\U0001F9FF\U00002600-\U000027BF\U0001F900-\U0001F9FF\U0001FA00-\U0001FAFF]'
+        text = re.sub(emoji_pattern, '', text)
+
+        # Clean up any double spaces left behind
+        text = re.sub(r'\s+', ' ', text).strip()
+
+        return text
+
     def make_punchy(self, text: str, max_words: int = 35) -> str:
         """
         Make text punchier by cutting fluff and tightening language.
         Does NOT use AI - purely rule-based for speed.
+        Also removes emojis as they're AI tells.
         """
+        # FIRST: Remove all emojis (instant AI tell)
+        text = self.remove_emojis(text)
+
         # Remove filler phrases
         filler_patterns = [
             (r'\bit is (?:important|worth noting|essential) (?:to note )?that\b', ''),
