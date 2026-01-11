@@ -47,11 +47,24 @@ class ContentRewriter:
         return tone_path.read_text(encoding='utf-8')
 
     def load_angle_template(self, angle_name: str) -> str:
-        """Load content angle template"""
+        """
+        Load content angle template or use custom angle description.
+
+        If angle_name contains spaces or is longer than typical preset names,
+        treat it as a custom description rather than a filename.
+        """
+        # Check if this is a custom angle description (contains spaces or long text)
+        # Preset angle names are simple identifiers like "story_personal", "hot_take"
+        if ' ' in angle_name or len(angle_name) > 30:
+            # This is a custom angle description - use it directly
+            return f"Content Angle: {angle_name}"
+
+        # Otherwise, try to load from file (preset angle)
         angle_path = Config.ANGLES_DIR / f"{angle_name}.txt"
 
         if not angle_path.exists():
-            raise FileNotFoundError(f"Angle template not found: {angle_path}")
+            # If file doesn't exist but it's a short name, treat as custom too
+            return f"Content Angle: {angle_name}"
 
         return angle_path.read_text(encoding='utf-8')
 
