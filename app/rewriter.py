@@ -75,13 +75,21 @@ class ContentRewriter:
             return framework_path.read_text(encoding='utf-8')
         return ""
 
+    def load_narrative_arc(self, content_purpose: str) -> str:
+        """Load the narrative arc prompt for a content purpose."""
+        arc_path = Config.PROMPTS_DIR / f"arc_{content_purpose}.txt"
+        if arc_path.exists():
+            return arc_path.read_text(encoding='utf-8')
+        return ""
+
     def rewrite_content(
         self,
         rough_idea: str,
         tone: str = "santai_gaul",
         language: str = "bahasa",
         angle: str = "story_personal",
-        versions: int = 1
+        versions: int = 1,
+        content_purpose: str = "storytelling"
     ) -> List[Dict[str, any]]:
         """
         Rewrite rough idea into polished carousel content.
@@ -92,6 +100,7 @@ class ContentRewriter:
             language: Language category ('bahasa', 'english', 'mixed')
             angle: Content angle ('story_personal', 'hot_take', 'tips_listicle', etc.)
             versions: Number of alternative versions to generate
+            content_purpose: Content type ('educational', 'motivational', 'storytelling')
 
         Returns:
             List of content versions with slides and metadata
@@ -101,6 +110,7 @@ class ContentRewriter:
         viral_framework = self.load_viral_framework()
         tone_definition = self.load_tone_definition(tone, language)
         angle_template = self.load_angle_template(angle)
+        narrative_arc = self.load_narrative_arc(content_purpose)
 
         # Build the full prompt
         system_prompt = f"""{master_prompt}
@@ -110,6 +120,12 @@ class ContentRewriter:
 ## VIRAL SUCCESS FRAMEWORK (Apply These Principles):
 
 {viral_framework}
+
+---
+
+## NARRATIVE ARC (CRITICAL - Follow This Structure):
+
+{narrative_arc}
 
 ---
 
@@ -125,7 +141,8 @@ class ContentRewriter:
 
 ---
 
-Remember: Apply the copywriting frameworks, follow the angle structure, match the tone perfectly, and make it sound 100% human.
+Remember: Apply the copywriting frameworks, follow the NARRATIVE ARC structure strictly, match the tone perfectly, and make it sound 100% human.
+IMPORTANT: Each slide MUST include a [BEAT: BEAT_NAME] marker to identify its narrative function.
 """
 
         user_prompt = f"""Transform this rough idea into a VIRAL Instagram carousel:
@@ -137,29 +154,36 @@ Remember: Apply the copywriting frameworks, follow the angle structure, match th
 - Language: {language}
 - Tone: {tone}
 - Angle: {angle}
+- Content Purpose: {content_purpose.upper()}
 - Generate {versions} version(s)
+- STRICTLY follow the NARRATIVE ARC for {content_purpose} content
 - Apply the viral framework (hook psychology, algorithm optimization, engagement triggers)
 - 5-7 slides maximum
-- Slide 2 must work as backup hook (algorithm re-shows it first)
 - Include explicit CTA optimized for saves/shares/comments
 
 Provide the output in this format:
 
 === VERSION 1 ===
 
-[SLIDE 1]
-[Primary hook - max 12 words, one psychological trigger]
+[SLIDE 1 - BEAT: BEAT_NAME]
+[Content following the narrative arc beat]
 
-[SLIDE 2]
-[Backup hook - works independently]
+[SLIDE 2 - BEAT: BEAT_NAME]
+[Content following the narrative arc beat]
 
-[SLIDE 3]
-[First value delivery - prove worth here]
+[SLIDE 3 - BEAT: BEAT_NAME]
+[Content following the narrative arc beat]
 
-[SLIDE 4-6]
-[Core content - one point per slide]
+[SLIDE 4 - BEAT: BEAT_NAME]
+[Content following the narrative arc beat]
 
-[FINAL SLIDE]
+[SLIDE 5 - BEAT: BEAT_NAME]
+[Content following the narrative arc beat]
+
+[SLIDE 6 - BEAT: BEAT_NAME]
+[Content following the narrative arc beat]
+
+[SLIDE 7 - BEAT: CTA]
 [Key insight + explicit CTA]
 
 [ENGAGEMENT OPTIMIZATION]
@@ -202,6 +226,7 @@ Slide X: [emotional beat] - suggest: [emotion/energy]
 
         Returns list of dicts with:
         - slides: List of slide texts
+        - narrative_beats: Dict of slide_num -> beat name (NEW)
         - meme_suggestions: Dict of slide_num -> suggestion
         - hook_alternatives: List of alternative hooks
         - engagement_optimization: Dict with viral strategy info
@@ -214,6 +239,7 @@ Slide X: [emotional beat] - suggest: [emotion/energy]
         for version_text in version_splits[1:]:  # Skip first empty split
             version_data = {
                 "slides": [],
+                "narrative_beats": {},  # NEW: Maps slide_num -> beat_name
                 "meme_suggestions": {},
                 "hook_alternatives": [],
                 "engagement_optimization": {
@@ -233,13 +259,23 @@ Slide X: [emotional beat] - suggest: [emotion/energy]
             for line in lines:
                 line = line.strip()
 
-                # Check for slide markers
+                # Check for slide markers (now with BEAT)
+                # Format: [SLIDE 1 - BEAT: PAIN_POINT] or [SLIDE 1]
                 if line.startswith('[SLIDE '):
                     if current_slide and in_slide:
                         version_data["slides"].append(current_slide.strip())
                     current_slide = ""
                     in_slide = True
                     slide_num += 1
+
+                    # Extract narrative beat if present
+                    if 'BEAT:' in line:
+                        try:
+                            beat_part = line.split('BEAT:')[1]
+                            beat_name = beat_part.strip().rstrip(']').strip().lower()
+                            version_data["narrative_beats"][slide_num] = beat_name
+                        except:
+                            pass
                     continue
 
                 # Check for section markers
@@ -301,7 +337,7 @@ Slide X: [emotional beat] - suggest: [emotion/energy]
             if version_data["slides"]:
                 versions.append(version_data)
 
-        return versions if versions else [{"slides": [response_text], "meme_suggestions": {}, "hook_alternatives": []}]
+        return versions if versions else [{"slides": [response_text], "narrative_beats": {}, "meme_suggestions": {}, "hook_alternatives": []}]
 
     def refine_slides(
         self,

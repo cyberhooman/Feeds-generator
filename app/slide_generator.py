@@ -204,7 +204,12 @@ class SlideGenerator:
         use_ai_meme_agent: bool = False,
         content_type_override: str = None,
         meme_style: str = "dark_minimal",
-        meme_language: str = "en"
+        meme_language: str = "en",
+        # NEW: Content Strategy parameters
+        content_purpose: str = None,
+        visual_role: str = None,
+        visual_style: str = None,
+        narrative_beats: Optional[Dict[int, str]] = None
     ) -> Tuple[List[Image.Image], List[Path]]:
         """
         Generate full carousel with all slides.
@@ -225,6 +230,10 @@ class SlideGenerator:
             use_ai_meme_agent: If True, use AI to generate original memes (no templates)
             meme_style: Style for AI meme generation (dark_minimal, light_clean, etc.)
             meme_language: Language for AI meme content ("en" or "id")
+            content_purpose: Content type (educational, motivational, storytelling)
+            visual_role: How visuals support message (amplify_emotion, provide_evidence, minimal)
+            visual_style: Visual style lock (auto, cartoon, movie, photo, diagram, text_only)
+            narrative_beats: Dict mapping slide number to beat name
 
         Returns:
             Tuple of (list of PIL Images, list of saved file paths)
@@ -245,31 +254,44 @@ class SlideGenerator:
 
         # NEW: Use Smart Image Curator (AI-powered web scraping)
         if use_ai_meme_agent:
-            try:
-                from .smart_image_curator import SmartImageCurator
+            # Check if visual_style is text_only - skip image finding entirely
+            if visual_style == "text_only":
+                logger.info("Visual style is 'text_only' - skipping image curation")
+            elif visual_role == "minimal":
+                logger.info("Visual role is 'minimal' - using limited images")
+                # In minimal mode, only add images to explanation slides
+            else:
+                try:
+                    from .smart_image_curator import SmartImageCurator
 
-                logger.info("Using Smart Image Curator - AI finds relevant images from the web")
+                    logger.info("Using Smart Image Curator - AI finds relevant images from the web")
+                    if content_purpose:
+                        logger.info(f"Content purpose: {content_purpose}")
+                    if narrative_beats:
+                        logger.info(f"Narrative beats provided for {len(narrative_beats)} slides")
 
-                # Create curator
-                curator = SmartImageCurator(cache_dir=str(project_dir / "curated_images"))
+                    # Create curator
+                    curator = SmartImageCurator(cache_dir=str(project_dir / "curated_images"))
 
-                # Find relevant images for each slide
-                image_results = curator.find_images_for_slides(
-                    slides=slides,
-                    topic=topic_hint,
-                    skip_first_last=True,  # Skip hook and CTA slides
-                    content_type=content_type_override
-                )
+                    # Find relevant images for each slide with narrative context
+                    image_results = curator.find_images_for_slides(
+                        slides=slides,
+                        topic=topic_hint,
+                        skip_first_last=True,  # Skip hook and CTA slides
+                        content_type=content_type_override,
+                        narrative_beats=narrative_beats,  # NEW: Pass narrative beats
+                        visual_style=visual_style  # NEW: Pass visual style lock
+                    )
 
-                # Use found images as meme paths
-                for slide_num, result in image_results.items():
-                    meme_paths[slide_num] = result.local_path
+                    # Use found images as meme paths
+                    for slide_num, result in image_results.items():
+                        meme_paths[slide_num] = result.local_path
 
-                logger.info(f"Curated {len(image_results)} contextual images from the web")
+                    logger.info(f"Curated {len(image_results)} contextual images from the web")
 
-            except Exception as e:
-                logger.warning(f"Smart Image Curator failed, falling back to dynamic memes: {e}")
-                # Fall through to dynamic meme handling
+                except Exception as e:
+                    logger.warning(f"Smart Image Curator failed, falling back to dynamic memes: {e}")
+                    # Fall through to dynamic meme handling
 
         # If AI agent didn't provide memes, try dynamic memes
         if not meme_paths and use_dynamic_memes and meme_recommendations is not None:

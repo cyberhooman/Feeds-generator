@@ -377,6 +377,56 @@ def render_sidebar():
 
         st.markdown('<hr style="border: none; border-top: 1px solid #E2E8F0; margin: 1.5rem 0;">', unsafe_allow_html=True)
 
+        # Content Strategy Section - NEW
+        st.markdown('<h3 style="color: #64748B; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin: 1.5rem 0 0.75rem 0;">Content Strategy</h3>', unsafe_allow_html=True)
+
+        with st.expander("Narrative & Visual Strategy", expanded=True):
+            st.markdown("**Content Purpose**")
+            st.caption("Controls the narrative arc and emotional flow of your carousel")
+            content_purpose = st.radio(
+                "What type of content are you creating?",
+                options=["Educational", "Motivational", "Storytelling"],
+                index=2,  # Default to Storytelling
+                horizontal=True,
+                label_visibility="collapsed",
+                help="Educational: problem → explanation → application | Motivational: pain → shift → action | Storytelling: hook → tension → resolution"
+            )
+
+            st.markdown("---")
+
+            st.markdown("**Visual Role**")
+            st.caption("How should images support your message?")
+            visual_role = st.radio(
+                "How should visuals relate to text?",
+                options=["Amplify Emotion", "Provide Evidence", "Minimal/None"],
+                index=0,  # Default to Amplify Emotion
+                horizontal=True,
+                label_visibility="collapsed",
+                help="Amplify: images intensify feelings | Evidence: images prove claims | Minimal: mostly text"
+            )
+
+            st.markdown("---")
+
+            st.markdown("**Visual Style**")
+            st.caption("Lock to one style for consistency across all slides")
+            visual_style = st.selectbox(
+                "Preferred visual style",
+                options=["Auto (AI Decides)", "Cartoon Scenes", "Movie/TV Stills", "Professional Photos", "Diagrams/Charts", "Text Only"],
+                index=0,
+                label_visibility="collapsed",
+                help="Auto lets AI choose, or lock to one style for visual coherence"
+            )
+
+            # Show strategy summary
+            strategy_summary = {
+                "Educational": "Problem → Context → Explanation → Application → Summary",
+                "Motivational": "Pain Point → Empathy → Shift → New Perspective → Action",
+                "Storytelling": "Hook → Tension → Conflict → Resolution → Takeaway"
+            }
+            st.info(f"**Arc:** {strategy_summary[content_purpose]}")
+
+        st.markdown('<hr style="border: none; border-top: 1px solid #E2E8F0; margin: 1.5rem 0;">', unsafe_allow_html=True)
+
         # Display Options
         st.markdown('<h3 style="color: #64748B; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin: 1.5rem 0 0.75rem 0;">Display</h3>', unsafe_allow_html=True)
 
@@ -485,6 +535,26 @@ def render_sidebar():
         </div>
         """, unsafe_allow_html=True)
 
+    # Map UI values to internal values
+    content_purpose_map = {
+        "Educational": "educational",
+        "Motivational": "motivational",
+        "Storytelling": "storytelling"
+    }
+    visual_role_map = {
+        "Amplify Emotion": "amplify_emotion",
+        "Provide Evidence": "provide_evidence",
+        "Minimal/None": "minimal"
+    }
+    visual_style_map = {
+        "Auto (AI Decides)": "auto",
+        "Cartoon Scenes": "cartoon",
+        "Movie/TV Stills": "movie",
+        "Professional Photos": "photo",
+        "Diagrams/Charts": "diagram",
+        "Text Only": "text_only"
+    }
+
     return {
         "preset": preset,
         "language": language,
@@ -503,6 +573,10 @@ def render_sidebar():
         "content_type_override": content_type_override if use_memes else None,
         "meme_style": meme_style if use_memes else "dark_minimal",
         "meme_language": meme_language if use_memes else "en",
+        # Content Strategy settings - NEW
+        "content_purpose": content_purpose_map.get(content_purpose, "storytelling"),
+        "visual_role": visual_role_map.get(visual_role, "amplify_emotion"),
+        "visual_style": visual_style_map.get(visual_style, "auto"),
     }
 
 
@@ -682,20 +756,22 @@ def main():
 
                 with progress_container:
                     with st.status("Creating your carousel...", expanded=True) as status:
-                        # Step 1: Rewrite
-                        st.write("Writing content with AI copywriter...")
+                        # Step 1: Rewrite with content strategy
+                        st.write(f"Writing {settings['content_purpose']} content with AI copywriter...")
                         rewriter = ContentRewriter()
                         content_versions = rewriter.rewrite_content(
                             rough_idea=content,
                             tone=settings["tone"] or "santai_gaul",
                             language=settings["language"] or "bahasa",
                             angle=settings["angle"] or "story_personal",
-                            versions=settings["versions"]
+                            versions=settings["versions"],
+                            content_purpose=settings["content_purpose"]  # NEW: Pass content purpose
                         )
                         st.write(f"✓ Generated {len(content_versions)} version(s)")
 
                         selected_version = content_versions[0]
                         slides = selected_version['slides']
+                        narrative_beats = selected_version.get('narrative_beats', {})  # NEW: Get beats
 
                         # Step 2: Humanization
                         if not settings["skip_humanizer"]:
@@ -771,7 +847,12 @@ def main():
                             use_ai_meme_agent=settings["use_memes"] and settings["use_ai_memes"],
                             content_type_override=settings["content_type_override"],
                             meme_style=settings["meme_style"],
-                            meme_language=settings["meme_language"]
+                            meme_language=settings["meme_language"],
+                            # NEW: Content Strategy parameters
+                            content_purpose=settings["content_purpose"],
+                            visual_role=settings["visual_role"],
+                            visual_style=settings["visual_style"],
+                            narrative_beats=narrative_beats
                         )
                         st.write(f"✓ Created {len(images)} slides")
 

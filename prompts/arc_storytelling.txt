@@ -1,0 +1,113 @@
+## STORYTELLING NARRATIVE ARC
+
+You are creating STORY-DRIVEN content. Your carousel MUST follow classic narrative structure to captivate and engage.
+
+### SLIDE STRUCTURE (7 slides):
+
+[SLIDE 1 - BEAT: HOOK]
+- Start IN MEDIAS RES or with INTRIGUE
+- Drop reader into a moment, a scene, a question
+- "The day I lost everything..." / "She said one thing that changed my life..."
+- Create immediate curiosity
+- Visual mood: DRAMATIC, ATTENTION-GRABBING, MYSTERIOUS
+
+[SLIDE 2 - BEAT: TENSION_BUILD]
+- RAISE THE STAKES - what's at risk?
+- Build anticipation and suspense
+- Add context that makes the conflict matter
+- "But I didn't know what was coming..."
+- Visual mood: TENSE, SUSPENSEFUL, ANTICIPATION
+
+[SLIDE 3 - BEAT: CONFLICT_PEAK]
+- The CLIMAX - the hardest moment
+- The confrontation, the failure, the breaking point
+- Maximum emotional intensity
+- Don't resolve yet - let them feel it
+- Visual mood: INTENSE, PEAK EMOTION, DRAMATIC
+
+[SLIDE 4 - BEAT: RESOLUTION]
+- The TURN - how things started changing
+- The first glimmer of hope or breakthrough
+- Show the transformation beginning
+- Visual mood: RELIEF, TRANSFORMATION, SHIFT
+
+[SLIDE 5 - BEAT: RESOLUTION]
+- Complete the resolution
+- Show the new reality, the outcome
+- The "after" to the "before" of slides 1-3
+- Visual mood: PEACE, COMPLETION, NEW STATE
+
+[SLIDE 6 - BEAT: TAKEAWAY]
+- The LESSON - what did this story teach?
+- Universal truth extracted from personal experience
+- "This taught me that..."
+- Visual mood: WISE, REFLECTIVE, CONTEMPLATIVE
+
+[SLIDE 7 - BEAT: CTA]
+- Invite reader INTO the story
+- "Have you experienced this?"
+- Call to action that connects, not just promotes
+- Visual mood: TEXT-ONLY (no image)
+
+### VISUAL GUIDELINES FOR STORYTELLING CONTENT:
+
+DO USE:
+- Movie/TV scene stills that match the emotion
+- Cinematic photography
+- Anime or cartoon scenes (if style-consistent)
+- Images that SHOW don't TELL
+- Scene-setting imagery
+
+DO NOT USE:
+- Random memes (break narrative immersion)
+- Generic stock photos (feel disconnected)
+- Mixing styles (don't go cartoon → photo → meme)
+- Decorative images that don't serve the story
+
+### STYLE CONSISTENCY RULE:
+
+Once you establish a visual style (cartoon, cinematic, photo), MAINTAIN it throughout:
+- If slide 2 uses a cartoon scene → slides 3-6 should also use cartoon
+- If slide 2 uses movie stills → slides 3-6 should also use movie stills
+- This creates visual coherence and professional feel
+
+### OUTPUT FORMAT:
+
+For each slide, include the beat marker:
+
+```
+[SLIDE 1 - BEAT: HOOK]
+Your slide content here...
+
+[SLIDE 2 - BEAT: TENSION_BUILD]
+Your slide content here...
+```
+
+This beat marker helps the visual system select narratively appropriate imagery.
+
+### NARRATIVE ENERGY FLOW:
+
+The tension should flow like this:
+1. HIGH-INTRIGUING (hook) →
+2. RISING (tension) →
+3. PEAK (conflict) →
+4. FALLING-RELIEF (resolution) →
+5. CALM (more resolution) →
+6. REFLECTIVE (takeaway) →
+7. WARM-CONNECTING (cta)
+
+### STORYTELLING TECHNIQUES:
+
+- Use sensory details ("The cold tile floor...")
+- Include dialogue when possible ("She said...")
+- Be specific about time/place ("Tuesday morning, 3am...")
+- Show vulnerability, not perfection
+- Make the universal feel personal
+
+### TONE FOR STORYTELLING CONTENT:
+
+- Intimate, not distant
+- Vivid, not vague
+- Honest, not curated
+- Engaging, not lecturing
+- Human, not branded

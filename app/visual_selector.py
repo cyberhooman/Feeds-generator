@@ -251,6 +251,181 @@ class VisualSelector:
         return strategies
 
 
+class StyleConsistencyTracker:
+    """
+    Ensures visual style consistency across all slides in a carousel.
+
+    Once a visual style is selected (cartoon, photo, movie, etc.),
+    this tracker ensures subsequent slides use the same style family.
+
+    This prevents the chaotic mix of cartoons + memes + photos
+    that creates visual incoherence.
+    """
+
+    # Style families and their associated search terms
+    STYLE_FAMILIES = {
+        'cartoon': ['cartoon', 'animated', 'animation', 'spongebob', 'simpsons', 'anime', 'pixar', 'disney'],
+        'movie': ['movie', 'film', 'cinema', 'tv show', 'scene', 'still', 'screenshot'],
+        'photo': ['photo', 'stock', 'professional', 'real', 'portrait', 'reuters', 'ap news'],
+        'diagram': ['diagram', 'chart', 'graph', 'infographic', 'illustration', 'flowchart'],
+        'meme': ['meme', 'reaction', 'wojak', 'pepe', 'template'],
+    }
+
+    def __init__(self, preferred_style: Optional[str] = None):
+        """
+        Initialize the style tracker.
+
+        Args:
+            preferred_style: Optional style lock ('cartoon', 'movie', 'photo', 'diagram', 'auto', 'text_only')
+                           If 'auto' or None, style will be auto-detected from first selection.
+                           If 'text_only', no images should be used.
+        """
+        self.preferred_style = preferred_style if preferred_style not in ['auto', None] else None
+        self.locked_style: Optional[str] = self.preferred_style
+        self.selection_history: List[Dict] = []
+        logger.info(f"StyleConsistencyTracker initialized with preferred_style={preferred_style}")
+
+    def is_text_only_mode(self) -> bool:
+        """Check if tracker is in text-only mode."""
+        return self.preferred_style == 'text_only'
+
+    def get_allowed_search_terms(self) -> Optional[List[str]]:
+        """
+        Get allowed search terms based on locked style.
+
+        Returns:
+            List of allowed search terms, or None if no style lock (all terms allowed)
+        """
+        if not self.locked_style:
+            return None
+
+        return self.STYLE_FAMILIES.get(self.locked_style, None)
+
+    def get_blocked_search_terms(self) -> List[str]:
+        """
+        Get search terms that should be blocked (other style families).
+
+        Returns:
+            List of terms to exclude from search
+        """
+        if not self.locked_style:
+            return []
+
+        blocked = []
+        for style, terms in self.STYLE_FAMILIES.items():
+            if style != self.locked_style:
+                blocked.extend(terms)
+
+        return blocked
+
+    def record_selection(self, source: str, search_query: str, image_url: str):
+        """
+        Record a visual selection and auto-lock style if not already locked.
+
+        Args:
+            source: Source of the image (e.g., 'bing', 'google', 'reuters')
+            search_query: The search query used
+            image_url: URL of the selected image
+        """
+        # Infer style from search query and source
+        inferred_style = self._infer_style(search_query, source)
+
+        self.selection_history.append({
+            'source': source,
+            'query': search_query,
+            'url': image_url,
+            'inferred_style': inferred_style
+        })
+
+        # Auto-lock style from first selection
+        if not self.locked_style and inferred_style:
+            self.locked_style = inferred_style
+            logger.info(f"Style auto-locked to '{inferred_style}' based on first selection")
+
+    def _infer_style(self, search_query: str, source: str) -> Optional[str]:
+        """Infer the visual style from search query and source."""
+        query_lower = search_query.lower()
+        source_lower = source.lower()
+
+        # Check each style family
+        for style, terms in self.STYLE_FAMILIES.items():
+            for term in terms:
+                if term in query_lower or term in source_lower:
+                    return style
+
+        # Source-based inference
+        if source_lower in ['reuters', 'ap', 'getty']:
+            return 'photo'
+
+        return None
+
+    def should_use_image(self, slide_number: int, total_slides: int) -> bool:
+        """
+        Determine if a slide should have an image based on style settings.
+
+        Args:
+            slide_number: 1-indexed slide number
+            total_slides: Total slides in carousel
+
+        Returns:
+            True if image should be used, False for text-only
+        """
+        # Text-only mode
+        if self.is_text_only_mode():
+            return False
+
+        # Hook and CTA slides typically don't need images
+        if slide_number == 1 or slide_number == total_slides:
+            return False
+
+        return True
+
+    def filter_search_query(self, original_query: str) -> str:
+        """
+        Filter search query to match locked style.
+
+        Adds style-specific terms and removes conflicting terms.
+
+        Args:
+            original_query: The original search query
+
+        Returns:
+            Modified query optimized for style consistency
+        """
+        if not self.locked_style:
+            return original_query
+
+        # Add style hint to query
+        style_hint = self.STYLE_FAMILIES.get(self.locked_style, [''])[0]
+
+        # Remove conflicting terms
+        filtered_query = original_query
+        for style, terms in self.STYLE_FAMILIES.items():
+            if style != self.locked_style:
+                for term in terms:
+                    # Remove term if it appears as a whole word
+                    filtered_query = re.sub(rf'\b{re.escape(term)}\b', '', filtered_query, flags=re.IGNORECASE)
+
+        # Clean up extra spaces
+        filtered_query = ' '.join(filtered_query.split())
+
+        # Add style hint if not already present
+        if style_hint and style_hint not in filtered_query.lower():
+            filtered_query = f"{filtered_query} {style_hint}"
+
+        return filtered_query.strip()
+
+    def get_style_report(self) -> Dict:
+        """Get a report of style tracking status."""
+        return {
+            'preferred_style': self.preferred_style,
+            'locked_style': self.locked_style,
+            'is_text_only': self.is_text_only_mode(),
+            'selection_count': len(self.selection_history),
+            'allowed_terms': self.get_allowed_search_terms(),
+        }
+
+
 # Convenience function
 def select_carousel_visuals(
     slides: List[str],
