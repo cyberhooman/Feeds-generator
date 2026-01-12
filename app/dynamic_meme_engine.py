@@ -16,6 +16,7 @@ import base64
 import re
 import io
 import tempfile
+import time
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Any
 from dataclasses import dataclass
@@ -171,6 +172,12 @@ class DynamicMemeEngine:
     """
     Intelligent engine that dynamically fetches memes from the internet
     based on content analysis. No local storage required.
+
+    Improvements:
+    - Pre-caches all 15 meme templates at startup (reliable fallback)
+    - Validates all URLs work before using
+    - Adds retry logic with exponential backoff
+    - Better error handling and logging
     """
 
     def __init__(self):
@@ -186,7 +193,120 @@ class DynamicMemeEngine:
         # Cache for session (cleared after use)
         self._session_cache = {}
 
+        # Pre-cache all meme templates at startup
+        self._template_cache = {}
+        self._precache_meme_templates()
+
         logger.info("DynamicMemeEngine initialized")
+
+    def _precache_meme_templates(self):
+        """
+        Pre-cache all 15 meme templates at startup.
+
+        This ensures we ALWAYS have a reliable fallback, even if APIs fail.
+        """
+        logger.info("Pre-caching meme templates...")
+
+        DIRECT_URLS = {
+            "drake": "https://i.imgflip.com/30b1gx.jpg",
+            "pikachu": "https://imgflip.com/s/meme/Surprised-Pikachu.jpg",
+            "galaxy_brain": "https://i.imgflip.com/2h7h1d.jpg",
+            "clown": "https://i.imgflip.com/38el31.jpg",
+            "distracted": "https://i.imgflip.com/1ur9b0.jpg",
+            "this_is_fine": "https://i.imgflip.com/26am.jpg",
+            "crying_cat": "https://i.imgflip.com/2hgfw.jpg",
+            "stonks": "https://i.imgflip.com/3lmzyx.jpg",
+            "monkey_look": "https://i.imgflip.com/1ihzfe.jpg",
+            "woman_cat": "https://i.imgflip.com/345v97.jpg",
+            "gru_plan": "https://i.imgflip.com/26jxvz.jpg",
+            "two_buttons": "https://i.imgflip.com/1g8my4.jpg",
+            "waiting_skeleton": "https://i.imgflip.com/2fm6x.jpg",
+            "trade_offer": "https://i.imgflip.com/54hjww.jpg",
+            "uno_reverse": "https://i.imgflip.com/3lmzyx.jpg",
+        }
+
+        for fmt, url in DIRECT_URLS.items():
+            try:
+                # Try to download and validate
+                response = requests.get(
+                    url,
+                    timeout=10,
+                    headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
+                )
+
+                if response.status_code == 200:
+                    # Validate it's actually an image
+                    try:
+                        from PIL import Image
+                        img = Image.open(io.BytesIO(response.content))
+                        img.verify()
+
+                        # Cache it
+                        cache_key = f"cached_{fmt}.jpg"
+                        cache_path = self.temp_dir / cache_key
+                        cache_path.write_bytes(response.content)
+
+                        self._template_cache[fmt] = str(cache_path)
+                        logger.debug(f"✓ Cached {fmt}")
+                    except Exception as e:
+                        logger.warning(f"Invalid image for {fmt}: {e}")
+                else:
+                    logger.warning(f"Failed to fetch {fmt}: HTTP {response.status_code}")
+
+            except Exception as e:
+                logger.warning(f"Pre-cache failed for {fmt}: {e}")
+
+        logger.info(f"Pre-cached {len(self._template_cache)}/{len(DIRECT_URLS)} meme templates")
+
+    def _is_url_valid(self, url: str, timeout: int = 5) -> bool:
+        """
+        Check if a URL is accessible and returns valid content.
+
+        Returns: True if URL is valid and accessible
+        """
+        try:
+            response = requests.head(url, timeout=timeout, allow_redirects=True)
+            return response.status_code == 200
+        except:
+            return False
+
+    def _fetch_with_retry(self, url: str, max_retries: int = 3) -> Optional[bytes]:
+        """
+        Fetch URL with retry logic and exponential backoff.
+
+        Args:
+            url: URL to fetch
+            max_retries: Maximum number of retries
+
+        Returns:
+            Response content or None if failed
+        """
+        import time
+
+        for attempt in range(max_retries):
+            try:
+                response = requests.get(
+                    url,
+                    timeout=10,
+                    headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
+                )
+
+                if response.status_code == 200:
+                    return response.content
+
+                logger.warning(f"Attempt {attempt + 1}: HTTP {response.status_code}")
+
+            except requests.Timeout:
+                logger.warning(f"Attempt {attempt + 1}: Timeout")
+            except Exception as e:
+                logger.warning(f"Attempt {attempt + 1}: {e}")
+
+            # Exponential backoff: 0.5s, 1s, 2s
+            if attempt < max_retries - 1:
+                wait_time = 0.5 * (2 ** attempt)
+                time.sleep(wait_time)
+
+        return None
 
     def analyze_content(self, text: str, topic_hint: str = None) -> ContentAnalysis:
         """
@@ -393,18 +513,37 @@ class DynamicMemeEngine:
         """
         Synchronous method to fetch a meme from the internet.
 
-        Tries multiple sources in order of preference.
+        Improved flow:
+        1. Try Imgflip API (fresh content)
+        2. Try pre-cached template (reliable fallback)
+        3. Return None only if both fail
         """
         # Try Imgflip first (most reliable for meme templates)
         meme = self._fetch_from_imgflip_sync(format_type, search_queries)
         if meme:
+            logger.info(f"✓ Fetched {format_type} from Imgflip API")
             return meme
 
-        # Fallback: Try direct URLs for known formats
-        meme = self._fetch_from_direct_urls(format_type)
-        if meme:
-            return meme
+        # Fallback to pre-cached template (guaranteed to exist if precache succeeded)
+        if format_type in self._template_cache:
+            cached_path = self._template_cache[format_type]
+            try:
+                with open(cached_path, 'rb') as f:
+                    image_data = f.read()
 
+                return FetchedMeme(
+                    url=f"cached://{format_type}",
+                    image_data=image_data,
+                    temp_path=cached_path,
+                    source="precache",
+                    title=format_type.replace("_", " ").title(),
+                    relevance_score=0.7,  # Pre-cached templates are good quality
+                    format_type=format_type
+                )
+            except Exception as e:
+                logger.warning(f"Failed to use cached {format_type}: {e}")
+
+        logger.warning(f"✗ No meme available for {format_type}")
         return None
 
     def _fetch_from_imgflip_sync(self, format_type: str, search_queries: List[str]) -> Optional[FetchedMeme]:

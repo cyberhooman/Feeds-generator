@@ -45,7 +45,8 @@
       "Bash(echo:*)",
       "Bash(done)",
       "Bash(ls -la \"d:\\\\code\\\\Instagram feeds generator\\\\templates\\\\slides\"\" 2>/dev/null || echo \"Directory not found \")",
-      "Bash(tasklist:*)"
+      "Bash(tasklist:*)",
+      "Bash(start cmd /c \"streamlit run streamlit_app.py\")"
     ],
     "deny": [],
     "ask": []

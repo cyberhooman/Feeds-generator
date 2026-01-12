@@ -107,8 +107,31 @@
             height: 20px;
         }
 
-        /* Text highlight styling */
+        /* Text highlight styling - PROFESSIONAL VERSION */
+        /* Uses bold text instead of yellow boxes for cleaner look */
         .highlight {
+            /* Option 1: Bold only (like @theeconomicinfluence.id) */
+            font-weight: 800;
+            color: var(--text-primary, #fff);
+            /* No background - cleaner professional look */
+            background: none;
+            padding: 0;
+            display: inline;
+        }
+
+        /* Alternative: Subtle highlight (use class="highlight-subtle") */
+        .highlight-subtle {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary, #fff);
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline;
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+        }
+
+        /* Legacy yellow highlight (use class="highlight-yellow" if needed) */
+        .highlight-yellow {
             background: var(--highlight-bg, #FFD93D);
             color: var(--highlight-text, #000);
             padding: 4px 14px;

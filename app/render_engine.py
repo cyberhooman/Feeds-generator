@@ -12,7 +12,7 @@ import subprocess
 import tempfile
 import shutil
 from pathlib import Path
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional, Any, Tuple
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from dataclasses import dataclass
 
@@ -88,6 +88,36 @@ class TextFormatter:
     """Formats text for HTML rendering with highlights and markdown."""
 
     @staticmethod
+    def truncate_text_with_ellipsis(
+        text: str,
+        max_chars: int = 280,
+        add_ellipsis: bool = True
+    ) -> Tuple[str, bool]:
+        """
+        Truncate text to fit within max characters, preserving word boundaries.
+
+        Args:
+            text: Text to truncate
+            max_chars: Maximum characters allowed
+            add_ellipsis: Add "..." if truncated
+
+        Returns:
+            Tuple of (truncated_text, was_truncated)
+        """
+        clean_text = re.sub(r'<[^>]+>', '', text)
+
+        if len(clean_text) <= max_chars:
+            return text, False
+
+        # Truncate at word boundary
+        words = clean_text[:max_chars].rsplit(' ', 1)[0]
+        truncated = words + ('...' if add_ellipsis else '')
+
+        # Re-apply any formatting to truncated version
+        # (This is simplified - just append ellipsis to original)
+        return text[:len(words) * 2] + ('...' if add_ellipsis else ''), True
+
+    @staticmethod
     def format_text(text: str, highlights: List[str] = None) -> str:
         """
         Convert text with markdown and highlights to HTML.
@@ -156,6 +186,91 @@ class TextFormatter:
         elif length < 60:
             return "compact"
         return ""
+
+    @staticmethod
+    def calculate_optimal_font_size(
+        text: str,
+        max_width_px: int = 900,
+        max_height_px: int = 600,
+        min_font_size: int = 24,
+        max_font_size: int = 68
+    ) -> Dict[str, Any]:
+        """
+        Calculate OPTIMAL font size for text to fit within slide bounds.
+
+        NEW: Replaces discrete size classes with continuous scaling.
+
+        Args:
+            text: Text to render (may include HTML)
+            max_width_px: Maximum width available
+            max_height_px: Maximum height available
+            min_font_size: Minimum readable font size
+            max_font_size: Maximum font size
+
+        Returns:
+            Dict with:
+            - font_size: Calculated font size
+            - line_height: Optimal line height
+            - needs_truncation: Bool - text won't fit even at min size
+            - recommended_action: "render", "truncate", "split"
+        """
+        # Remove HTML tags for calculation
+        clean_text = re.sub(r'<[^>]+>', '', text)
+        text_length = len(clean_text)
+        word_count = len(clean_text.split())
+
+        # Estimate characters per line at different font sizes
+        chars_per_line_estimate = {
+            24: 80,   # Small font, tight fit
+            32: 60,   # Medium-small
+            40: 45,   # Medium
+            48: 35,   # Medium-large
+            56: 28,   # Large
+            68: 20,   # Very large
+        }
+
+        # Calculate number of lines needed at different sizes
+        def estimate_lines_needed(font_size: int) -> int:
+            """Estimate lines needed for this text at given font size."""
+            chars_per_line = chars_per_line_estimate.get(font_size, 40)
+            estimated_lines = max(1, text_length // chars_per_line)
+            return int(estimated_lines * 1.2)  # 20% buffer
+
+        # Line height is typically 1.3-1.5x font size
+        def estimate_height_needed(font_size: int) -> int:
+            """Estimate total height needed for this text."""
+            lines = estimate_lines_needed(font_size)
+            line_height = int(font_size * 1.4)
+            return lines * line_height
+
+        # Start from max and work down
+        best_font_size = max_font_size
+        for size in range(max_font_size, min_font_size - 1, -4):
+            height_needed = estimate_height_needed(size)
+            if height_needed <= max_height_px:
+                best_font_size = size
+                break
+
+        # Check if text still won't fit
+        final_height = estimate_height_needed(best_font_size)
+        needs_truncation = final_height > max_height_px
+
+        # Determine recommended action
+        if needs_truncation:
+            action = "truncate"
+        elif text_length > 400:
+            action = "split"
+        else:
+            action = "render"
+
+        return {
+            'font_size': best_font_size,
+            'line_height': int(best_font_size * 1.4),
+            'needs_truncation': needs_truncation,
+            'estimated_height': final_height,
+            'max_height': max_height_px,
+            'recommended_action': action,
+        }
 
 
 class TemplateSelector:

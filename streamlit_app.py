@@ -374,16 +374,6 @@ def render_sidebar():
                 help="Automatically highlight important words"
             )
 
-            use_images = st.checkbox(
-                "Contextual Images",
-                value=check_pexels_api_key(),
-                disabled=not check_pexels_api_key(),
-                help="Add contextual stock photos"
-            )
-
-            if not check_pexels_api_key():
-                st.caption("Add PEXELS_API_KEY for images")
-
             skip_humanizer = st.checkbox("Skip humanization", value=False)
             output_name = st.text_input("Output folder", value="carousel")
 
@@ -406,48 +396,22 @@ def render_sidebar():
 
             show_slide_indicator = st.checkbox("Slide Indicators", value=False)
 
-            # Text-only is default (more professional)
+            # AI-Powered Visual Selection (simplified)
             use_memes = st.checkbox(
-                "Add Visual Images",
-                value=False,  # DEFAULT: Text-only for professional look
-                help="Add memes, cartoons, or movie scenes to slides (text-only is more professional)"
+                "🤖 AI Visual Selection",
+                value=True,  # DEFAULT: AI automatically chooses best images
+                help="AI intelligently chooses the best cartoon/movie/meme for each slide"
             )
 
             if use_memes:
-                st.caption("💡 Pro tip: Text-only carousels often perform better!")
+                st.success("🎯 AI Mode: Automatically selects cartoons, movies, or memes based on content")
+                st.caption("✨ AI analyzes each slide and picks the perfect visual (Spongebob, anime, movie scenes, memes, etc.)")
 
-                # Picture source selection - Including blend mode and smart infographics
-                picture_mode = st.radio(
-                    "Image Style",
-                    ["🎬 Movie/TV Scenes", "😂 Memes & Reactions", "🎨 Cartoons & Illustrations", "🎭 Blend (Mix All 3)", "📊 Smart Infographics (AI Decides)"],
-                    index=0,
-                    help="Choose the style of images to include",
-                    horizontal=False
-                )
-
-                use_ai_memes = True  # Always use AI search for these
+                # Always use AI with blend mode (intelligent mix)
+                use_ai_memes = True
+                content_type_override = "blend"  # AI freely chooses from all types
                 meme_style = "dark_minimal"
                 meme_language = "en"
-
-                if picture_mode == "🎬 Movie/TV Scenes":
-                    content_type_override = "movie_scene"
-                    st.caption("Sources: Movie stills, TV show scenes, iconic moments")
-
-                elif picture_mode == "😂 Memes & Reactions":
-                    content_type_override = "meme_reaction"
-                    st.caption("Sources: Popular memes, reaction images, viral moments")
-
-                elif picture_mode == "🎨 Cartoons & Illustrations":
-                    content_type_override = "cartoon"
-                    st.caption("Sources: Cartoons, illustrations, animated content")
-
-                elif picture_mode == "🎭 Blend (Mix All 3)":
-                    content_type_override = "blend"
-                    st.caption("🎭 Dynamic mix: Movies, memes, and cartoons for maximum variety!")
-
-                else:  # Smart Infographics mode
-                    content_type_override = "smart_infographic"
-                    st.caption("📊 AI analyzes each slide and adds charts/graphs/theory diagrams only where needed")
 
             else:
                 use_ai_memes = False
@@ -531,7 +495,6 @@ def render_sidebar():
         "theme": theme,
         "versions": versions if preset == "custom" else 1,
         "use_highlighting": use_highlighting if preset == "custom" else True,
-        "use_images": use_images if preset == "custom" else check_pexels_api_key(),
         "skip_humanizer": skip_humanizer if preset == "custom" else False,
         "output_name": output_name if preset == "custom" else "carousel",
         "show_logo": show_logo if preset == "custom" else False,
@@ -763,18 +726,8 @@ def main():
                         else:
                             st.write("Text-only mode")
 
-                        # Step 4: Images
+                        # Step 4: Images (removed - using AI meme agent instead)
                         image_assignments = None
-                        if settings["use_images"] and check_pexels_api_key():
-                            st.write("Finding contextual images...")
-                            try:
-                                from app.image_search import ContentImageMatcher
-                                matcher = ContentImageMatcher()
-                                image_assignments = matcher.get_images_for_slides(slides, meme_results)
-                                images_found = sum(1 for a in image_assignments if a.get('has_image'))
-                                st.write(f"✓ Found {images_found} images")
-                            except Exception as e:
-                                st.write(f"Warning: Images skipped: {e}")
 
                         # Step 5: Highlights
                         highlight_data = None

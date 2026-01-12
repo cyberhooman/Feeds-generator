@@ -338,94 +338,140 @@ Be VERY specific with proper names and locations."""
             "avoid_keywords": ["meme", "cartoon"]
         }
 
-    def analyze_entertainment_for_visuals(self, text: str, topic: str = None, content_type: str = "meme_reaction") -> Dict:
+    def analyze_entertainment_for_visuals(self, text: str, topic: str = None, content_type: str = "cartoon_scene") -> Dict:
         """
-        AI analysis for ENTERTAINMENT content (movies, memes, cartoons).
+        AI analysis for ENTERTAINMENT content - PROFESSIONAL QUALITY.
 
-        Creates search queries optimized for finding:
-        - Movie/TV scenes that match the emotional context
-        - Popular memes and reaction images
-        - Cartoons and illustrations
+        Optimized for @theeconomicinfluence.id style:
+        - Spongebob, Simpsons, popular cartoon scenes
+        - Movie/TV screenshots (no meme text overlays)
+        - Situation-matching (not just emotion)
         """
         is_indonesian = self._detect_indonesian(text)
 
-        # Define content-specific instructions
-        if content_type == "movie_scene":
+        # PROFESSIONAL CARTOON SCENE MODE (default for Indonesian content creators)
+        if content_type == "cartoon_scene":
             content_instruction = """
-FIND: Iconic movie/TV scenes that match the SITUATION and ACTION, not just emotion.
-CRITICAL: Match the CONTEXT, not just the feeling.
+YOUR JOB: Analyze the text and intelligently find the BEST cartoon/movie/anime scene that matches.
 
-THINK: "What movie scene shows this EXACT situation happening?"
+YOU ARE FREE TO CHOOSE ANY:
+- Cartoon show (Spongebob, Simpsons, Family Guy, South Park, Adventure Time, Regular Show, etc.)
+- Anime (any popular anime that fits)
+- Movie scene (any iconic movie)
+- Meme format (Pepe, Wojak, Doge, This is Fine, etc.)
+- Character (ANY character from ANY show/movie)
+
+CRITICAL THINKING REQUIRED:
+1. What is the EXACT situation/emotion in this text?
+2. What cartoon/movie character or scene PERFECTLY represents this?
+3. Think creatively - don't limit yourself to common choices
+4. Vary your choices - avoid repeating same show/character
+
+SEARCH QUERY FORMAT:
+- "[character name] [show/movie] [specific action/emotion] scene screenshot"
+- Be VERY specific about the action or emotion
+- Add "scene screenshot" to avoid meme templates with text
+
+EXAMPLES OF GOOD SEARCH QUERIES:
+- "Patrick Star sleeping under rock lazy Spongebob scene screenshot"
+- "Squidward Tentacles depressed alone window Spongebob scene screenshot"
+- "Homer Simpson eating donuts lazy couch scene screenshot"
+- "Pepe frog crying sad meme original scene"
+- "Gojo Satoru confident smiling Jujutsu Kaisen scene screenshot"
+- "This is fine dog fire burning comic scene"
+- "Rick Sanchez drunk existential Rick and Morty scene screenshot"
+
+CRITICAL RULES:
+1. Be SPECIFIC about the action/situation in search query
+2. Use "scene screenshot" to get clean images
+3. Think freely - ANY cartoon/anime/movie is valid
+4. Prioritize relevance over familiarity"""
+
+        elif content_type == "movie_scene":
+            content_instruction = """
+YOUR JOB: Find ANY iconic movie/TV scene that perfectly matches the situation.
+
+YOU ARE FREE TO CHOOSE:
+- ANY movie (classic, modern, international, etc.)
+- ANY TV show scene
+- ANY genre (drama, comedy, action, thriller, etc.)
+- Think creatively - obscure films are valid if they match perfectly
+
+SEARCH QUERY FORMAT:
+- "[movie/show title] [character if known] [specific scene/action] screenshot"
+- Be VERY specific about what's happening in the scene
+- Add "scene screenshot" to avoid promotional posters
 
 EXAMPLES:
-- "Bored reading books" → "Someone falling asleep with book" NOT just "bored face"
-- "Business failure" → "Wolf of Wall Street disaster scene" NOT just "sad person"
-- "Mind-blown by plot twist" → "Inception reality-breaking moment" NOT just "shocked face"
-- "Training/improvement" → "Rocky training montage" NOT just "sweaty person"
-- "Reading sci-fi" → "Person absorbed in book / futuristic scene" NOT random action
+- "Wolf of Wall Street Leonardo DiCaprio money throwing scene screenshot"
+- "Joker stairs dance rain scene screenshot"
+- "Parasite basement flooding chaos scene screenshot"
+- "The Office Jim looking at camera awkward scene screenshot"
+- "Fight Club Edward Norton insomnia mirror scene screenshot"
 
-SEARCH STRATEGY:
-1. Identify the SITUATION/ACTION in the text (reading, failing, discovering, training)
-2. Find movie scene showing that EXACT action
-3. Include character names + movie title + action
-4. Avoid generic emotions - focus on WHAT'S HAPPENING"""
+THINK FREELY: Choose based on RELEVANCE, not popularity!"""
 
-        elif content_type == "cartoon":
+        else:  # fallback to cartoon_scene
             content_instruction = """
-FIND: Cartoons, illustrations, or animated content that match the emotion.
-THINK: "What cartoon character or scene shows this feeling?"
-EXAMPLES:
-- Thinking hard → "thinking cartoon character"
-- Stressed → "stressed cartoon illustration"
-- Happy → "celebration cartoon"
-- Confused → "question marks cartoon"
-SEARCH TERMS: Include "cartoon", "illustration", "animated", avoid real photos"""
+FIND: Popular cartoon scenes matching the emotional context.
+Default to Spongebob/Simpsons scenes - most recognizable and versatile.
+SEARCH FORMAT: "[character] [show] [situation] scene" """
 
-        else:  # meme_reaction (default)
-            content_instruction = """
-FIND: Popular memes and reaction images that match the emotion.
-THINK: "What meme template perfectly captures this feeling?"
-EXAMPLES:
-- Realization → "Galaxy brain meme", "Wait it's all meme"
-- Disappointment → "Disappointed cricket fan", "Sad Pablo Escobar"
-- Success → "Success kid meme", "Stonks meme"
-- Confusion → "Confused math lady", "Nick Young question marks"
-SEARCH TERMS: Include "meme", "reaction", specific meme names"""
-
-        prompt = f"""You are an expert at finding the PERFECT visual to match content CONTEXT, not just emotion.
+        prompt = f"""You are a PROFESSIONAL content curator for Indonesian Instagram carousels.
+Your job: Find the PERFECT cartoon/movie scene for this slide content.
 
 TEXT: "{text}"
 TOPIC: {topic or "general"}
 LANGUAGE: {"Indonesian" if is_indonesian else "English"}
-CONTENT TYPE: {content_type.upper()}
 
 {content_instruction}
 
-YOUR JOB:
-1. Identify the SITUATION/ACTION happening in the text (not just the emotion)
-2. Think: "What movie scene shows this EXACT situation?"
-3. Create search with SPECIFIC movie/character + action
+ANALYZE THE TEXT:
+1. What SITUATION is being described? (not just emotion)
+2. What popular cartoon/movie scene shows this EXACT situation?
+3. Create a search query with: [character] + [show/movie] + [situation] + "scene"
 
-CRITICAL FOR MOVIE SCENES:
-- "bored reading books" → Search "person falling asleep reading book movie scene"
-- "business failed" → Search "Wolf of Wall Street office disaster scene"
-- "plot twist mind blown" → Search "Inception reality bending scene Leo DiCaprio"
-- "training improved" → Search "Rocky training montage stairs"
+EXAMPLE ANALYSES (showing creativity and variety):
 
-AVOID: Just searching emotions like "confused face" or "happy person"
-DO: Search situation + character + movie: "Hermione reading library Harry Potter scene"
+Example 1 - "orang yang kerja keras tapi ekonomi rapuh"
+→ Situation: Working hard every day but still financially struggling
+→ Perfect match: "Squidward Tentacles exhausted cashier Krusty Krab scene screenshot"
+→ Why: Squidward embodies working hard with no reward
+
+Example 2 - "tekanan sosial untuk terlihat sukses"
+→ Situation: Social pressure to appear successful while hiding struggles
+→ Perfect match: "Patrick Star fake mustache business Spongebob scene screenshot"
+→ Why: Patrick pretending to be sophisticated/successful is iconic
+
+Example 3 - "procrastination bener-bener ngerusak mental"
+→ Situation: Procrastination destroying mental health
+→ Perfect match: "Mordecai Rigby avoiding work Regular Show scene screenshot"
+→ Why: They're the ultimate procrastinators (different from previous slides)
+
+Example 4 - "anxiety overwhelm everything"
+→ Situation: Anxiety taking over, feeling overwhelmed
+→ Perfect match: "Chihiro crying anxious Spirited Away scene screenshot"
+→ Why: Powerful depiction of anxiety in a beautiful anime scene
+
+Example 5 - "dulu naif, sekarang burnout"
+→ Situation: Used to be naive/hopeful, now burned out
+→ Perfect match: "Bojack Horseman depressed couch drinking scene screenshot"
+→ Why: Bojack perfectly shows the transition from hope to burnout
+
+KEY INSIGHT: Think FREELY and choose the MOST FITTING scene regardless of show popularity!
 
 Return ONLY a JSON object:
 {{
-    "situation_context": "what's happening in the text (action/situation)",
-    "content_match": "specific movie/scene showing this situation",
-    "search_query": "movie title + character + action (NOT just emotion)",
+    "situation": "describe the situation in the text",
+    "emotion": "primary emotion (one word)",
+    "best_character": "Spongebob/Homer/Squidward/etc",
+    "best_show": "Spongebob/Simpsons/etc",
+    "search_query": "[character] [show] [situation] scene screenshot",
     "backup_queries": [
-        "alternative scene showing same situation",
-        "different movie same action",
-        "generic situation search"
-    ],
-    "mood": "one word emotion"
+        "alternative character same situation",
+        "different show same emotion",
+        "generic [emotion] cartoon scene"
+    ]
 }}"""
 
         try:
@@ -881,11 +927,12 @@ Return ONLY a JSON object:
         if not content_type:
             content_type = self._detect_content_type(text, topic)
 
-        # BLEND MODE: Randomly select between movie_scene, meme_reaction, cartoon for variety
+        # BLEND MODE: AI intelligently decides the best visual type for this specific content
         if content_type == "blend":
-            import random
-            content_type = random.choice(["movie_scene", "meme_reaction", "cartoon"])
-            logger.info(f"Blend mode: Selected {content_type.upper()} for this slide")
+            # Use cartoon_scene as default - AI will freely choose any cartoon/movie/anime/meme
+            # The AI prompt already allows complete freedom, so this is the most flexible option
+            content_type = "cartoon_scene"
+            logger.info(f"Blend mode: AI will intelligently choose the best visual type")
 
         # SMART INFOGRAPHIC MODE: AI decides if this slide needs a chart/graph/theory visual
         if content_type == "smart_infographic":
@@ -905,8 +952,8 @@ Return ONLY a JSON object:
         elif content_type == "infographic":
             # INFOGRAPHIC: Use the analysis from analyze_if_needs_infographic
             analysis = needs_infographic  # Already analyzed above
-        elif content_type in ["movie_scene", "meme_reaction", "cartoon"]:
-            # NEW: Specialized analysis for entertainment content
+        elif content_type in ["movie_scene", "meme_reaction", "cartoon", "cartoon_scene"]:
+            # NEW: Specialized analysis for entertainment content (cartoon_scene is the default)
             analysis = self.analyze_entertainment_for_visuals(text, topic, content_type)
         else:  # emotional/meme content (default)
             analysis = self.analyze_content_for_visuals(text, topic)
@@ -931,9 +978,29 @@ Return ONLY a JSON object:
             bing_urls = self.scrape_bing_images(f"{analysis['search_query']} news photo", limit=5)
             all_urls.extend([(url, 'bing') for url in bing_urls])
 
+        elif content_type == "cartoon_scene":
+            # PROFESSIONAL CARTOON SCENE SOURCES
+            # Priority: Clean cartoon screenshots from popular shows
+            search_query = analysis.get('search_query', '')
+
+            # 1. Bing Images - usually best for cartoon screenshots
+            bing_urls = self.scrape_bing_images(f"{search_query}", limit=max_results)
+            all_urls.extend([(url, 'bing') for url in bing_urls])
+
+            # 2. Google Images with specific filters
+            google_urls = self.scrape_google_images(f"{search_query} -meme -template", limit=max_results)
+            all_urls.extend([(url, 'google') for url in google_urls])
+
+            # 3. Try backup queries if character-specific
+            for backup in analysis.get('backup_queries', [])[:2]:
+                backup_urls = self.scrape_bing_images(backup, limit=5)
+                all_urls.extend([(url, 'bing_backup') for url in backup_urls])
+
+            logger.info(f"Cartoon scene search: {search_query}")
+
         elif content_type == "movie_scene":
             # MOVIE/TV SOURCES: Search for iconic scenes
-            bing_urls = self.scrape_bing_images(f"{analysis['search_query']} movie scene", limit=max_results)
+            bing_urls = self.scrape_bing_images(f"{analysis['search_query']} scene screenshot -meme", limit=max_results)
             all_urls.extend([(url, 'bing') for url in bing_urls])
 
             google_urls = self.scrape_google_images(f"{analysis['search_query']} film scene screenshot", limit=max_results)
@@ -948,15 +1015,15 @@ Return ONLY a JSON object:
             all_urls.extend([(url, 'google') for url in google_urls])
 
             # Also try imgur for memes
-            imgur_urls = self.scrape_imgur_images(analysis['search_query'], limit=5)
+            imgur_urls = self.scrape_imgur_search(analysis['search_query'], limit=5)
             all_urls.extend([(url, 'imgur') for url in imgur_urls])
 
         elif content_type == "cartoon":
-            # CARTOON/ILLUSTRATION SOURCES
-            bing_urls = self.scrape_bing_images(f"{analysis['search_query']} cartoon illustration", limit=max_results)
+            # CARTOON/ILLUSTRATION SOURCES (legacy - use cartoon_scene instead)
+            bing_urls = self.scrape_bing_images(f"{analysis['search_query']} cartoon scene", limit=max_results)
             all_urls.extend([(url, 'bing') for url in bing_urls])
 
-            google_urls = self.scrape_google_images(f"{analysis['search_query']} animated cartoon", limit=max_results)
+            google_urls = self.scrape_google_images(f"{analysis['search_query']} animated scene", limit=max_results)
             all_urls.extend([(url, 'google') for url in google_urls])
 
         elif content_type == "infographic":
