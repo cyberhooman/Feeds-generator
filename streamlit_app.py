@@ -67,9 +67,7 @@ def check_api_key():
     return bool(os.getenv("DEEPSEEK_API_KEY"))
 
 
-def check_pexels_api_key():
-    """Check if Pexels API key is configured"""
-    return bool(os.getenv("PEXELS_API_KEY"))
+# Pexels removed - using AI-powered Smart Image Curator instead
 
 
 def get_available_tones():
