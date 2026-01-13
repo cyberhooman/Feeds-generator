@@ -151,60 +151,74 @@ def get_theme_info():
 
 
 def render_sidebar():
-    """Render the professional sidebar."""
+    """Render the modern, easy-to-use sidebar."""
     with st.sidebar:
-        # Logo/Brand
+        # Modern Logo/Brand Header
         st.markdown("""
-        <div style="padding: 1.5rem 0; border-bottom: 1px solid var(--border-subtle); margin-bottom: 1.5rem;">
+        <div class="sidebar-section" style="background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); border: none; margin-bottom: 1rem;">
             <div style="display: flex; align-items: center; gap: 0.75rem;">
-                <div style="width: 36px; height: 36px; background: var(--pure-black); border-radius: 4px; display: flex; align-items: center; justify-content: center;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="18" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/></svg>
+                <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #10B981 0%, #059669 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="18" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/></svg>
                 </div>
                 <div>
-                    <div style="font-weight: 700; font-size: 1rem; color: var(--text-primary); letter-spacing: -0.02em;">Content Studio</div>
-                    <div style="font-size: 0.6875rem; color: var(--text-tertiary); font-family: var(--font-mono);">v2.0</div>
+                    <div style="font-weight: 700; font-size: 1.125rem; color: #FFFFFF; letter-spacing: -0.02em;">Content Studio</div>
+                    <div style="font-size: 0.6875rem; color: #10B981; font-weight: 500;">Pro Edition</div>
                 </div>
             </div>
         </div>
         """, unsafe_allow_html=True)
 
-        # Quick Presets
-        st.markdown('<h3 style="color: #71717A; font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin: 1.5rem 0 0.75rem 0;">Style Preset</h3>', unsafe_allow_html=True)
+        # Quick Start Presets - Card Section
+        st.markdown("""
+        <div class="sidebar-section">
+            <div class="sidebar-section-header">
+                <div class="sidebar-section-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                </div>
+                <span class="sidebar-section-title">Quick Start</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
         preset_options = {
-            "custom": {"name": "Custom", "desc": "Configure your own settings", "icon": "⚙️"},
-            "economic": {"name": "Economic Influence", "desc": "Dark, edgy economics content", "icon": "📊"},
-            "casual": {"name": "Casual Story", "desc": "Warm, personal storytelling", "icon": "✨"},
-            "professional": {"name": "Professional", "desc": "Clean, business content", "icon": "💼"}
+            "custom": {"name": "Custom", "icon": "⚙️"},
+            "economic": {"name": "Finance", "icon": "📊"},
+            "casual": {"name": "Story", "icon": "✨"},
+            "professional": {"name": "Business", "icon": "💼"}
         }
 
         # Initialize session state for preset
         if 'selected_preset' not in st.session_state:
             st.session_state.selected_preset = 'custom'
 
-        # Render preset buttons in 2x2 grid
-        cols = st.columns(2)
+        # Render preset buttons in 2x2 grid with modern styling
+        cols = st.columns(4)
         preset_keys = list(preset_options.keys())
 
         for idx, key in enumerate(preset_keys):
-            with cols[idx % 2]:
+            with cols[idx]:
                 option = preset_options[key]
                 is_selected = st.session_state.selected_preset == key
 
-                # Use Streamlit button with custom styling
-                button_label = f"{option['icon']} {option['name']}"
-
                 if st.button(
-                    button_label,
+                    f"{option['icon']}",
                     key=f"preset_{key}",
                     use_container_width=True,
-                    type="primary" if is_selected else "secondary"
+                    type="primary" if is_selected else "secondary",
+                    help=option['name']
                 ):
                     st.session_state.selected_preset = key
                     st.rerun()
 
-                # Show description below button
-                st.caption(option['desc'])
+        # Show current preset name
+        current_preset = preset_options[st.session_state.selected_preset]
+        st.markdown(f"""
+        <div style="text-align: center; margin: 0.5rem 0 1rem 0;">
+            <span style="font-size: 0.75rem; color: #64748B; background: #F1F5F9; padding: 0.25rem 0.75rem; border-radius: 20px;">
+                {current_preset['icon']} {current_preset['name']} Mode
+            </span>
+        </div>
+        """, unsafe_allow_html=True)
 
         preset = st.session_state.selected_preset
 
@@ -230,89 +244,95 @@ def render_sidebar():
             tone = None
             angle = None
 
-        # Custom settings expander
+        # Custom settings - Modern Card Section
         if preset == "custom":
-            with st.expander("Language & Tone", expanded=True):
-                language = st.selectbox(
-                    "Language",
-                    ["bahasa", "english", "mixed"],
-                    index=0
-                )
+            st.markdown("""
+            <div class="sidebar-section">
+                <div class="sidebar-section-header">
+                    <div class="sidebar-section-icon" style="background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                    </div>
+                    <span class="sidebar-section-title">Language & Style</span>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
 
-                # Tone selection with manual input option
-                st.markdown("**Tone**")
-                tone_mode = st.radio(
-                    "Tone Input Mode",
-                    ["Select from presets", "Write custom tone"],
-                    index=0,
-                    label_visibility="collapsed",
-                    horizontal=True,
-                    key="tone_mode"
-                )
+            language = st.selectbox(
+                "Language",
+                ["bahasa", "english", "mixed"],
+                index=0
+            )
 
-                if tone_mode == "Select from presets":
-                    all_tones = get_available_tones()
-                    available_tones = all_tones.get(language, [])
-                    if available_tones:
-                        default_idx = available_tones.index("santai_gaul") if "santai_gaul" in available_tones else 0
-                        tone = st.selectbox(
-                            "Select Tone",
-                            available_tones,
-                            index=default_idx,
-                            label_visibility="collapsed"
-                        )
-                    else:
-                        tone = "santai_gaul"
-                        st.caption("⚠️ No preset tones found")
-                else:
-                    tone = st.text_input(
-                        "Custom Tone",
-                        value="professional, friendly, informative",
-                        placeholder="e.g., casual, witty, educational",
-                        help="Describe the tone/voice you want (e.g., 'sarcastic but helpful', 'warm and empathetic')",
+            # Tone selection - simplified
+            tone_mode = st.radio(
+                "Tone",
+                ["Preset", "Custom"],
+                index=0,
+                horizontal=True,
+                key="tone_mode"
+            )
+
+            if tone_mode == "Preset":
+                all_tones = get_available_tones()
+                available_tones = all_tones.get(language, [])
+                if available_tones:
+                    default_idx = available_tones.index("santai_gaul") if "santai_gaul" in available_tones else 0
+                    tone = st.selectbox(
+                        "Select Tone",
+                        available_tones,
+                        index=default_idx,
                         label_visibility="collapsed"
                     )
-
-                st.markdown("---")
-
-                # Content Angle selection with manual input option
-                st.markdown("**Content Angle**")
-                angle_mode = st.radio(
-                    "Angle Input Mode",
-                    ["Select from presets", "Write custom angle"],
-                    index=0,
-                    label_visibility="collapsed",
-                    horizontal=True,
-                    key="angle_mode"
+                else:
+                    tone = "santai_gaul"
+            else:
+                tone = st.text_input(
+                    "Custom Tone",
+                    value="professional, friendly",
+                    placeholder="e.g., casual, witty",
+                    label_visibility="collapsed"
                 )
 
-                if angle_mode == "Select from presets":
-                    available_angles = get_available_angles()
-                    if available_angles:
-                        default_idx = available_angles.index("story_personal") if "story_personal" in available_angles else 0
-                        angle = st.selectbox(
-                            "Select Angle",
-                            available_angles,
-                            index=default_idx,
-                            label_visibility="collapsed"
-                        )
-                    else:
-                        angle = "story_personal"
-                        st.caption("⚠️ No preset angles found")
-                else:
-                    angle = st.text_area(
-                        "Custom Content Angle",
-                        value="Tell a personal story with lessons learned",
-                        placeholder="e.g., 'Start with a mistake, then show the solution', 'Controversial take with data backing'",
-                        help="Describe the content structure/approach you want",
-                        height=80,
+            # Content Angle - simplified
+            angle_mode = st.radio(
+                "Content Angle",
+                ["Preset", "Custom"],
+                index=0,
+                horizontal=True,
+                key="angle_mode"
+            )
+
+            if angle_mode == "Preset":
+                available_angles = get_available_angles()
+                if available_angles:
+                    default_idx = available_angles.index("story_personal") if "story_personal" in available_angles else 0
+                    angle = st.selectbox(
+                        "Select Angle",
+                        available_angles,
+                        index=default_idx,
                         label_visibility="collapsed"
                     )
+                else:
+                    angle = "story_personal"
+            else:
+                angle = st.text_area(
+                    "Custom Angle",
+                    value="Tell a personal story with lessons learned",
+                    height=60,
+                    label_visibility="collapsed"
+                )
 
-        st.markdown('<hr style="border: none; border-top: 1px solid #E2E8F0; margin: 1.5rem 0;">', unsafe_allow_html=True)
-
-        # Theme Selection
-        st.markdown('<h3 style="color: #71717A; font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin: 1.5rem 0 0.75rem 0;">Visual Theme</h3>', unsafe_allow_html=True)
+        # Theme Selection - Modern Visual Grid
+        st.markdown("""
+        <div class="sidebar-section">
+            <div class="sidebar-section-header">
+                <div class="sidebar-section-icon" style="background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.555C21.965 6.012 17.461 2 12 2z"/></svg>
+                </div>
+                <span class="sidebar-section-title">Visual Theme</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
         theme_info = get_theme_info()
         theme_names = list(theme_info.keys())
@@ -327,7 +347,7 @@ def render_sidebar():
             label_visibility="collapsed"
         )
 
-        # Theme preview - improved with clear spacing
+        # Compact theme preview
         colors = theme_info[theme]["colors"]
         is_gradient = "gradient" in theme
 
@@ -341,197 +361,190 @@ def render_sidebar():
         else:
             bg_style = f"background-color: {colors['bg']}"
 
-        # Smart text color based on background
         if theme in ['dark_mode', 'neon_nights', 'dark_gradient', 'ocean_gradient']:
             preview_text_color = '#FFFFFF'
-            preview_bg = colors['bg']
         else:
             preview_text_color = '#18181B'
-            preview_bg = colors['bg']
 
         st.markdown(f"""
-        <div style="{bg_style}; padding: 1.5rem; border-radius: 10px; text-align: center; margin: 0.75rem 0 0.5rem 0; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.1);">
-            <div style="color: {preview_text_color}; font-weight: 700; font-size: 1.5rem; margin-bottom: 0.75rem; letter-spacing: -0.02em;">Aa Bb Cc</div>
-            <div style="background: {colors['accent']}; color: {preview_bg}; padding: 6px 14px; border-radius: 6px; display: inline-block; font-size: 0.8125rem; font-weight: 600; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">Highlight Text</div>
+        <div style="{bg_style}; padding: 1rem; border-radius: 10px; text-align: center; margin: 0.5rem 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <div style="color: {preview_text_color}; font-weight: 700; font-size: 1.125rem; margin-bottom: 0.5rem;">Aa Bb</div>
+            <div style="background: {colors['accent']}; color: {colors['bg']}; padding: 4px 10px; border-radius: 4px; display: inline-block; font-size: 0.75rem; font-weight: 600;">Highlight</div>
+        </div>
+        <div style="text-align: center; margin-bottom: 1rem;">
+            <span style="font-size: 0.6875rem; color: #94A3B8;">{theme_info[theme]["description"]}</span>
         </div>
         """, unsafe_allow_html=True)
 
-        st.caption(theme_info[theme]["description"])
+        # Content Strategy - Compact Modern Card
+        st.markdown("""
+        <div class="sidebar-section">
+            <div class="sidebar-section-header">
+                <div class="sidebar-section-icon" style="background: linear-gradient(135deg, #EC4899 0%, #DB2777 100%);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                </div>
+                <span class="sidebar-section-title">Content Strategy</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
-        st.markdown('<hr style="border: none; border-top: 1px solid #E2E8F0; margin: 1.5rem 0;">', unsafe_allow_html=True)
+        content_purpose = st.radio(
+            "Purpose",
+            options=["Educational", "Motivational", "Storytelling"],
+            index=2,
+            horizontal=True,
+            help="Controls narrative arc"
+        )
 
-        # Generation Options
-        st.markdown('<h3 style="color: #64748B; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin: 1.5rem 0 0.75rem 0;">Generation</h3>', unsafe_allow_html=True)
+        visual_role = st.radio(
+            "Visuals",
+            options=["Amplify", "Evidence", "Minimal"],
+            index=0,
+            horizontal=True,
+            help="How images support text"
+        )
 
-        with st.expander("Output Options", expanded=False):
-            versions = st.slider("Content Versions", 1, 3, 1)
+        visual_style = st.selectbox(
+            "Style",
+            options=["Auto (AI)", "Cartoon", "Movie/TV", "Photos", "Diagrams", "Text Only"],
+            index=0,
+            label_visibility="collapsed"
+        )
 
-            use_highlighting = st.checkbox(
-                "AI Keyword Highlighting",
-                value=True,
-                help="Automatically highlight important words"
-            )
+        # Compact arc summary
+        strategy_summary = {
+            "Educational": "Problem → Explain → Apply",
+            "Motivational": "Pain → Shift → Action",
+            "Storytelling": "Hook → Tension → Resolve"
+        }
+        st.markdown(f"""
+        <div style="background: linear-gradient(135deg, rgba(236, 72, 153, 0.08) 0%, rgba(219, 39, 119, 0.08) 100%); padding: 0.5rem 0.75rem; border-radius: 8px; margin: 0.5rem 0 1rem 0; border-left: 3px solid #EC4899;">
+            <span style="font-size: 0.6875rem; color: #9D174D; font-weight: 500;">{strategy_summary[content_purpose]}</span>
+        </div>
+        """, unsafe_allow_html=True)
 
-            skip_humanizer = st.checkbox("Skip humanization", value=False)
-            output_name = st.text_input("Output folder", value="carousel")
+        # AI Visual & Options - Combined Compact Section
+        st.markdown("""
+        <div class="sidebar-section">
+            <div class="sidebar-section-header">
+                <div class="sidebar-section-icon" style="background: linear-gradient(135deg, #06B6D4 0%, #0891B2 100%);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="m6 20 .7-2.9A1.4 1.4 0 0 1 8.1 16h7.8a1.4 1.4 0 0 1 1.4 1.1l.7 2.9"/></svg>
+                </div>
+                <span class="sidebar-section-title">Output Settings</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
-        st.markdown('<hr style="border: none; border-top: 1px solid #E2E8F0; margin: 1.5rem 0;">', unsafe_allow_html=True)
+        # AI Visual Selection toggle
+        use_memes = st.toggle("AI Visual Selection", value=True, help="AI picks best images")
 
-        # Content Strategy Section - NEW
-        st.markdown('<h3 style="color: #64748B; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin: 1.5rem 0 0.75rem 0;">Content Strategy</h3>', unsafe_allow_html=True)
+        if use_memes:
+            st.markdown("""
+            <div style="background: #ECFDF5; padding: 0.5rem 0.75rem; border-radius: 8px; margin-bottom: 0.75rem;">
+                <span style="font-size: 0.6875rem; color: #047857;">AI auto-selects cartoons, movies, memes</span>
+            </div>
+            """, unsafe_allow_html=True)
+            use_ai_memes = True
+            content_type_override = "blend"
+            meme_style = "dark_minimal"
+            meme_language = "en"
+        else:
+            st.markdown("""
+            <div style="background: #F1F5F9; padding: 0.5rem 0.75rem; border-radius: 8px; margin-bottom: 0.75rem;">
+                <span style="font-size: 0.6875rem; color: #64748B;">Text-only mode</span>
+            </div>
+            """, unsafe_allow_html=True)
+            use_ai_memes = False
+            content_type_override = None
+            meme_style = "dark_minimal"
+            meme_language = "en"
 
-        with st.expander("Narrative & Visual Strategy", expanded=True):
-            st.markdown("**Content Purpose**")
-            st.caption("Controls the narrative arc and emotional flow of your carousel")
-            content_purpose = st.radio(
-                "What type of content are you creating?",
-                options=["Educational", "Motivational", "Storytelling"],
-                index=2,  # Default to Storytelling
-                horizontal=True,
-                label_visibility="collapsed",
-                help="Educational: problem → explanation → application | Motivational: pain → shift → action | Storytelling: hook → tension → resolution"
-            )
+        # Compact toggles
+        col1, col2 = st.columns(2)
+        with col1:
+            use_highlighting = st.toggle("Highlights", value=True, help="Highlight keywords")
+        with col2:
+            show_logo = st.toggle("Logo", value=False, help="Show logo on slides")
 
-            st.markdown("---")
-
-            st.markdown("**Visual Role**")
-            st.caption("How should images support your message?")
-            visual_role = st.radio(
-                "How should visuals relate to text?",
-                options=["Amplify Emotion", "Provide Evidence", "Minimal/None"],
-                index=0,  # Default to Amplify Emotion
-                horizontal=True,
-                label_visibility="collapsed",
-                help="Amplify: images intensify feelings | Evidence: images prove claims | Minimal: mostly text"
-            )
-
-            st.markdown("---")
-
-            st.markdown("**Visual Style**")
-            st.caption("Lock to one style for consistency across all slides")
-            visual_style = st.selectbox(
-                "Preferred visual style",
-                options=["Auto (AI Decides)", "Cartoon Scenes", "Movie/TV Stills", "Professional Photos", "Diagrams/Charts", "Text Only"],
-                index=0,
-                label_visibility="collapsed",
-                help="Auto lets AI choose, or lock to one style for visual coherence"
-            )
-
-            # Show strategy summary
-            strategy_summary = {
-                "Educational": "Problem → Context → Explanation → Application → Summary",
-                "Motivational": "Pain Point → Empathy → Shift → New Perspective → Action",
-                "Storytelling": "Hook → Tension → Conflict → Resolution → Takeaway"
-            }
-            st.info(f"**Arc:** {strategy_summary[content_purpose]}")
-
-        st.markdown('<hr style="border: none; border-top: 1px solid #E2E8F0; margin: 1.5rem 0;">', unsafe_allow_html=True)
-
-        # Display Options
-        st.markdown('<h3 style="color: #64748B; font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin: 1.5rem 0 0.75rem 0;">Display</h3>', unsafe_allow_html=True)
-
-        with st.expander("Slide Settings", expanded=False):
-            show_logo = st.checkbox("Show Logo", value=False)
-            logo_path = None
-            if show_logo:
-                default_logo = Path("assets/logo.png")
-                if default_logo.exists():
-                    st.caption("Using: assets/logo.png")
-                    logo_path = str(default_logo)
-                else:
-                    st.caption("Add logo.png to assets/")
-                    show_logo = False
-
-            show_slide_indicator = st.checkbox("Slide Indicators", value=False)
-
-            # AI-Powered Visual Selection (simplified)
-            use_memes = st.checkbox(
-                "🤖 AI Visual Selection",
-                value=True,  # DEFAULT: AI automatically chooses best images
-                help="AI intelligently chooses the best cartoon/movie/meme for each slide"
-            )
-
-            if use_memes:
-                st.success("🎯 AI Mode: Automatically selects cartoons, movies, or memes based on content")
-                st.caption("✨ AI analyzes each slide and picks the perfect visual (Spongebob, anime, movie scenes, memes, etc.)")
-
-                # Always use AI with blend mode (intelligent mix)
-                use_ai_memes = True
-                content_type_override = "blend"  # AI freely chooses from all types
-                meme_style = "dark_minimal"
-                meme_language = "en"
-
+        logo_path = None
+        if show_logo:
+            default_logo = Path("assets/logo.png")
+            if default_logo.exists():
+                logo_path = str(default_logo)
             else:
-                use_ai_memes = False
-                content_type_override = None
-                meme_style = "dark_minimal"
-                meme_language = "en"
-                st.info("✨ Text-only mode - Clean, professional look!")
+                show_logo = False
 
-        st.markdown('<hr style="border: none; border-top: 1px solid #E2E8F0; margin: 1.5rem 0;">', unsafe_allow_html=True)
+        col3, col4 = st.columns(2)
+        with col3:
+            show_slide_indicator = st.toggle("Indicators", value=False, help="Slide numbers")
+        with col4:
+            skip_humanizer = st.toggle("Skip AI Check", value=False, help="Skip humanization")
 
-        # System Status
-        st.markdown('<h3 style="color: #71717A; font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin: 1.5rem 0 0.75rem 0;">System Status</h3>', unsafe_allow_html=True)
+        # Advanced options (collapsed)
+        with st.expander("Advanced", expanded=False):
+            versions = st.slider("Versions", 1, 3, 1)
+            output_name = st.text_input("Folder", value="carousel", label_visibility="collapsed", placeholder="Output folder name")
 
-        # Renderer status
-        if PLAYWRIGHT_AVAILABLE:
-            st.markdown(render_status_badge("success", "Renderer"), unsafe_allow_html=True)
-        else:
-            st.markdown(render_status_badge("error", "Renderer"), unsafe_allow_html=True)
+        # System Status - Compact inline
+        st.markdown("""
+        <div class="sidebar-section" style="padding: 0.75rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <span style="font-size: 0.6875rem; color: #64748B; font-weight: 500;">System Status</span>
+                <div style="display: flex; gap: 0.75rem;">
+        """, unsafe_allow_html=True)
 
-        st.markdown('<div style="height: 0.5rem;"></div>', unsafe_allow_html=True)
+        renderer_status = "online" if PLAYWRIGHT_AVAILABLE else "offline"
+        api_status = "online" if check_api_key() else "offline"
 
-        # API Key status
-        if check_api_key():
-            st.markdown(render_status_badge("success", "API Key"), unsafe_allow_html=True)
-        else:
-            st.markdown(render_status_badge("error", "API Key"), unsafe_allow_html=True)
+        st.markdown(f"""
+                    <div style="display: flex; align-items: center; gap: 0.25rem;">
+                        <span class="status-dot {renderer_status}"></span>
+                        <span style="font-size: 0.625rem; color: #64748B;">Renderer</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.25rem;">
+                        <span class="status-dot {api_status}"></span>
+                        <span style="font-size: 0.625rem; color: #64748B;">API</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
-        # Draft History Section
-        st.markdown('<hr style="border: none; border-top: 1px solid #E2E8F0; margin: 1.5rem 0;">', unsafe_allow_html=True)
-        st.markdown('<h3 style="color: #71717A; font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin: 1.5rem 0 0.75rem 0;">Draft History</h3>', unsafe_allow_html=True)
-
-        # Initialize draft history in session state
+        # Draft History - Compact
         if 'draft_history' not in st.session_state:
             st.session_state.draft_history = []
 
-        # Show save current draft button
-        if st.session_state.get('content_draft', '').strip():
-            if st.button("💾 Save Current Draft", use_container_width=True, help="Save draft to history"):
-                timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
-                preview = st.session_state.content_draft[:50] + "..." if len(st.session_state.content_draft) > 50 else st.session_state.content_draft
-                st.session_state.draft_history.insert(0, {
-                    'content': st.session_state.content_draft,
-                    'timestamp': timestamp,
-                    'preview': preview
-                })
-                # Keep only last 5 drafts
-                st.session_state.draft_history = st.session_state.draft_history[:5]
-                st.success("Draft saved!")
-                st.rerun()
+        if st.session_state.get('content_draft', '').strip() or st.session_state.draft_history:
+            with st.expander("Drafts", expanded=False):
+                if st.session_state.get('content_draft', '').strip():
+                    if st.button("Save Current", use_container_width=True, type="secondary"):
+                        timestamp = datetime.now().strftime("%m/%d %H:%M")
+                        preview = st.session_state.content_draft[:40] + "..." if len(st.session_state.content_draft) > 40 else st.session_state.content_draft
+                        st.session_state.draft_history.insert(0, {
+                            'content': st.session_state.content_draft,
+                            'timestamp': timestamp,
+                            'preview': preview
+                        })
+                        st.session_state.draft_history = st.session_state.draft_history[:5]
+                        st.rerun()
 
-        # Display saved drafts
-        if st.session_state.draft_history:
-            for idx, draft in enumerate(st.session_state.draft_history):
-                with st.expander(f"📝 {draft['timestamp']}", expanded=False):
-                    st.caption(draft['preview'])
-                    col_load, col_del = st.columns([3, 1])
+                for idx, draft in enumerate(st.session_state.draft_history):
+                    col_info, col_load, col_del = st.columns([3, 1, 1])
+                    with col_info:
+                        st.markdown(f"<span style='font-size: 0.6875rem; color: #64748B;'>{draft['timestamp']}</span>", unsafe_allow_html=True)
                     with col_load:
-                        if st.button("Load", key=f"load_draft_{idx}", use_container_width=True):
+                        if st.button("Load", key=f"load_{idx}", use_container_width=True):
                             st.session_state.content_draft = draft['content']
-                            st.success("Draft loaded!")
                             st.rerun()
                     with col_del:
-                        if st.button("🗑️", key=f"del_draft_{idx}", help="Delete this draft"):
+                        if st.button("X", key=f"del_{idx}"):
                             st.session_state.draft_history.pop(idx)
                             st.rerun()
-        else:
-            st.caption("No saved drafts yet")
 
         # Footer
         st.markdown("""
-        <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #E2E8F0; text-align: center;">
-            <div style="font-size: 0.75rem; color: #94A3B8;">Powered by DeepSeek AI</div>
+        <div style="margin-top: 1.5rem; text-align: center;">
+            <span style="font-size: 0.625rem; color: #CBD5E1;">Powered by DeepSeek AI</span>
         </div>
         """, unsafe_allow_html=True)
 

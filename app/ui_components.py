@@ -216,77 +216,211 @@ def inject_custom_css():
         border: 1px solid var(--border-subtle) !important;
     }
 
-    /* ===== SIDEBAR - Atmospheric Background ===== */
+    /* ===== SIDEBAR - Modern Glass Morphism Design ===== */
     [data-testid="stSidebar"] {
-        background:
-            radial-gradient(circle at top right, rgba(16, 185, 129, 0.04) 0%, transparent 50%),
-            radial-gradient(circle at bottom left, rgba(245, 158, 11, 0.03) 0%, transparent 50%),
-            linear-gradient(180deg, #FAFAFA 0%, #FFFFFF 100%);
-        border-right: 1px solid var(--border-subtle);
-        padding: var(--space-4) var(--space-3);
+        background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%) !important;
+        border-right: 1px solid rgba(0, 0, 0, 0.06) !important;
+        padding: 0 !important;
         position: relative;
     }
 
-    [data-testid="stSidebar"]::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 200px;
-        background: linear-gradient(180deg, rgba(16, 185, 129, 0.03) 0%, transparent 100%);
-        pointer-events: none;
+    [data-testid="stSidebar"] > div:first-child {
+        padding: 1rem 1rem 2rem 1rem !important;
     }
 
     [data-testid="stSidebar"] .block-container {
         padding: 0 !important;
     }
 
-    /* Sidebar headings - use system fonts */
+    /* Modern Section Cards */
+    .sidebar-section {
+        background: var(--pure-white);
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        transition: all 0.2s ease;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .sidebar-section:hover {
+        border-color: rgba(16, 185, 129, 0.2);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    .sidebar-section-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    }
+
+    .sidebar-section-icon {
+        width: 28px;
+        height: 28px;
+        background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .sidebar-section-icon svg {
+        width: 14px;
+        height: 14px;
+        color: white;
+    }
+
+    .sidebar-section-title {
+        font-size: 0.8125rem !important;
+        font-weight: 600 !important;
+        color: #1E293B !important;
+        margin: 0 !important;
+        letter-spacing: -0.01em !important;
+    }
+
+    /* Quick Action Pills */
+    .quick-action-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .quick-action-pill {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0.75rem 0.5rem;
+        background: #F8FAFC;
+        border: 1px solid transparent;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        text-align: center;
+    }
+
+    .quick-action-pill:hover {
+        background: #F1F5F9;
+        border-color: rgba(16, 185, 129, 0.2);
+        transform: translateY(-1px);
+    }
+
+    .quick-action-pill.active {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%);
+        border-color: #10B981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+
+    .quick-action-pill .pill-icon {
+        font-size: 1.25rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .quick-action-pill .pill-label {
+        font-size: 0.6875rem;
+        font-weight: 500;
+        color: #64748B;
+    }
+
+    .quick-action-pill.active .pill-label {
+        color: #059669;
+        font-weight: 600;
+    }
+
+    /* Theme Selector Grid */
+    .theme-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.5rem;
+    }
+
+    .theme-chip {
+        aspect-ratio: 1;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        border: 2px solid transparent;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .theme-chip:hover {
+        transform: scale(1.05);
+    }
+
+    .theme-chip.active {
+        border-color: #10B981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+    }
+
+    .theme-chip.active::after {
+        content: '';
+        position: absolute;
+        bottom: 4px;
+        right: 4px;
+        width: 14px;
+        height: 14px;
+        background: #10B981;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Sidebar headings - Modern style */
     [data-testid="stSidebar"] h1,
     [data-testid="stSidebar"] h2,
     [data-testid="stSidebar"] h3 {
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
         font-size: 0.6875rem !important;
         font-weight: 600 !important;
-        color: #71717A !important;
+        color: #94A3B8 !important;
         text-transform: uppercase !important;
         letter-spacing: 0.08em !important;
-        margin: 1.5rem 0 0.75rem 0 !important;
+        margin: 1rem 0 0.5rem 0 !important;
         line-height: 1.4 !important;
     }
 
-    /* Sidebar text - use system fonts to prevent overlap */
+    /* Sidebar text */
     [data-testid="stSidebar"] label,
     [data-testid="stSidebar"] p {
         color: var(--text-primary) !important;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-        font-size: 0.875rem !important;
+        font-size: 0.8125rem !important;
         line-height: 1.5 !important;
     }
 
-    /* Use system fonts in sidebar to prevent rendering issues */
+    /* Use system fonts in sidebar */
     [data-testid="stSidebar"] * {
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
     }
 
-    /* Sidebar selectbox - custom styling */
+    /* Modern Input Fields */
     [data-testid="stSidebar"] [data-baseweb="select"] > div {
-        background-color: var(--pure-white) !important;
-        border: 1px solid var(--border-default) !important;
-        border-radius: var(--radius-md) !important;
+        background-color: #F8FAFC !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
+        border-radius: 10px !important;
         color: var(--gray-900) !important;
-        font-size: var(--text-sm) !important;
-        transition: var(--transition-fast) !important;
-        min-height: 42px !important;
+        font-size: 0.8125rem !important;
+        transition: all 0.15s ease !important;
+        min-height: 40px !important;
     }
 
     [data-testid="stSidebar"] [data-baseweb="select"]:hover > div {
-        border-color: var(--border-strong) !important;
+        border-color: rgba(16, 185, 129, 0.3) !important;
         background-color: var(--pure-white) !important;
     }
 
-    /* Sidebar select text visibility - FORCE DARK TEXT */
+    [data-testid="stSidebar"] [data-baseweb="select"]:focus-within > div {
+        border-color: #10B981 !important;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
+    }
+
+    /* Sidebar select text visibility */
     [data-testid="stSidebar"] [data-baseweb="select"] span {
         color: var(--gray-900) !important;
         font-weight: 500 !important;
@@ -294,6 +428,50 @@ def inject_custom_css():
 
     [data-testid="stSidebar"] [data-baseweb="select"] div {
         color: var(--gray-900) !important;
+    }
+
+    /* Status Indicator Dots */
+    .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 0.5rem;
+    }
+
+    .status-dot.online {
+        background: #10B981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+    }
+
+    .status-dot.offline {
+        background: #EF4444;
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+    }
+
+    /* Compact Toggle Switch Style */
+    .toggle-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    }
+
+    .toggle-row:last-child {
+        border-bottom: none;
+    }
+
+    .toggle-label {
+        font-size: 0.8125rem;
+        color: #334155;
+        font-weight: 500;
+    }
+
+    .toggle-desc {
+        font-size: 0.6875rem;
+        color: #94A3B8;
+        margin-top: 0.125rem;
     }
 
     /* Dropdown menu popover - WHITE BACKGROUND WITH DARK TEXT */
@@ -574,11 +752,58 @@ def inject_custom_css():
             0 1px 3px rgba(0, 0, 0, 0.2);
     }
 
-    /* Sidebar preset buttons - compact and clear */
+    /* Sidebar preset buttons - Modern icon style */
     [data-testid="stSidebar"] .stButton > button {
-        padding: var(--space-2) var(--space-3);
-        font-size: 0.8125rem;
-        min-height: 36px;
+        padding: 0.625rem;
+        font-size: 1.25rem;
+        min-height: 48px;
+        aspect-ratio: 1;
+        border-radius: 12px;
+    }
+
+    [data-testid="stSidebar"] .stButton > button[kind="primary"] {
+        background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+        border: 2px solid #10B981;
+        transform: scale(1.05);
+    }
+
+    [data-testid="stSidebar"] .stButton > button[kind="secondary"] {
+        background: #F8FAFC;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        color: #64748B;
+    }
+
+    [data-testid="stSidebar"] .stButton > button[kind="secondary"]:hover {
+        background: #F1F5F9;
+        border-color: rgba(16, 185, 129, 0.2);
+    }
+
+    /* Modern Toggle Switches */
+    [data-testid="stSidebar"] .stCheckbox {
+        background: transparent;
+        padding: 0;
+    }
+
+    /* Style toggle switches for better appearance */
+    [data-baseweb="checkbox"] {
+        background: #E2E8F0 !important;
+        border-radius: 12px !important;
+        width: 42px !important;
+        height: 24px !important;
+        border: none !important;
+        transition: all 0.2s ease !important;
+    }
+
+    [data-baseweb="checkbox"][aria-checked="true"] {
+        background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+    }
+
+    [data-baseweb="checkbox"] > div {
+        width: 18px !important;
+        height: 18px !important;
+        background: white !important;
+        border-radius: 50% !important;
+        transition: all 0.2s ease !important;
     }
 
     /* Generate button - Full width with emphasis */
@@ -808,15 +1033,48 @@ def inject_custom_css():
         margin-bottom: 1rem !important;
     }
 
-    /* Sidebar expander - better spacing */
+    /* Sidebar expander - Modern minimal style */
     [data-testid="stSidebar"] .streamlit-expanderHeader {
         margin-bottom: 0.25rem !important;
-        padding: 0.5rem 0.75rem !important;
+        padding: 0.625rem 0.875rem !important;
+        background: #F8FAFC !important;
+        border: 1px solid rgba(0, 0, 0, 0.06) !important;
+        border-radius: 10px !important;
+        font-size: 0.8125rem !important;
+    }
+
+    [data-testid="stSidebar"] .streamlit-expanderHeader:hover {
+        background: #F1F5F9 !important;
+        border-color: rgba(16, 185, 129, 0.2) !important;
     }
 
     [data-testid="stSidebar"] .streamlit-expanderContent {
-        margin-bottom: 1rem !important;
+        margin-bottom: 0.75rem !important;
         padding: 0.75rem !important;
+        background: transparent !important;
+        border: none !important;
+    }
+
+    /* Radio buttons in sidebar - segmented control style */
+    [data-testid="stSidebar"] .stRadio [role="radiogroup"] {
+        background: #F8FAFC;
+        padding: 0.25rem;
+        border-radius: 10px;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        gap: 0.25rem;
+    }
+
+    [data-testid="stSidebar"] .stRadio label {
+        padding: 0.375rem 0.75rem !important;
+        border-radius: 8px !important;
+        font-size: 0.75rem !important;
+        font-weight: 500 !important;
+    }
+
+    [data-testid="stSidebar"] .stRadio label:has(input:checked) {
+        background: white !important;
+        color: #10B981 !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
     }
 
     /* Expander content elements spacing */
