@@ -435,27 +435,57 @@ def render_sidebar():
         </div>
         """, unsafe_allow_html=True)
 
+        # Map visual_style to internal value (moved here to use in logic below)
+        visual_style_map = {
+            "Auto (AI)": "auto",
+            "Cartoon": "cartoon",
+            "Movie/TV": "movie",
+            "Photos": "photo",
+            "Diagrams": "diagram",
+            "Text Only": "text_only"
+        }
+        mapped_style = visual_style_map.get(visual_style, "auto")
+
         # AI Visual Selection checkbox
-        use_memes = st.checkbox("AI Visual Selection", value=True, help="AI picks best images for each slide")
+        use_memes = st.checkbox("AI Visual Selection", value=True, help="Smart AI finds perfect images from web")
 
         if use_memes:
-            st.markdown("""
-            <div style="background: #ECFDF5; padding: 0.5rem 0.75rem; border-radius: 8px; margin-bottom: 0.75rem;">
-                <span style="font-size: 0.6875rem; color: #047857;">AI auto-selects cartoons, movies, memes</span>
-            </div>
-            """, unsafe_allow_html=True)
+            # AI smart curator mode - respects Style setting
+            if mapped_style == "text_only":
+                st.markdown("""
+                <div style="background: #F1F5F9; padding: 0.5rem 0.75rem; border-radius: 8px; margin-bottom: 0.75rem;">
+                    <span style="font-size: 0.6875rem; color: #64748B;">Text-only mode (Style override)</span>
+                </div>
+                """, unsafe_allow_html=True)
+            else:
+                style_desc = visual_style if visual_style != "Auto (AI)" else "any style"
+                st.markdown(f"""
+                <div style="background: #ECFDF5; padding: 0.5rem 0.75rem; border-radius: 8px; margin-bottom: 0.75rem;">
+                    <span style="font-size: 0.6875rem; color: #047857;">AI finds {style_desc.lower()} images</span>
+                </div>
+                """, unsafe_allow_html=True)
             use_ai_memes = True
-            content_type_override = "blend"
+            content_type_override = "blend"  # AI decides, constrained by mapped_style
             meme_style = "dark_minimal"
             meme_language = "en"
         else:
-            st.markdown("""
-            <div style="background: #F1F5F9; padding: 0.5rem 0.75rem; border-radius: 8px; margin-bottom: 0.75rem;">
-                <span style="font-size: 0.6875rem; color: #64748B;">Text-only mode</span>
-            </div>
-            """, unsafe_allow_html=True)
-            use_ai_memes = False
-            content_type_override = None
+            # Fallback mode - still respects Style setting
+            if mapped_style == "text_only":
+                st.markdown("""
+                <div style="background: #F1F5F9; padding: 0.5rem 0.75rem; border-radius: 8px; margin-bottom: 0.75rem;">
+                    <span style="font-size: 0.6875rem; color: #64748B;">Text-only mode</span>
+                </div>
+                """, unsafe_allow_html=True)
+                use_ai_memes = False
+                content_type_override = None
+            else:
+                st.markdown(f"""
+                <div style="background: #FEF3C7; padding: 0.5rem 0.75rem; border-radius: 8px; margin-bottom: 0.75rem;">
+                    <span style="font-size: 0.6875rem; color: #92400E;">Simple search: {visual_style.lower()}</span>
+                </div>
+                """, unsafe_allow_html=True)
+                use_ai_memes = False
+                content_type_override = mapped_style  # Force this specific style
             meme_style = "dark_minimal"
             meme_language = "en"
 
@@ -550,17 +580,9 @@ def render_sidebar():
         "Storytelling": "storytelling"
     }
     visual_role_map = {
-        "Amplify Emotion": "amplify_emotion",
-        "Provide Evidence": "provide_evidence",
-        "Minimal/None": "minimal"
-    }
-    visual_style_map = {
-        "Auto (AI Decides)": "auto",
-        "Cartoon Scenes": "cartoon",
-        "Movie/TV Stills": "movie",
-        "Professional Photos": "photo",
-        "Diagrams/Charts": "diagram",
-        "Text Only": "text_only"
+        "Amplify": "amplify_emotion",
+        "Evidence": "provide_evidence",
+        "Minimal": "minimal"
     }
 
     return {
@@ -577,14 +599,14 @@ def render_sidebar():
         "logo_path": logo_path if preset == "custom" else None,
         "show_slide_indicator": show_slide_indicator if preset == "custom" else False,
         "use_memes": use_memes,  # Always respect user's checkbox regardless of preset
-        "use_ai_memes": use_ai_memes if use_memes else False,
-        "content_type_override": content_type_override if use_memes else None,
-        "meme_style": meme_style if use_memes else "dark_minimal",
-        "meme_language": meme_language if use_memes else "en",
-        # Content Strategy settings - NEW
+        "use_ai_memes": use_ai_memes,  # Now set correctly based on checkbox AND style
+        "content_type_override": content_type_override,  # Now respects style setting
+        "meme_style": meme_style,
+        "meme_language": meme_language,
+        # Content Strategy settings
         "content_purpose": content_purpose_map.get(content_purpose, "storytelling"),
         "visual_role": visual_role_map.get(visual_role, "amplify_emotion"),
-        "visual_style": visual_style_map.get(visual_style, "auto"),
+        "visual_style": mapped_style,  # Use the mapped_style variable from above
     }
 
 
