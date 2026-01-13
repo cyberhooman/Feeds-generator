@@ -1066,9 +1066,30 @@ def inject_custom_css():
         height: 18px !important;
     }
 
-    /* Hide any text that looks like icon names */
-    [data-testid="stSidebar"] details summary span[data-testid="stMarkdownContainer"] {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    /* Hide keyboard_arrow_down text completely */
+    [data-testid="stSidebar"] .streamlit-expanderHeader p {
+        font-size: 0 !important;
+        line-height: 0 !important;
+        color: transparent !important;
+    }
+
+    /* Hide the arrow text but keep the SVG */
+    [data-testid="stSidebar"] details summary {
+        font-size: 0.8125rem !important;
+    }
+
+    [data-testid="stSidebar"] details summary::before {
+        content: '' !important;
+    }
+
+    /* Target the specific text node */
+    [data-testid="stSidebar"] .streamlit-expanderHeader span {
+        font-size: inherit !important;
+    }
+
+    /* Hide just the icon text, not the label */
+    [data-testid="stSidebar"] details summary svg + * {
+        display: none !important;
     }
 
     [data-testid="stSidebar"] .streamlit-expanderContent {
