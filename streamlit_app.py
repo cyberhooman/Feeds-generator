@@ -475,9 +475,10 @@ def render_sidebar():
         skip_humanizer = st.checkbox("Skip Humanization", value=False, help="Skip AI authenticity check")
 
         # Advanced options (collapsed)
-        with st.expander("Advanced", expanded=False):
-            versions = st.slider("Versions", 1, 3, 1)
-            output_name = st.text_input("Folder", value="carousel", label_visibility="collapsed", placeholder="Output folder name")
+        with st.expander("More Options", expanded=False):
+            versions = st.slider("Content Versions", 1, 3, 1, help="Generate multiple variations")
+            st.markdown('<p style="font-size: 0.75rem; color: #64748B; margin-bottom: 0.25rem;">Output Folder</p>', unsafe_allow_html=True)
+            output_name = st.text_input("output_folder_hidden", value="carousel", label_visibility="hidden", placeholder="carousel")
 
         # System Status - Compact inline
         st.markdown("""

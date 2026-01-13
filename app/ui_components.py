@@ -1043,11 +1043,40 @@ def inject_custom_css():
         border-color: rgba(16, 185, 129, 0.2) !important;
     }
 
+    /* Hide material icon text, show only the SVG arrow */
+    [data-testid="stSidebar"] .streamlit-expanderHeader svg {
+        display: block !important;
+        width: 18px !important;
+        height: 18px !important;
+    }
+
+    /* Hide any text that looks like icon names */
+    [data-testid="stSidebar"] details summary span[data-testid="stMarkdownContainer"] {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    }
+
     [data-testid="stSidebar"] .streamlit-expanderContent {
         margin-bottom: 0.75rem !important;
         padding: 0.75rem !important;
         background: transparent !important;
         border: none !important;
+    }
+
+    /* Fix expander details/summary styling */
+    [data-testid="stSidebar"] details[data-testid="stExpander"] > summary {
+        background: #F8FAFC !important;
+        border: 1px solid rgba(0, 0, 0, 0.06) !important;
+        border-radius: 10px !important;
+        padding: 0.625rem 0.875rem !important;
+        list-style: none !important;
+    }
+
+    [data-testid="stSidebar"] details[data-testid="stExpander"] > summary::-webkit-details-marker {
+        display: none !important;
+    }
+
+    [data-testid="stSidebar"] details[data-testid="stExpander"] > summary::marker {
+        display: none !important;
     }
 
     /* Radio buttons in sidebar - segmented control style */
