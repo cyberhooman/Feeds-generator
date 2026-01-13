@@ -489,24 +489,40 @@ def inject_custom_css():
     }
 
     [data-baseweb="menu"] li:hover {
-        background-color: var(--gray-100) !important;
+        background-color: #F1F5F9 !important;
         color: var(--gray-900) !important;
     }
 
-    /* Select dropdown options */
+    /* Select dropdown options - Force white background and dark text */
     [role="option"] {
         background-color: var(--pure-white) !important;
         color: var(--gray-900) !important;
     }
 
     [role="option"]:hover {
-        background-color: var(--gray-100) !important;
+        background-color: #F1F5F9 !important;
         color: var(--gray-900) !important;
     }
 
     [aria-selected="true"][role="option"] {
-        background-color: var(--gray-200) !important;
+        background-color: rgba(16, 185, 129, 0.1) !important;
         color: var(--gray-900) !important;
+        font-weight: 600 !important;
+    }
+
+    /* Sidebar dropdown - fix black background issue */
+    [data-testid="stSidebar"] [role="listbox"] {
+        background-color: var(--pure-white) !important;
+    }
+
+    [data-testid="stSidebar"] [role="listbox"] [role="option"] {
+        background-color: var(--pure-white) !important;
+        color: #1E293B !important;
+    }
+
+    [data-testid="stSidebar"] [role="listbox"] [role="option"]:hover {
+        background-color: #F1F5F9 !important;
+        color: #1E293B !important;
     }
 
     /* Sidebar captions - better spacing */
@@ -1395,7 +1411,31 @@ def inject_custom_css():
     }
 
     [data-baseweb="popover"] * {
-        color: var(--gray-900) !important;
+        color: #1E293B !important;
+    }
+
+    /* Nuclear fix for black dropdown backgrounds */
+    [role="listbox"],
+    [data-testid="stSidebar"] [role="listbox"] {
+        background: white !important;
+    }
+
+    [role="listbox"] li,
+    [data-testid="stSidebar"] [role="listbox"] li {
+        background-color: white !important;
+        color: #1E293B !important;
+    }
+
+    [role="listbox"] li:hover,
+    [data-testid="stSidebar"] [role="listbox"] li:hover {
+        background-color: #F1F5F9 !important;
+        color: #1E293B !important;
+    }
+
+    [role="listbox"] li[aria-selected="true"],
+    [data-testid="stSidebar"] [role="listbox"] li[aria-selected="true"] {
+        background-color: rgba(16, 185, 129, 0.12) !important;
+        color: #1E293B !important;
     }
     </style>
     """, unsafe_allow_html=True)
