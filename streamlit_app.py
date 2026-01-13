@@ -435,8 +435,8 @@ def render_sidebar():
         </div>
         """, unsafe_allow_html=True)
 
-        # AI Visual Selection toggle
-        use_memes = st.toggle("AI Visual Selection", value=True, help="AI picks best images")
+        # AI Visual Selection checkbox
+        use_memes = st.checkbox("AI Visual Selection", value=True, help="AI picks best images for each slide")
 
         if use_memes:
             st.markdown("""
@@ -459,12 +459,9 @@ def render_sidebar():
             meme_style = "dark_minimal"
             meme_language = "en"
 
-        # Compact toggles
-        col1, col2 = st.columns(2)
-        with col1:
-            use_highlighting = st.toggle("Highlights", value=True, help="Highlight keywords")
-        with col2:
-            show_logo = st.toggle("Logo", value=False, help="Show logo on slides")
+        # Compact toggles - stacked for better readability
+        use_highlighting = st.checkbox("AI Keyword Highlighting", value=True, help="Highlight important words")
+        show_logo = st.checkbox("Show Logo", value=False, help="Display logo on slides")
 
         logo_path = None
         if show_logo:
@@ -474,11 +471,8 @@ def render_sidebar():
             else:
                 show_logo = False
 
-        col3, col4 = st.columns(2)
-        with col3:
-            show_slide_indicator = st.toggle("Indicators", value=False, help="Slide numbers")
-        with col4:
-            skip_humanizer = st.toggle("Skip AI Check", value=False, help="Skip humanization")
+        show_slide_indicator = st.checkbox("Slide Indicators", value=False, help="Show slide numbers")
+        skip_humanizer = st.checkbox("Skip Humanization", value=False, help="Skip AI authenticity check")
 
         # Advanced options (collapsed)
         with st.expander("Advanced", expanded=False):

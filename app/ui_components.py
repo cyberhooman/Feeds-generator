@@ -778,32 +778,27 @@ def inject_custom_css():
         border-color: rgba(16, 185, 129, 0.2);
     }
 
-    /* Modern Toggle Switches */
-    [data-testid="stSidebar"] .stCheckbox {
+    /* Modern Toggle Switches - Fix vertical text issue */
+    [data-testid="stSidebar"] .stCheckbox,
+    [data-testid="stSidebar"] [data-testid="stCheckbox"] {
         background: transparent;
         padding: 0;
     }
 
-    /* Style toggle switches for better appearance */
-    [data-baseweb="checkbox"] {
-        background: #E2E8F0 !important;
-        border-radius: 12px !important;
-        width: 42px !important;
-        height: 24px !important;
-        border: none !important;
-        transition: all 0.2s ease !important;
+    /* Toggle label text - ensure horizontal display */
+    [data-testid="stSidebar"] [data-testid="stCheckbox"] label,
+    [data-testid="stSidebar"] .stCheckbox label {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: 0.5rem !important;
+        white-space: nowrap !important;
     }
 
-    [data-baseweb="checkbox"][aria-checked="true"] {
-        background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
-    }
-
-    [data-baseweb="checkbox"] > div {
-        width: 18px !important;
-        height: 18px !important;
-        background: white !important;
-        border-radius: 50% !important;
-        transition: all 0.2s ease !important;
+    [data-testid="stSidebar"] [data-testid="stCheckbox"] label span,
+    [data-testid="stSidebar"] .stCheckbox label span {
+        writing-mode: horizontal-tb !important;
+        text-orientation: mixed !important;
     }
 
     /* Generate button - Full width with emphasis */
