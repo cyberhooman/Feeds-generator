@@ -175,13 +175,13 @@ class TextFormatter:
         clean_text = re.sub(r'<[^>]+>', '', text)
         length = len(clean_text)
 
-        if length > 400:
+        if length > 500:
             return "ultra-long"
-        elif length > 280:
+        elif length > 350:
             return "very-long"
-        elif length > 180:
+        elif length > 220:
             return "long"
-        elif length > 100:
+        elif length > 120:
             return "medium"
         elif length < 60:
             return "compact"

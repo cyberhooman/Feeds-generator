@@ -44,7 +44,7 @@
 .highlight {
     background: var(--highlight-bg);
     color: var(--highlight-text);
-    padding: 6px 16px;
+    padding: 2px 12px;
     border-radius: 4px;
     font-weight: 700;
 }

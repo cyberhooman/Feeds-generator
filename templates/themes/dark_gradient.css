@@ -57,8 +57,8 @@
 .highlight {
     background: var(--highlight-bg);
     color: var(--highlight-text);
-    padding: 6px 16px;
-    border-radius: 6px;
+    padding: 2px 12px;
+    border-radius: 4px;
     font-weight: 700;
     box-shadow: 0 0 20px rgba(0, 217, 255, 0.4);
 }
