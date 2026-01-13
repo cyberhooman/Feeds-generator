@@ -396,14 +396,6 @@ def render_sidebar():
             help="Controls narrative arc"
         )
 
-        visual_role = st.radio(
-            "Visuals",
-            options=["Amplify", "Evidence", "Minimal"],
-            index=0,
-            horizontal=True,
-            help="How images support text"
-        )
-
         visual_style = st.selectbox(
             "Style",
             options=["Auto (AI)", "Cartoon", "Movie/TV", "Photos", "Diagrams", "Text Only"],
@@ -579,11 +571,6 @@ def render_sidebar():
         "Motivational": "motivational",
         "Storytelling": "storytelling"
     }
-    visual_role_map = {
-        "Amplify": "amplify_emotion",
-        "Evidence": "provide_evidence",
-        "Minimal": "minimal"
-    }
 
     return {
         "preset": preset,
@@ -605,7 +592,6 @@ def render_sidebar():
         "meme_language": meme_language,
         # Content Strategy settings
         "content_purpose": content_purpose_map.get(content_purpose, "storytelling"),
-        "visual_role": visual_role_map.get(visual_role, "amplify_emotion"),
         "visual_style": mapped_style,  # Use the mapped_style variable from above
     }
 
@@ -801,7 +787,6 @@ def main():
 
                         selected_version = content_versions[0]
                         slides = selected_version['slides']
-                        narrative_beats = selected_version.get('narrative_beats', {})  # NEW: Get beats
 
                         # Step 2: Humanization
                         if not settings["skip_humanizer"]:
@@ -878,11 +863,9 @@ def main():
                             content_type_override=settings["content_type_override"],
                             meme_style=settings["meme_style"],
                             meme_language=settings["meme_language"],
-                            # NEW: Content Strategy parameters
+                            # Content Strategy parameters
                             content_purpose=settings["content_purpose"],
-                            visual_role=settings["visual_role"],
-                            visual_style=settings["visual_style"],
-                            narrative_beats=narrative_beats
+                            visual_style=settings["visual_style"]
                         )
                         st.write(f"✓ Created {len(images)} slides")
 

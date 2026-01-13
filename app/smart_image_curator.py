@@ -146,130 +146,6 @@ class SmartImageCurator:
         else:
             return "emotional"
 
-    def _get_beat_search_modifiers(self, narrative_beat: str) -> Dict:
-        """
-        Get search query modifiers based on narrative beat.
-
-        Each beat has specific visual moods that should be reflected
-        in the image search to ensure visuals match narrative flow.
-        """
-        # Mapping of narrative beats to visual search characteristics
-        BEAT_MODIFIERS = {
-            # Educational beats
-            'problem_statement': {
-                'mood': 'confused',
-                'energy': 'tense',
-                'search_hints': ['confused', 'frustrated', 'problem', 'challenge', 'stuck'],
-                'avoid': ['happy', 'celebration', 'success', 'meme', 'funny']
-            },
-            'context_setting': {
-                'mood': 'observational',
-                'energy': 'calm',
-                'search_hints': ['thinking', 'analyzing', 'observing', 'contemplating'],
-                'avoid': ['action', 'intense', 'dramatic', 'meme']
-            },
-            'explanation': {
-                'mood': 'clear',
-                'energy': 'focused',
-                'search_hints': ['diagram', 'framework', 'illustration', 'explaining'],
-                'avoid': ['meme', 'funny', 'random', 'reaction']
-            },
-            'application': {
-                'mood': 'motivated',
-                'energy': 'active',
-                'search_hints': ['doing', 'action', 'working', 'implementing', 'productive'],
-                'avoid': ['passive', 'confused', 'stuck']
-            },
-            'summary': {
-                'mood': 'conclusive',
-                'energy': 'calm',
-                'search_hints': ['conclusion', 'success', 'achievement', 'complete'],
-                'avoid': ['question', 'confusion', 'problem']
-            },
-
-            # Motivational beats
-            'pain_point': {
-                'mood': 'frustrated',
-                'energy': 'low',
-                'search_hints': ['struggling', 'exhausted', 'frustrated', 'tired', 'overwhelmed'],
-                'avoid': ['happy', 'success', 'celebration', 'excited', 'meme']
-            },
-            'empathy': {
-                'mood': 'understanding',
-                'energy': 'gentle',
-                'search_hints': ['comfort', 'support', 'understanding', 'compassion', 'listening'],
-                'avoid': ['alone', 'isolated', 'aggressive']
-            },
-            'shift_moment': {
-                'mood': 'realization',
-                'energy': 'rising',
-                'search_hints': ['aha moment', 'realization', 'lightbulb', 'epiphany', 'surprised'],
-                'avoid': ['confused', 'sad', 'stuck', 'frustrated']
-            },
-            'new_perspective': {
-                'mood': 'hopeful',
-                'energy': 'rising',
-                'search_hints': ['hope', 'new beginning', 'sunrise', 'bright', 'optimistic', 'looking forward'],
-                'avoid': ['dark', 'gloomy', 'pessimistic']
-            },
-            'action': {
-                'mood': 'determined',
-                'energy': 'high',
-                'search_hints': ['determined', 'moving forward', 'action', 'progress', 'momentum', 'confident'],
-                'avoid': ['passive', 'waiting', 'stuck']
-            },
-
-            # Storytelling beats
-            'hook': {
-                'mood': 'intriguing',
-                'energy': 'high',
-                'search_hints': ['dramatic', 'attention', 'mysterious', 'compelling', 'intense'],
-                'avoid': ['boring', 'plain', 'mundane']
-            },
-            'tension_build': {
-                'mood': 'anxious',
-                'energy': 'rising',
-                'search_hints': ['tension', 'suspense', 'anticipation', 'worried', 'uncertain'],
-                'avoid': ['relaxed', 'calm', 'peaceful']
-            },
-            'conflict_peak': {
-                'mood': 'intense',
-                'energy': 'peak',
-                'search_hints': ['climax', 'confrontation', 'intense', 'dramatic', 'peak emotion'],
-                'avoid': ['calm', 'peaceful', 'resolved']
-            },
-            'resolution': {
-                'mood': 'relieved',
-                'energy': 'calming',
-                'search_hints': ['relief', 'resolution', 'peace', 'solved', 'transformed', 'calm'],
-                'avoid': ['tension', 'conflict', 'problem']
-            },
-            'takeaway': {
-                'mood': 'wise',
-                'energy': 'calm',
-                'search_hints': ['wisdom', 'lesson', 'reflection', 'contemplation', 'insight'],
-                'avoid': ['action', 'intense', 'dramatic']
-            },
-
-            # Common beats
-            'cta': {
-                'mood': 'inviting',
-                'energy': 'warm',
-                'search_hints': ['invitation', 'welcome', 'join', 'together', 'community'],
-                'avoid': ['aggressive', 'pushy', 'desperate']
-            },
-        }
-
-        # Normalize beat name
-        beat_key = narrative_beat.lower().replace('-', '_').replace(' ', '_')
-
-        return BEAT_MODIFIERS.get(beat_key, {
-            'mood': 'neutral',
-            'energy': 'moderate',
-            'search_hints': [],
-            'avoid': []
-        })
-
     def analyze_content_for_visuals(self, text: str, topic: str = None) -> Dict:
         """
         Enhanced AI analysis with Indonesian context understanding.
@@ -1041,14 +917,13 @@ Return ONLY a JSON object:
         max_results: int = 10,
         min_relevance_score: float = 5.5,
         content_type: str = None,  # Allow explicit override
-        narrative_beat: str = None,  # NEW: Narrative beat for this slide
-        visual_style_lock: str = None  # NEW: Style to enforce (cartoon, movie, photo, etc.)
+        narrative_beat: str = None,  # Deprecated - kept for compatibility
+        visual_style_lock: str = None  # Style to enforce (cartoon, movie, photo, etc.)
     ) -> Optional[ImageResult]:
         """
         Enhanced image finding for both emotional and news content.
 
         Automatically detects content type and uses appropriate search strategy.
-        Now supports narrative-aware selection via narrative_beat parameter.
 
         Args:
             text: The slide content
@@ -1056,14 +931,10 @@ Return ONLY a JSON object:
             max_results: Max images to consider
             min_relevance_score: Minimum score threshold
             content_type: Explicit content type override
-            narrative_beat: Narrative beat (e.g., 'pain_point', 'shift_moment', 'resolution')
+            narrative_beat: Deprecated - no longer used (kept for compatibility)
             visual_style_lock: Style to enforce ('cartoon', 'movie', 'photo', 'diagram')
         """
-        # Apply narrative beat to search strategy
-        beat_search_modifiers = self._get_beat_search_modifiers(narrative_beat) if narrative_beat else {}
-
-        if beat_search_modifiers:
-            logger.info(f"Narrative beat '{narrative_beat}' - mood: {beat_search_modifiers.get('mood', 'neutral')}")
+        # Removed beat-locked search - it was too rigid and reduced image quality
         # Step 1: Detect content type if not specified
         if not content_type:
             content_type = self._detect_content_type(text, topic)
@@ -1288,8 +1159,7 @@ Return ONLY a JSON object:
         topic: str = None,
         skip_first_last: bool = True,
         content_type: str = None,
-        narrative_beats: Dict[int, str] = None,  # NEW: Beat per slide
-        visual_style: str = None  # NEW: Style lock (cartoon, movie, photo, etc.)
+        visual_style: str = None
     ) -> Dict[int, ImageResult]:
         """
         Find images for all slides in a carousel.
@@ -1299,12 +1169,10 @@ Return ONLY a JSON object:
             topic: Optional topic hint
             skip_first_last: Skip hook/CTA slides
             content_type: Override content type for all slides
-            narrative_beats: Dict mapping slide number to beat name
             visual_style: Style to enforce across all slides
         """
         results = {}
         total_slides = len(slides)
-        narrative_beats = narrative_beats or {}
 
         # Track style consistency
         current_style_lock = visual_style if visual_style not in ['auto', None] else None
@@ -1315,15 +1183,12 @@ Return ONLY a JSON object:
                 logger.info(f"Skipping slide {i} (hook/CTA)")
                 continue
 
-            # Get narrative beat for this slide
-            beat = narrative_beats.get(i, None)
-            logger.info(f"Finding image for slide {i} (beat: {beat or 'none'})...")
+            logger.info(f"Finding image for slide {i}...")
 
             result = self.find_image_for_content(
                 slide_text,
                 topic,
                 content_type=content_type,
-                narrative_beat=beat,
                 visual_style_lock=current_style_lock
             )
 
