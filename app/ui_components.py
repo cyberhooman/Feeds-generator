@@ -1414,28 +1414,69 @@ def inject_custom_css():
         color: #1E293B !important;
     }
 
-    /* Nuclear fix for black dropdown backgrounds */
+    /* Nuclear fix for black dropdown backgrounds - ULTRA AGGRESSIVE */
     [role="listbox"],
-    [data-testid="stSidebar"] [role="listbox"] {
+    [data-testid="stSidebar"] [role="listbox"],
+    ul[role="listbox"],
+    div[role="listbox"] {
         background: white !important;
+        background-color: white !important;
     }
 
+    /* Target ALL list items in dropdowns */
     [role="listbox"] li,
-    [data-testid="stSidebar"] [role="listbox"] li {
+    [data-testid="stSidebar"] [role="listbox"] li,
+    ul[role="listbox"] > li,
+    [role="listbox"] > li {
+        background: white !important;
         background-color: white !important;
         color: #1E293B !important;
     }
 
+    /* Hover state */
     [role="listbox"] li:hover,
-    [data-testid="stSidebar"] [role="listbox"] li:hover {
+    [data-testid="stSidebar"] [role="listbox"] li:hover,
+    ul[role="listbox"] > li:hover {
+        background: #F1F5F9 !important;
         background-color: #F1F5F9 !important;
         color: #1E293B !important;
     }
 
+    /* Selected state */
     [role="listbox"] li[aria-selected="true"],
-    [data-testid="stSidebar"] [role="listbox"] li[aria-selected="true"] {
+    [data-testid="stSidebar"] [role="listbox"] li[aria-selected="true"],
+    ul[role="listbox"] > li[aria-selected="true"] {
+        background: rgba(16, 185, 129, 0.12) !important;
         background-color: rgba(16, 185, 129, 0.12) !important;
         color: #1E293B !important;
+    }
+
+    /* Target the UL element directly */
+    [data-testid="stSidebar"] ul {
+        background: white !important;
+    }
+
+    /* BaseWeb specific overrides */
+    [data-baseweb="popover"] ul,
+    [data-baseweb="menu"] ul {
+        background: white !important;
+        background-color: white !important;
+    }
+
+    /* Override any dark theme */
+    .stSelectbox ul,
+    .stSelectbox [role="listbox"] {
+        background: white !important;
+        background-color: white !important;
+    }
+
+    /* Force all children to have white background */
+    [role="listbox"] * {
+        background-color: transparent !important;
+    }
+
+    [role="listbox"] > li {
+        background-color: white !important;
     }
     </style>
     """, unsafe_allow_html=True)
