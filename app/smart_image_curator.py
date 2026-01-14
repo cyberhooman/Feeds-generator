@@ -934,7 +934,26 @@ Return ONLY a JSON object:
             narrative_beat: Deprecated - no longer used (kept for compatibility)
             visual_style_lock: Style to enforce ('cartoon', 'movie', 'photo', 'diagram')
         """
-        # Removed beat-locked search - it was too rigid and reduced image quality
+        # STYLE LOCK: If user selected a specific style, force the content type
+        if visual_style_lock:
+            style_to_content_type = {
+                "cartoon": "cartoon_scene",
+                "movie": "movie_scene",
+                "photo": "news",
+            }
+            if visual_style_lock in style_to_content_type:
+                content_type = style_to_content_type[visual_style_lock]
+                logger.info(f"Style lock '{visual_style_lock}' -> forcing content_type to '{content_type}'")
+            elif visual_style_lock == "diagram":
+                # Special handling - needs analysis dict for infographic routing
+                content_type = "infographic"
+                needs_infographic = {
+                    'needs_visual': True,
+                    'visual_type': 'diagram',
+                    'reason': 'User selected diagram style'
+                }
+                logger.info(f"Style lock 'diagram' -> forcing infographic mode")
+
         # Step 1: Detect content type if not specified
         if not content_type:
             content_type = self._detect_content_type(text, topic)

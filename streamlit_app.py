@@ -290,7 +290,8 @@ def render_sidebar():
                     "Custom Tone",
                     value="professional, friendly",
                     placeholder="e.g., casual, witty",
-                    label_visibility="collapsed"
+                    label_visibility="collapsed",
+                    key="custom_tone_input"
                 )
 
             # Content Angle - simplified
@@ -319,7 +320,8 @@ def render_sidebar():
                     "Custom Angle",
                     value="Tell a personal story with lessons learned",
                     height=60,
-                    label_visibility="collapsed"
+                    label_visibility="collapsed",
+                    key="custom_angle_input"
                 )
 
         # Theme Selection - Modern Visual Grid
