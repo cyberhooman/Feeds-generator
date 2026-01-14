@@ -945,13 +945,13 @@ Return ONLY a JSON object:
                 content_type = style_to_content_type[visual_style_lock]
                 logger.info(f"Style lock '{visual_style_lock}' -> forcing content_type to '{content_type}'")
             elif visual_style_lock == "diagram":
-                # Special handling - needs analysis dict for infographic routing
+                # Special handling - needs to call analyze_if_needs_infographic for search query
                 content_type = "infographic"
-                needs_infographic = {
-                    'needs_visual': True,
-                    'visual_type': 'diagram',
-                    'reason': 'User selected diagram style'
-                }
+                needs_infographic = self.analyze_if_needs_infographic(text, topic)
+                # Override the decision - user wants diagrams regardless
+                needs_infographic['needs_visual'] = True
+                if needs_infographic.get('visual_type') == 'none':
+                    needs_infographic['visual_type'] = 'diagram'
                 logger.info(f"Style lock 'diagram' -> forcing infographic mode")
 
         # Step 1: Detect content type if not specified
