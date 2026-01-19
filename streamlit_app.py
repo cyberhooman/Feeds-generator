@@ -1,13 +1,12 @@
 """
-Content Studio - Professional SaaS UI
-Create viral Instagram carousels powered by AI
+Content Studio - Professional SaaS UI (Text-Only Edition)
+Create viral Instagram carousel content powered by AI
 
 Features:
-- Professional HTML/CSS templates rendered with Playwright
-- 7 beautiful themes (dark, light, gradients, neon)
-- AI-powered keyword highlighting
-- Meme integration
-- Ready-to-post PNG output
+- AI-powered content rewriting and optimization
+- Multiple tones and angles
+- Smart keyword highlighting
+- Ready-to-post text output
 """
 
 import streamlit as st
@@ -50,14 +49,6 @@ inject_custom_css()
 from app.config import Config
 Config.ensure_directories_only()
 
-# Check if Playwright is available
-PLAYWRIGHT_AVAILABLE = False
-try:
-    from playwright.sync_api import sync_playwright
-    PLAYWRIGHT_AVAILABLE = True
-except ImportError:
-    pass
-
 # Import slide generator
 from app.slide_generator import SlideGenerator
 
@@ -65,9 +56,6 @@ from app.slide_generator import SlideGenerator
 def check_api_key():
     """Check if DeepSeek API key is configured"""
     return bool(os.getenv("DEEPSEEK_API_KEY"))
-
-
-# Pexels removed - using AI-powered Smart Image Curator instead
 
 
 def get_available_tones():
@@ -87,16 +75,15 @@ def get_available_angles():
     return []
 
 
-def create_zip_download(images, captions):
-    """Create a ZIP file containing all slide images and captions."""
+def create_zip_download(slides, captions):
+    """Create a ZIP file containing all slide texts and captions."""
     zip_buffer = io.BytesIO()
     with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
-        for i, img in enumerate(images):
-            img_buffer = io.BytesIO()
-            img.save(img_buffer, format='PNG')
-            img_buffer.seek(0)
-            zip_file.writestr(f"slide_{i+1:02d}.png", img_buffer.getvalue())
+        # Save slides as text files
+        for i, slide_text in enumerate(slides):
+            zip_file.writestr(f"slide_{i+1:02d}.txt", slide_text)
 
+        # Save captions
         captions_text = ""
         for idx, cap_data in enumerate(captions):
             strategy = cap_data.get("strategy", f"Version {idx+1}")
@@ -110,7 +97,7 @@ def create_zip_download(images, captions):
 
 
 def get_theme_info():
-    """Get theme display information for the new template system."""
+    """Get theme display information."""
     return {
         "dark_mode": {
             "label": "Dark Mode",
@@ -162,7 +149,7 @@ def render_sidebar():
                 </div>
                 <div>
                     <div style="font-weight: 700; font-size: 1.125rem; color: #FFFFFF; letter-spacing: -0.02em;">Content Studio</div>
-                    <div style="font-size: 0.6875rem; color: #10B981; font-weight: 500;">Pro Edition</div>
+                    <div style="font-size: 0.6875rem; color: #10B981; font-weight: 500;">Text Edition</div>
                 </div>
             </div>
         </div>
@@ -398,13 +385,6 @@ def render_sidebar():
             help="Controls narrative arc"
         )
 
-        visual_style = st.selectbox(
-            "Style",
-            options=["Auto (AI)", "Cartoon", "Movie/TV", "Photos", "Diagrams", "Text Only"],
-            index=0,
-            label_visibility="collapsed"
-        )
-
         # Compact arc summary
         strategy_summary = {
             "Educational": "Problem → Explain → Apply",
@@ -417,7 +397,7 @@ def render_sidebar():
         </div>
         """, unsafe_allow_html=True)
 
-        # AI Visual & Options - Combined Compact Section
+        # Output Settings - Combined Compact Section
         st.markdown("""
         <div class="sidebar-section">
             <div class="sidebar-section-header">
@@ -429,73 +409,15 @@ def render_sidebar():
         </div>
         """, unsafe_allow_html=True)
 
-        # Map visual_style to internal value (moved here to use in logic below)
-        visual_style_map = {
-            "Auto (AI)": "auto",
-            "Cartoon": "cartoon",
-            "Movie/TV": "movie",
-            "Photos": "photo",
-            "Diagrams": "diagram",
-            "Text Only": "text_only"
-        }
-        mapped_style = visual_style_map.get(visual_style, "auto")
+        # Text-only mode indicator
+        st.markdown("""
+        <div style="background: #F1F5F9; padding: 0.5rem 0.75rem; border-radius: 8px; margin-bottom: 0.75rem;">
+            <span style="font-size: 0.6875rem; color: #64748B;">📝 Text-only mode (no images)</span>
+        </div>
+        """, unsafe_allow_html=True)
 
-        # AI Visual Selection checkbox
-        use_memes = st.checkbox("AI Visual Selection", value=True, help="Smart AI finds perfect images from web")
-
-        if use_memes:
-            # AI smart curator mode - respects Style setting
-            if mapped_style == "text_only":
-                st.markdown("""
-                <div style="background: #F1F5F9; padding: 0.5rem 0.75rem; border-radius: 8px; margin-bottom: 0.75rem;">
-                    <span style="font-size: 0.6875rem; color: #64748B;">Text-only mode (Style override)</span>
-                </div>
-                """, unsafe_allow_html=True)
-            else:
-                style_desc = visual_style if visual_style != "Auto (AI)" else "any style"
-                st.markdown(f"""
-                <div style="background: #ECFDF5; padding: 0.5rem 0.75rem; border-radius: 8px; margin-bottom: 0.75rem;">
-                    <span style="font-size: 0.6875rem; color: #047857;">AI finds {style_desc.lower()} images</span>
-                </div>
-                """, unsafe_allow_html=True)
-            use_ai_memes = True
-            content_type_override = "blend"  # AI decides, constrained by mapped_style
-            meme_style = "dark_minimal"
-            meme_language = "en"
-        else:
-            # Fallback mode - still respects Style setting
-            if mapped_style == "text_only":
-                st.markdown("""
-                <div style="background: #F1F5F9; padding: 0.5rem 0.75rem; border-radius: 8px; margin-bottom: 0.75rem;">
-                    <span style="font-size: 0.6875rem; color: #64748B;">Text-only mode</span>
-                </div>
-                """, unsafe_allow_html=True)
-                use_ai_memes = False
-                content_type_override = None
-            else:
-                st.markdown(f"""
-                <div style="background: #FEF3C7; padding: 0.5rem 0.75rem; border-radius: 8px; margin-bottom: 0.75rem;">
-                    <span style="font-size: 0.6875rem; color: #92400E;">Simple search: {visual_style.lower()}</span>
-                </div>
-                """, unsafe_allow_html=True)
-                use_ai_memes = False
-                content_type_override = mapped_style  # Force this specific style
-            meme_style = "dark_minimal"
-            meme_language = "en"
-
-        # Compact toggles - stacked for better readability
+        # Compact toggles
         use_highlighting = st.checkbox("AI Keyword Highlighting", value=True, help="Highlight important words")
-        show_logo = st.checkbox("Show Logo", value=False, help="Display logo on slides")
-
-        logo_path = None
-        if show_logo:
-            default_logo = Path("assets/logo.png")
-            if default_logo.exists():
-                logo_path = str(default_logo)
-            else:
-                show_logo = False
-
-        show_slide_indicator = st.checkbox("Slide Indicators", value=False, help="Show slide numbers")
         skip_humanizer = st.checkbox("Skip Humanization", value=False, help="Skip AI authenticity check")
 
         # Advanced options (collapsed)
@@ -512,14 +434,9 @@ def render_sidebar():
                 <div style="display: flex; gap: 0.75rem;">
         """, unsafe_allow_html=True)
 
-        renderer_status = "online" if PLAYWRIGHT_AVAILABLE else "offline"
         api_status = "online" if check_api_key() else "offline"
 
         st.markdown(f"""
-                    <div style="display: flex; align-items: center; gap: 0.25rem;">
-                        <span class="status-dot {renderer_status}"></span>
-                        <span style="font-size: 0.625rem; color: #64748B;">Renderer</span>
-                    </div>
                     <div style="display: flex; align-items: center; gap: 0.25rem;">
                         <span class="status-dot {api_status}"></span>
                         <span style="font-size: 0.625rem; color: #64748B;">API</span>
@@ -584,17 +501,7 @@ def render_sidebar():
         "use_highlighting": use_highlighting if preset == "custom" else True,
         "skip_humanizer": skip_humanizer if preset == "custom" else False,
         "output_name": output_name if preset == "custom" else "carousel",
-        "show_logo": show_logo if preset == "custom" else False,
-        "logo_path": logo_path if preset == "custom" else None,
-        "show_slide_indicator": show_slide_indicator if preset == "custom" else False,
-        "use_memes": use_memes,  # Always respect user's checkbox regardless of preset
-        "use_ai_memes": use_ai_memes,  # Now set correctly based on checkbox AND style
-        "content_type_override": content_type_override,  # Now respects style setting
-        "meme_style": meme_style,
-        "meme_language": meme_language,
-        # Content Strategy settings
         "content_purpose": content_purpose_map.get(content_purpose, "storytelling"),
-        "visual_style": mapped_style,  # Use the mapped_style variable from above
     }
 
 
@@ -628,15 +535,6 @@ def main():
 
     # Main content area
     render_header()
-
-    # Show Playwright warning if needed
-    if not PLAYWRIGHT_AVAILABLE:
-        st.warning("""
-        **Playwright not installed!** Install with:
-        ```bash
-        pip install playwright && playwright install chromium
-        ```
-        """)
 
     # Two-column layout
     col1, col2 = st.columns([1, 1.2], gap="large")
@@ -724,15 +622,6 @@ def main():
         )
 
         # Current settings display
-        # Determine picture status text
-        if settings['use_memes']:
-            if settings['use_ai_memes']:
-                picture_status = "AI Search"
-            else:
-                picture_status = "Stock/Templates"
-        else:
-            picture_status = "Text Only"
-
         st.markdown(f"""
         <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 1rem; margin-top: 1rem;">
             <div style="font-size: 0.75rem; color: #64748B; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem;">Current Settings</div>
@@ -746,8 +635,8 @@ def main():
                     <div style="font-size: 0.875rem; color: #1E293B; font-weight: 500;">{settings['language'] or 'Auto'}</div>
                 </div>
                 <div>
-                    <div style="font-size: 0.75rem; color: #64748B; margin-bottom: 0.25rem;">Pictures</div>
-                    <div style="font-size: 0.875rem; color: #1E293B; font-weight: 500;">{picture_status}</div>
+                    <div style="font-size: 0.75rem; color: #64748B; margin-bottom: 0.25rem;">Format</div>
+                    <div style="font-size: 0.875rem; color: #1E293B; font-weight: 500;">Text Only</div>
                 </div>
             </div>
         </div>
@@ -783,7 +672,7 @@ def main():
                             language=settings["language"] or "bahasa",
                             angle=settings["angle"] or "story_personal",
                             versions=settings["versions"],
-                            content_purpose=settings["content_purpose"]  # NEW: Pass content purpose
+                            content_purpose=settings["content_purpose"]
                         )
                         st.write(f"✓ Generated {len(content_versions)} version(s)")
 
@@ -806,21 +695,7 @@ def main():
                                 slides = [result["humanized"] for result in humanized_results]
                             st.write("✓ Content sounds human")
 
-                        # Step 3: Meme settings
-                        meme_results = None
-                        if settings["use_memes"]:
-                            if settings["use_ai_memes"]:
-                                st.write("Smart Image Curator - AI searching the web for perfect visuals...")
-                            else:
-                                st.write("Preparing meme template matching...")
-                            meme_results = {"use_dynamic": True}
-                        else:
-                            st.write("Text-only mode")
-
-                        # Step 4: Images (removed - using AI meme agent instead)
-                        image_assignments = None
-
-                        # Step 5: Highlights
+                        # Step 3: Highlights
                         highlight_data = None
                         if settings["use_highlighting"]:
                             st.write("Identifying keywords...")
@@ -831,7 +706,7 @@ def main():
                             except Exception as e:
                                 st.write(f"Warning: Highlights skipped: {e}")
 
-                        # Step 6: Caption
+                        # Step 4: Caption
                         st.write("Generating captions...")
                         caption_gen = CaptionGenerator()
                         captions = caption_gen.generate_caption(
@@ -842,51 +717,31 @@ def main():
                         )
                         st.write(f"✓ Generated {len(captions)} caption(s)")
 
-                        # Step 7: Render slides
-                        st.write(f"Rendering slides ({settings['theme']})...")
+                        # Step 5: Generate carousel (text-only)
+                        st.write(f"Processing slides ({settings['theme']})...")
                         slide_gen = SlideGenerator(theme=settings["theme"])
 
-                        topic_hint = None
-                        if settings["tone"] in ["ekonomi_edgy", "profesional"] or settings["preset"] == "economic":
-                            topic_hint = "finance"
-
-                        images, saved_paths = slide_gen.generate_carousel(
+                        slide_texts, saved_paths = slide_gen.generate_carousel(
                             slides=slides,
-                            meme_recommendations=meme_results,
-                            image_assignments=image_assignments,
                             highlight_data=highlight_data,
-                            project_name=settings["output_name"],
-                            show_logo=settings["show_logo"],
-                            logo_path=settings["logo_path"],
-                            show_slide_indicator=settings["show_slide_indicator"],
-                            use_dynamic_memes=settings["use_memes"] and not settings["use_ai_memes"],
-                            topic_hint=topic_hint,
-                            use_ai_meme_agent=settings["use_memes"] and settings["use_ai_memes"],
-                            content_type_override=settings["content_type_override"],
-                            meme_style=settings["meme_style"],
-                            meme_language=settings["meme_language"],
-                            # Content Strategy parameters
-                            content_purpose=settings["content_purpose"],
-                            visual_style=settings["visual_style"]
+                            project_name=settings["output_name"]
                         )
-                        st.write(f"✓ Created {len(images)} slides")
+                        st.write(f"✓ Created {len(slide_texts)} slides")
 
                         status.update(label="✓ Carousel ready!", state="complete", expanded=False)
 
                 # Store results
-                st.session_state['generated_images'] = images
+                st.session_state['generated_slides'] = slide_texts
                 st.session_state['saved_paths'] = saved_paths
                 st.session_state['captions'] = captions
                 st.session_state['slides'] = slides
                 st.session_state['selected_version'] = selected_version
-                st.session_state['slide_gen'] = slide_gen
-                st.session_state['meme_results'] = meme_results
 
                 # Success message
                 st.success("Your carousel is ready!")
 
                 # Download button
-                zip_data = create_zip_download(images, captions)
+                zip_data = create_zip_download(slide_texts, captions)
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
                 st.download_button(
@@ -912,25 +767,17 @@ def main():
 
                 # Slide tabs
                 st.markdown("#### Slides")
-                slide_tabs = st.tabs([f"#{i+1}" for i in range(len(images))])
+                slide_tabs = st.tabs([f"#{i+1}" for i in range(len(slide_texts))])
 
-                for i, (tab, img) in enumerate(zip(slide_tabs, images)):
+                for i, (tab, slide_text) in enumerate(zip(slide_tabs, slide_texts)):
                     with tab:
-                        st.image(img, use_container_width=True)
-
-                        col_a, col_b = st.columns([3, 1])
-                        with col_a:
-                            with st.expander("View text"):
-                                st.text(slides[i])
-                        with col_b:
-                            img_bytes = slide_gen.get_image_bytes(img)
-                            st.download_button(
-                                label="Download",
-                                data=img_bytes,
-                                file_name=f"slide_{i+1:02d}.png",
-                                mime="image/png",
-                                key=f"dl_{i}"
-                            )
+                        st.text_area(
+                            f"Slide {i+1}",
+                            value=slide_text,
+                            height=200,
+                            key=f"slide_{i}",
+                            label_visibility="collapsed"
+                        )
 
                 # Captions
                 st.markdown("#### Captions")
@@ -955,7 +802,7 @@ def main():
                     'slides': slides,
                     'captions': captions,
                     'version': selected_version,
-                    'images': images
+                    'slide_texts': slide_texts
                 }
 
             except Exception as e:
@@ -967,12 +814,18 @@ def main():
             result = st.session_state['last_result']
             st.info("Previous result shown. Enter new content to regenerate.")
 
-            if 'images' in result and result['images']:
-                images = result['images']
-                slide_tabs = st.tabs([f"#{i+1}" for i in range(len(images))])
-                for i, (tab, img) in enumerate(zip(slide_tabs, images)):
+            if 'slide_texts' in result and result['slide_texts']:
+                slide_texts = result['slide_texts']
+                slide_tabs = st.tabs([f"#{i+1}" for i in range(len(slide_texts))])
+                for i, (tab, slide_text) in enumerate(zip(slide_tabs, slide_texts)):
                     with tab:
-                        st.image(img, use_container_width=True)
+                        st.text_area(
+                            f"Slide {i+1}",
+                            value=slide_text,
+                            height=200,
+                            key=f"prev_slide_{i}",
+                            label_visibility="collapsed"
+                        )
         else:
             # Empty state
             render_empty_state()
